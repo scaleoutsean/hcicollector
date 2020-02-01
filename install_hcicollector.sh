@@ -35,8 +35,6 @@ echo -e ${Red} "Enter the SolidFire username (e.g.'monitor'): "
 read SFUSER
 echo -e ${Red} "Enter the Solidfire password: "
 read -s SFPASSWORD
-echo -e ${Purple} "Enter the size of the GraphiteDB volume in GB (e.g. '25') "
-read GRAPHITEVOLSIZE
 echo -e ${Yellow} "Enter the initial password to use for the Grafana admin account: "
 read -s GPASSWORD
 echo -e ${Green} "Enter the vCenter username: "

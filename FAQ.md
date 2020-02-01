@@ -43,19 +43,17 @@ It may work, but it generally isn't recommended unless there's a security bug th
 
 ## Add own data feeds and dashboards
 
-Feel free to do it by yourself, it's not too difficult. Metrics can be sent to StatsD or directly to Graphite. See `graphite/Dockerfile`. Additional ports may be `EXPOSE`'d if necessary.
+Feel free to do it by yourself, it's not too difficult. Metrics can be sent to StatsD or directly to Graphite. See `graphite/Dockerfile`. Additional ports may be `EXPOSE`'d if necessary. Dashboards can be imported from Graphana UI.
 
 ## Create SolidFire histograms
 
 In Grafana UI, use Explore or New Dashboard.
- - Method A: Query: default. In query Series, click on `select metric` and do `netapp` > `solidfire` > `cluster` > `YOUR_CLUSTER_NAME` > ` volumeID` > `YOUR_VOLUME_ID` > `YOUR_HISTOGRAM` > `YOUR_BUCKET(S)`
+ - Method A: Query: default. In query Series, click on `select metric` and do `netapp` > `solidfire` > `cluster` > `YOUR_CLUSTER_NAME` > ` volumeID` > `YOUR_VOLUME_ID` > `YOUR_HISTOGRAM` > `YOUR_BUCKET(S)`. That should get you something that looks like this [sample dash](https://raw.githubusercontent.com/scaleoutsean/hcicollector/v0.7/images/dashboard-solidfire-volume-min-to-max-histogram.png): `aliasByMetric(netapp.solidfire.cluster.taiwan.volumeID.37.minToMaxIopsPercentages.*)`
  - Method B: in Grafana UI, go to Dashboards > Manage > enter Grafana.com Dashboard ID 11684 and then Load. It doesn't do much but it's a good starting point.
 
-Example of for dashboard-solidfire-volume-min-to-max-histogram.png in images folder: `aliasByMetric(netapp.solidfire.cluster.taiwan.volumeID.37.minToMaxIopsPercentages.*)`
+## How to add 3rd party feeds and dashboards to Grafana
 
-## How to add 3rd party feeds and dashboards
-
-Edit Dockerfile to copy them to `grafana/dashboards`. See "Add own data fees and dashboards" above.
+Edit the Dockerfile to copy them to `grafana/dashboards`. Also see "Add own data fees and dashboards" above.
 
 ## Feed storage cluster data to existing GraphiteDB
 
