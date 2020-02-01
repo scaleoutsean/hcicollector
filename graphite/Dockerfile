@@ -1,5 +1,5 @@
-# Graphite stack
-
+# Dockerfile for Graphite stack
+# 
 FROM graphiteapp/graphite-statsd:1.1.6-1
 
 # Graphite

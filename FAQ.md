@@ -1,14 +1,14 @@
 # FAQs
 
-## HELP - shit doesn't wokr and I needed it to work yesterday
+## HELP - stuff doesn't wokr and I needed it to work yesterday
 
 If you must have a working solution ASAP, please consider one of alternative solutions (say, NetApp ActiveIQ or the free version of NetApp Cloud Insights) while you figure out how to make this thing work.
 
-This is a tiny community project so you're basically on your own. For "how-to-make-it-work" questions you may try the NetApp HCI channel in NetApp Community Slack (go to https://netapp.io, then join Slack) to see if you can find someone who has experience with HCICollector.
+Since v0.7 there's really not much that can go wrong, so my best advice would be to read the docs. You may also try the NetApp HCI channel in NetApp Community Slack (go to https://netapp.io, then join Slack) to see if you can find someone who has experience with HCICollector. For help with external projecs, check out their own resources.
 
 ## Where are the configuration files
 
-See the Dockerfile's.
+See the `Dockerfile`s.
 
 Other files of interest:
 
@@ -17,7 +17,9 @@ Other files of interest:
 
 ## Why are the passwords stored as plain text
 
-Because they are. Pull requests are welcome. Make sure the config files owned by root and off limits to other users. In fact the entire VM should be. Another thing you should consider is to create a reporting type admin account on NetApp HCI storage or SolidFire (refer to Access Control in the SolidFire API Reference Guide). The same goes for VMware and other monitored components.
+Because they are. Your pull request that fixes that will be welcome. 
+
+Make sure the config files owned by root and off limits to other users. In fact the entire VM should be. Another thing that should be considered is to create a reporting type admin account on NetApp HCI storage or SolidFire (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide). The same goes for VMware and other monitored components.
 
 If you don't manage the SolidFire or VMware cluster, you may ask the admin(s) to create a reporting-only admin account for you. For VMware vCenter please see the docs from upstream repo.
 

@@ -1,10 +1,10 @@
-# Changelog
+# Change Log
 
 ## Updates in v0.7
 
 * Fork upstream hcicollector by jedimt (builds upon upstream branch .v7)
-* Change Element OS API endpoint to v11.0 to support storage performance histograms (see the [FAQs](https://github.com/scaleoutsean/hcicollector/blob/master/FAQ.md) about pre-v11.0 Element OS)
-* Deprecate Bash installation script to make things simple and deploy faster without Docker and Trident dependencies (see the FAQs about HCICollector with NetApp Trident and containers)
+* Change Element OS API endpoint to v11.0 to support storage performance histograms (see the [FAQs](https://github.com/scaleoutsean/hcicollector/blob/master/FAQ.md) about pre-v11.0 Element OS). Dashboards that support histograms are not included in v0.7-beta1.
+* Deprecate Bash installation script (see FAQs for reasons)
 * Remove the Technical Report PDF and video demo files for faster cloning
 * Update 3rd party container images (graphite-statsd - v1.1.6-1, grafana - v6.5.1, vsphere-graphite - v0.8a)
 * Changes and improvements to documentation
@@ -45,3 +45,4 @@
 ### Changes for .v1
 
 * Initial release
+

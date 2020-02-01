@@ -1,12 +1,12 @@
 #!/usr/bin/python
-# solidfire_graphite_collector_v3.py
+# solidfire_graphite_collector.py
 #
-# Version 1.0.3
-# Author: Aaron Patten
-# Original author: Colin Bieberstein
-# Original contributors: Pablo Luis Zorzoli, Davide Obbi
+# Version 1.0.4
+# 
+# Original authors: Colin Bieberstein, Aaron Patten
+# Contributors: Pablo Luis Zorzoli, Davide Obbi, scaleoutSean
 #
-# Copyright  2018 NetApp, Inc. All Rights Reserved.
+# Copyright (c) 2020 NetApp, Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -19,6 +19,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import argparse
 import time
 import graphyte
@@ -182,6 +183,25 @@ def send_volume_stats(sf_element_factory, prefix):
                 LOG.warning('accountID ' + str(vol_accountName) + \
                             ' volume ' + vol_name + ' ' + key + ' ' + str(vs_dict[key]))
 
+def send_volume_histogram_stats(sf_element_factory, prefix):
+    """
+    Send volume QoS histogram stats.
+    Note: as of now (January 2020), the API is not properly documented so 
+        stuff may not mean what we think it means.
+    """
+
+    hmetrics = ['belowMinIopsPercentages','minToMaxIopsPercentages','minToMaxIopsPercentages',
+            'readBlockSizes','throttlePercentages','writeBlockSizes']
+    qosh = sfe.invoke_sfapi("ListVolumeQoSHistograms", parameters=None)
+    for i in range(len(qosh['qosHistograms'])):
+        for metric in hmetrics:
+            for key,value in (qosh['qosHistograms'][i]['histograms'][metric]).items():
+                if to_graphite:
+                    graphyte.send(prefix + '.volumeID.' + str(qosh['qosHistograms'][i]['volumeID']) 
+                        + '.' + metric + '.' + key, int(value))
+                else:
+                    LOG.warning('volumeID ' + str(qosh['qosHistograms'][i]['volumeID']) 
+                        + ' ' + key + ' ' + str(value))
 
 def send_drive_stats(sf_element_factory, prefix):
     """
@@ -268,21 +288,21 @@ def to_num(metric):
 # Parse commandline arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--solidfire',
-                    help='hostname of SolidFire array from which metrics should be collected')
+                    help='Hostname, IP or FQDN of SolidFire cluster Management Virtual IP from which metrics should be collected')
 parser.add_argument('-u', '--username', default='admin',
-                    help='username for SolidFire array. default admin')
+                    help='username for SolidFire array. default: admin (NOTE: please create a dedicated reporting admin account)')
 parser.add_argument('-p', '--password', default='password',
-                    help='password for SolidFire array. default password')
+                    help='password for SolidFire array. default: password')
 parser.add_argument('-o', '--timeout', default=15,
                     help='Timeout for SolidFire API calls to complete.')
 parser.add_argument('-g', '--graphite', default='localhost',
-                    help='hostname of Graphite server to send to. default localhost. "debug" sends metrics to logfile')
+                   help='hostname of Graphite server to send to. default: localhost. (NOTE: "debug" sends metrics to logfile)')
 parser.add_argument('-t', '--port', type=int, default=2003,
-                    help='port to send message to. default 2003. if the --graphite is set to debug can be omitted')
+                    help='port to send message to. default 2003. if the --graphite is set to debug, can be omitted')
 parser.add_argument('-m', '--metricroot', default='netapp.solidfire.cluster',
-                    help='graphite metric root. default netapp.solidfire.cluster')
+                    help='graphite metric root. default: netapp.solidfire.cluster')
 parser.add_argument('-l', '--logfile', 
-                    help='logfile.')
+                    help='logfile. default: none, Required if Graphite hostname is "debug" and metrics sent to logfile')
 args = parser.parse_args()
 
 to_graphite = True
@@ -290,7 +310,7 @@ to_graphite = True
 LOG = logging.getLogger('solidfire_graphite_collector.py')
 if args.logfile:
     logging.basicConfig(filename=args.logfile, level=logging.DEBUG, format='%(asctime)s %(message)s')
-    LOG.warning("Starting Collector script as a daemon.  No console output possible.")
+    LOG.warning("Starting Collector script as a daemon. No console output possible.")
 else:
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
 
@@ -303,7 +323,7 @@ else:
 
 LOG.info("Metrics Collection for array: {0}".format(args.solidfire))
 try:
-    sfe = ElementFactory.create(args.solidfire, args.username, args.password)
+    sfe = ElementFactory.create(args.solidfire, args.username, args.password, version="11.0")
     sfe.timeout(args.timeout)
 except solidfire.common.ApiServerError as e:
     LOG.warning("ApiServerError: {0}".format(str(e)))
@@ -318,6 +338,7 @@ try:
     send_cluster_faults(sfe, cluster_name)
     send_cluster_capacity(sfe, cluster_name)
     send_volume_stats(sfe, cluster_name)
+    send_volume_histogram_stats(sfe, cluster_name)
     send_drive_stats(sfe, cluster_name)
     send_node_stats(sfe, cluster_name + '.node')
 except solidfire.common.ApiServerError as e:

@@ -1,4 +1,10 @@
 #!/bin/bash
+############################################################################# 
+# This sript has been deprecated in v0.7.                                   #
+# While it may work, it is recommended to:                                  # 
+#   - Use this script without enabling Trident                              #
+#   - Manually review and if necessary edit configuration files             #
+#############################################################################
 
 #Check for proper permissions (https://stackoverflow.com/a/21622456)
 if (( $EUID != 0 )); then
@@ -57,7 +63,7 @@ cat << EOF > /etc/netappdvp/config.json
 {
     "version": 1,
     "storageDriverName": "solidfire-san",
-    "Endpoint": "https://$SFUSER:$SFPASSWORD@$SFMVIP/json-rpc/9.0",
+    "Endpoint": "https://$SFUSER:$SFPASSWORD@$SFMVIP/json-rpc/11.0",
     "SVIP": "$SFSVIP:3260",
     "TenantName": "$TACCOUNT",
     "InitiatorIFace": "default",
@@ -91,14 +97,16 @@ cat << EOF > /etc/netappdvp/config.json
 EOF
 
 echo "Installing Trident and creating the $GRAPHITEVOL volume"
-#Install the Triedent plugin
-docker plugin install --grant-all-permissions --alias netapp netapp/trident-plugin:18.07 config=config.json
+#Install the Trident plugin
+docker plugin install --grant-all-permissions --alias netapp netapp/trident-plugin:19.10 config=config.json
 
 #Wait for a couple seconds for Trident to initialize
 sleep 10
 
 #Create the Docker volume for the Graphite database
 docker volume create -d netapp --name $GRAPHITEVOL -o type=docker-db -o size=50G
+#If local driver is used (recommended) do something like this: 
+# docker volume create --name graphite --opt o=size=20G --opt device=/dev/sda --opt type=ext4
 
 #Dccker compose configuration
 echo "Creating the docker-compose.yml file"
