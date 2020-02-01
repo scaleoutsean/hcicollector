@@ -6,7 +6,7 @@
 #   - Manually review and if necessary edit configuration files             #
 #############################################################################
 
-#Check for proper permissions (https://stackoverflow.com/a/21622456)
+# Check for proper permissions (https://stackoverflow.com/a/21622456)
 if (( $EUID != 0 )); then
     echo "Please execute this script as root or use sudo"
     exit 128
@@ -16,7 +16,7 @@ fi
 
 for i in {16..21} {21..16} {16..21} {21..16} {16..21} {21..16} ; do echo -en "\e[38;5;${i}m#\e[0m" ; done ; echo
 
-#Set some bash colors
+# Set some bash colors
 Red='\033[0;31m'          # Red
 Green='\033[0;32m'        # Green
 Yellow='\033[0;33m'       # Yellow
@@ -25,97 +25,44 @@ Purple='\033[0;35m'       # Purple
 Cyan='\033[0;36m'         # Cyan
 White='\033[0;37m'        # White
 
-#Read in variables
+# Read in variables
+
+GRAPHITEVOL="graphite"
+
 echo -e ${Red} "Enter the SolidFire management virtual IP (MVIP): "
 read SFMVIP
-echo -e ${Red} "Enter the SolidFire storage virtual IP (SVIP): "
-read SFSVIP
-echo -e ${Red} "Enter the SolidFire username (case sensitive): "
+echo -e ${Red} "Enter the SolidFire username (e.g.'monitor'): "
 read SFUSER
 echo -e ${Red} "Enter the Solidfire password: "
 read -s SFPASSWORD
-echo -e ${Purple} "Enter the tenant account to use for Trident: "
-read TACCOUNT
-echo -e ${Purple} "Enter the volume name to create for Graphite"
-read GRAPHITEVOL
-echo -e ${Yellow} "Enter the password to use for the Grafana admin account: "
+echo -e ${Purple} "Enter the size of the GraphiteDB volume in GB (e.g. '25') "
+read GRAPHITEVOLSIZE
+echo -e ${Yellow} "Enter the initial password to use for the Grafana admin account: "
 read -s GPASSWORD
 echo -e ${Green} "Enter the vCenter username: "
 read VCENTERUSER
 echo -e ${Green} "Enter the vCenter password: "
 read -s VCENTERPASSWORD
-echo -e ${Green} "Enter the vCenter hostname or IP. Ex. vcsa: "
+echo -e ${Green} "Enter the vCenter hostname or IP (e.g. 'vcsa' or '10.10.10.10'): "
 read VCENTERHOSTNAME
-echo -e ${Green} "Enter the vCenter domain. Ex. rtp.openenglab.netapp.com, local: "
+echo -e ${Green} "Enter the vCenter domain (e.g. 'company.com' or 'local')"
 read VCENTERDOMAIN
-echo -e ${Green} "Does this vCenter have ESXi host added by IP address (true or false)? Ex. false "
+echo -e ${Green} "ESXi hosts in this vCenter cannot be resolved in DNS - true or false? (e.g. 'true') "
 read VCENTERIPBASED
-echo -e ${White} "Enter the IP address of this Docker host: "
+echo -e ${White} "Enter the IP address of this VM Docker host:"
 read DOCKERIP
 echo -e ${White} "Beginning Install"
 
-####Trident install and configuration####
+echo "Installing Trident and creating the Graphite volume"
 
-#Create the Trident config file
-mkdir -p /etc/netappdvp
-
-cat << EOF > /etc/netappdvp/config.json
-{
-    "version": 1,
-    "storageDriverName": "solidfire-san",
-    "Endpoint": "https://$SFUSER:$SFPASSWORD@$SFMVIP/json-rpc/11.0",
-    "SVIP": "$SFSVIP:3260",
-    "TenantName": "$TACCOUNT",
-    "InitiatorIFace": "default",
-    "Types": [
-        {
-            "Type": "docker-default",
-            "Qos": {
-                "minIOPS": 1000,
-                "maxIOPS": 2000,
-                "burstIOPS": 4000
-            }
-        },
-        {
-            "Type": "docker-app",
-            "Qos": {
-                "minIOPS": 4000,
-                "maxIOPS": 6000,
-                "burstIOPS": 8000
-            }
-        },
-        {
-            "Type": "docker-db",
-            "Qos": {
-                "minIOPS": 6000,
-                "maxIOPS": 8000,
-                "burstIOPS": 10000
-            }
-        }
-    ]
-}
-EOF
-
-echo "Installing Trident and creating the $GRAPHITEVOL volume"
-#Install the Trident plugin
-docker plugin install --grant-all-permissions --alias netapp netapp/trident-plugin:19.10 config=config.json
-
-#Wait for a couple seconds for Trident to initialize
-sleep 10
-
-#Create the Docker volume for the Graphite database
-docker volume create -d netapp --name $GRAPHITEVOL -o type=docker-db -o size=50G
-#If local driver is used (recommended) do something like this: 
-# docker volume create --name graphite --opt o=size=20G --opt device=/dev/sda --opt type=ext4
-
-#Dccker compose configuration
+# Docker compose configuration
 echo "Creating the docker-compose.yml file"
 cat << EOF > ./docker-compose.yml
 version: "2"
 services:
   graphite:
     build: ./graphite
-    container_name: graphite-v.7
+    container_name: graphite-v0.7
     restart: always
     ports:
         - "8080:80"
@@ -123,14 +70,14 @@ services:
         - "8126:8126"
         - "2003:2003"
         - "2004:2004"
-    volumes: #Trident or local volumes for persistent storage
-        - $GRAPHITEVOL:/opt/graphite/storage/whisper
+    volumes: 
+        - ${GRAPHITEVOL}:/opt/graphite/storage/whisper
     networks:
         - net_hcicollector
 
   grafana:
     build: ./grafana
-    container_name: grafana-v.7
+    container_name: grafana-v0.7
     restart: always
     ports:
         - "80:3000"
@@ -148,14 +95,14 @@ services:
 
   sfcollector:
     build: ./sfcollector
-    container_name: sfcollector-v.7
+    container_name: sfcollector-v0.7
     restart: always
     networks:
         - net_hcicollector
 
   vmwcollector:
     build: ./vmwcollector
-    container_name: vmwcollector-v.7
+    container_name: vmwcollector-v0.7
     restart: always
     networks:
         - net_hcicollector
@@ -167,11 +114,12 @@ networks:
     driver: bridge
 
 volumes:
-  $GRAPHITEVOL:
-    external: true
+  ${GRAPHITEVOL}:
+    external: false
 EOF
+chmod 740 docker-compose.yml
 
-#Wrapper script for the SolidFire collector
+# Wrapper script for the SolidFire collector
 echo "Creating the SolidFire collector wrapper.sh script"
 cat << EOF > ./sfcollector/wrapper.sh
 #!/usr/bin/env bash
@@ -181,13 +129,9 @@ do
 sleep 60
 done
 EOF
+chmod 740 sfcollector/wrapper.sh
 
-#Make the file executiable
-echo -e ${Cyan} "Marking wrapper.sh as executable"
-chmod a+x ./sfcollector/wrapper.sh
-
-
-#Create the storage-schemas.conf file for Graphite
+# Create the storage-schemas.conf file for Graphite
 echo "Creating the storage-schemas.conf file"
 cat << EOF > ./graphite/storage-schemas.conf
 [stats]
@@ -231,7 +175,7 @@ pattern = ^.*
 retentions = 1m:5d,10m:28d
 EOF
 
-#Create the vsphere-graphite.json file for the vSphere-Graphite collector
+# Create the vsphere-graphite.json file for the vSphere-Graphite collector
 echo "Creating the vsphere-graphite.json file"
 cat << EOF > ./vmwcollector/vsphere-graphite.json
 {
@@ -309,7 +253,7 @@ cat << EOF > ./vmwcollector/vsphere-graphite.json
 }
 EOF
 
-#Create the datasource.yml file for the dashboards
+# Create the datasource.yml file for the dashboards
 mkdir -p ./grafana/provisioning/datasources/
 cat << EOF > ./grafana/provisioning/datasources/datasource.yml
 apiVersion: 1
@@ -325,9 +269,9 @@ datasources:
     basicAuth: false
 EOF
 
-#Change the "datasource": instance in the provisoined dashboards to match the GRAPHITEVOL
+# Change the "datasource": instance in the provisoined dashboards to match the GRAPHITEVOL
 echo "Modifying the default 'datasource' values in the pre-packeged dashboards"
 DASHBOARDS=$(ls grafana/dashboards/*.json)
 sed -i '/-- Grafana --/b; s/\("datasource": "\).*\(".*$\)/\1'$GRAPHITEVOL'\2/g' $DASHBOARDS
 
-echo -e ${White} "Script complete. Please start the containers."
+echo -e ${White} "Script complete. 'sudo docker-compose up' to start the containers"
