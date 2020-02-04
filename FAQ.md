@@ -24,7 +24,7 @@ For now yes, but your pull request that fixes that would be welcome.
 
 The entire VM should be made off limits to non-administrators. For example you should run it on Management Network. 
 
-Another thing that should be considered is to create a reporting type admin account on SolidFire storage or NetApp HCI (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide) and you may do that if you do not wish to use QoS histograms. The same goes for VMware - vSphere administrator accounts should not be used in monitoring. If you don't manage the SolidFire or VMware cluster, you may ask the admin(s) to create a reporting-only admin account for you (for Element v11, if you do not use QoS histograms). For VMware vCenter please see the documentation for vsphere-graphite.
+Another thing that should be considered is a reporting-role admin account on SolidFire storage or NetApp HCI (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide) and you may do that if you do _not_ wish to use QoS histograms. The same goes for VMware - vSphere administrator account with limited permissions should be used for monitoring. If you don't manage the SolidFire or VMware cluster, you may ask the admin(s) to create a reporting-only admin account for you (for Element v11, if you do not use QoS histograms). For VMware vCenter please see the documentation for vsphere-graphite.
 
 ## How to integrate HCICollector with persistent container storage
 
@@ -43,41 +43,47 @@ It may work, but it generally isn't recommended unless there's a security bug th
 
 ## Add own data feeds and dashboards
 
-Feel free to do it by yourself, it's not too difficult. Metrics can be sent to StatsD or directly to Graphite. See `graphite/Dockerfile`. Additional ports may be `EXPOSE`'d if necessary. Dashboards can be imported from Graphana UI.
+Feel free to do it by yourself. Metrics can be sent to StatsD or directly to Graphite (see `graphite/Dockerfile`). Additional ports may be `EXPOSE`'d if necessary. Dashboards can be imported from the Graphana Web interface.
 
-## Create SolidFire histograms
+## How to create SolidFire histograms and other dashboards
 
 In Grafana UI, use Explore or New Dashboard.
- - Method A: Query: default. In query Series, click on `select metric` and do `netapp` > `solidfire` > `cluster` > `YOUR_CLUSTER_NAME` > ` volumeID` > `YOUR_VOLUME_ID` > `YOUR_HISTOGRAM` > `YOUR_BUCKET(S)`. That should get you something that looks like this [sample dash](https://raw.githubusercontent.com/scaleoutsean/hcicollector/v0.7/images/dashboard-solidfire-volume-min-to-max-histogram.png): `aliasByMetric(netapp.solidfire.cluster.taiwan.volumeID.37.minToMaxIopsPercentages.*)`
+ - Method A: Query: default. In query Series, click on `select metric` and do `netapp` > `solidfire` > `cluster` > `YOUR_CLUSTER_NAME` > ` volumeID` > `YOUR_VOLUME_ID` > `YOUR_HISTOGRAM` > `YOUR_BUCKET(S)`. That should get you something that looks like this [sample dash](images/dashboard-solidfire-volume-min-to-max-histogram.png): `aliasByMetric(netapp.solidfire.cluster.taiwan.volumeID.37.minToMaxIopsPercentages.*)`
  - Method B: in Grafana UI, go to Dashboards > Manage > enter Grafana.com Dashboard ID 11684 and then Load. It doesn't do much but it's a good starting point.
+
+The sharp-eyed may notice that metrics are a bit weird - for example volume metrics can be found under respective user accounts and also "directly" under the "cluster" object. This is something that needs to be improved and then documented.
 
 ## How to add 3rd party feeds and dashboards to Grafana
 
 Edit the Dockerfile to copy them to `grafana/dashboards`. Also see "Add own data fees and dashboards" above.
 
-## Feed storage cluster data to existing GraphiteDB
+## Feed SolidFire storage cluster metrics to existing GraphiteDB
 
 Use the `sfcollector` container. Create a `solidfire/wrapper.sh` to run `solidfire/solidfire_graphite_collector.py` and send it to existing StatsD or Graphite.
 
-* Use `solidfire_graphite_collector.py`. Provide your own Graphite server destination with the `--graphite` argument. You may also need to provide a custom `--metricroot` suitable for your environment.
-* Alternatively, modify HCICollector to send data to StatsD first. StatsD can send data to built-in GraphiteDB and also to another Graphite (such as your own). Mind the `metricroot` of secondary destination. You may also modify the script to send data to Telegram or other destnation.
+- Use `solidfire_graphite_collector.py`. Provide your own Graphite server destination with the `--graphite` argument. You may also need to provide a custom `--metricroot` suitable for your environment.
+- Alternatively, modify HCICollector to send data to StatsD first. StatsD can send data to built-in GraphiteDB and also to another Graphite (such as your own). Mind the `metricroot` of secondary destination. You may also modify the script to send data to Telegram or other destnation.
+
+## Use HCICollector without vCenter
+
+If you don't have a vCenter (you use Hyper-V, for example) or VMware in your environment, you may still use the installation script and then remove the vmwcollector (vsphere-graphite) section (before you run docker-compose).
 
 ## Alternative approaches to telemetry gathering
 
 Several of the many options:
 
-* Enterprise: please consider either the gratis or paid version of [NetApp Cloud Insights](https://cloud.netapp.com/cloud-insights), a proven, comprehensive, cloud-hosted service for cloud and on-premises environments.
-* Enterprise: if you own a NetApp HCI or SolidFire ("storage-only") cluster, you can choose to allow NetApp ActiveIQ to gather metrics and send them to ActiveIQ service, but with better trending and alerting. ActiveIQ also has an API and a mobile application which is superior for support-related monitoring (as opposed to gathering and visualization of performance-related metrics.)
-* Gratis: [NABox](https://nabox.org) (at some point it may be able to monitor Element storage clusters; until then you may try to integrate the SolidFire Graphite collector script on your own.)
-* Gratis: enable and use SNMP v2/v3 on Element software cluster (as well as other monitored components). This can work with any tool which can receive SNMP traps (Zabbix, [Nagios/Icinga](https://github.com/scaleoutsean/nagfire), etc.)
+- Enterprise: please consider either the gratis or paid version of [NetApp Cloud Insights](https://cloud.netapp.com/cloud-insights), a proven, comprehensive, cloud-hosted service for cloud and on-premises environments.
+- Enterprise: if you own a NetApp HCI or SolidFire ("storage-only") cluster, you can choose to allow NetApp ActiveIQ to gather metrics and send them to ActiveIQ service, but with better trending and alerting. ActiveIQ also has an API and a mobile application which is superior for support-related monitoring (as opposed to gathering and visualization of performance-related metrics.)
+- Gratis: [NABox](https://nabox.org) (at some point it may be able to monitor Element storage clusters; until then you may try to integrate the SolidFire Graphite collector script on your own.)
+- Gratis: enable and use SNMP v2/v3 on Element software cluster (as well as other monitored components). This can work with any tool which can receive SNMP traps (Zabbix, [Nagios/Icinga](https://github.com/scaleoutsean/nagfire), etc.)
 
 ## Roadmap
 
-At this time the primary goal is to keep components up to date and ensure the thing installs and runs. Depending on time and skills, we may add a thing or two. Tested pull requests are welcome, but maybe create an issue first to discuss it (or just fork this repo and do it any way you want).
+At this time the primary goal is to keep components up to date and ensure the thing installs and runs. Depending on time and skills, we may add a thing or two. Tested pull requests are welcome, but if possible create an issue first to put it up for discussion.
 
 ## What is the reason Trident was removed
 
-Because it was confusing to people unfamiliar with Trident, the installation script couldn't handle Trident uploads and beause of various other concerns (such as, for example, the fact that more and more users use Trident in production so there's a risk of conflict with other workloads). Additionally, I want to make it easier to install and use SolidFire collector in existing monitoring infrastructure rather than create new instances of Grafana and Graphite.
+Because it was confusing to people unfamiliar with Trident, the installation script couldn't handle Trident uploads and various other concerns (such as, for example, the fact that more and more users use Trident in production so there's a risk of conflict with other workloads). Additionally, my primary goal is to make it easier to install and use SolidFire collector in existing monitoring infrastructure rather than create new instances of Grafana and Graphite rather than introduce additional dependencies.
 
 ## Is this repo associated with or sponspored by NetApp
 

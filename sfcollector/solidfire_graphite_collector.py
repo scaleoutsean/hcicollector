@@ -46,7 +46,7 @@ def send_cluster_faults(sf_element_factory, prefix):
             graphyte.send(prefix + '.fault.' + key, to_num(group[key]))
     else:
         for key in group:
-            LOG.warning('fault.' + key, str(to_num(group[key])))
+            LOG.warning( 'fault.' + key + ' ' + str(group[key]))
 
 
 def send_cluster_stats(sf_element_factory, prefix):

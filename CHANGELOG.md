@@ -4,12 +4,11 @@
 
 - Fork upstream hcicollector by jedimt (builds upon upstream branch .v7)
 - Change Element OS API endpoint to v11.0 to support storage histograms (see the FAQs about working with pre-v11.0 Element OS clusters)
-- Gather storage histogram data. Histogram dashboards are not included in v0.7 but can be created from gathered histogram metrics
-- Remove NetApp Trident-related steps from installation script (see the FAQs)
-- Remove the NetApp Technical Report PDF and video demo files for faster repo cloning, add a link to a YouTube video demo instead
-- Update 3rd party container images (graphite-statsd v1.1.6-1, grafana v6.6.0, vsphere-graphite v0.8a)
-- Many changes and improvements to documentation, move images to images folder
-- Formatting edits to other files
+- Gather storage histogram data. Histogram dashboards are not included in v0.7 but can be imported or created from histogram metrics
+- Remove NetApp Trident-related steps from the installation script (see the FAQs)
+- Remove the NetApp Technical Report PDF and video demo files for faster repo cloning, add links to YouTube demo videos
+- Update third party container images (graphite-statsd v1.1.6-1, grafana v6.6.0, vsphere-graphite v0.8a)
+- Changes and improvements to documentation (new FAQs document)
 
 ## Updates in .v6
 
