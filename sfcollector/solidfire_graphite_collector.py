@@ -97,6 +97,8 @@ def send_cluster_capacity(sf_element_factory, prefix):
     zero_blocks = to_num(result['zeroBlocks'])
     unique_blocks = to_num(result['uniqueBlocks'])
     unique_blocks_used_space = to_num(result['uniqueBlocksUsedSpace'])
+    snapshot_non_zero_blocks = to_num(result['snapshotNonZeroBlocks'])
+    
     if non_zero_blocks != 0:
         thin_factor = float((non_zero_blocks + zero_blocks)) / float(non_zero_blocks)
     else:
@@ -107,7 +109,7 @@ def send_cluster_capacity(sf_element_factory, prefix):
         LOG.warning(key + ' ' + str(result[key]))
 
     if unique_blocks != 0:
-        dedupe_factor = float(non_zero_blocks) / float(unique_blocks)
+        dedupe_factor = float(non_zero_blocks + snapshot_non_zero_blocks) / float(unique_blocks)
     else:
         dedupe_factor = 1
     if to_graphite:
