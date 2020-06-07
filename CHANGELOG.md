@@ -1,16 +1,27 @@
 # Change Log
 
-## Updates in v0.7
+## Changes in v0.7
 
-- Fork upstream hcicollector by jedimt (builds upon upstream branch .v7)
-- Change Element OS API endpoint to v11.0 to support storage histograms (see the FAQs about working with pre-v11.0 Element OS clusters)
-- Gather storage histogram data. Histogram dashboards are not included in v0.7 but can be imported or created from histogram metrics
-- Remove NetApp Trident-related steps from the installation script (see the FAQs)
-- Remove the NetApp Technical Report PDF and video demo files for faster repo cloning, add links to YouTube demo videos
-- Update third party container images (graphite-statsd v1.1.6-1, grafana v6.6.0, vsphere-graphite v0.8a)
-- Changes and improvements to documentation (new FAQs document)
+- Fork upstream hcicollector by jedimt (this release builds upon upstream branch .v7, here renamed to v0.7)
+- Remove NetApp Trident-related steps from install script (see the FAQs)
+- Remove the NetApp Technical Report PDF and video demo files from the repo for faster repository cloning. Add video links to YouTube demo videos
+- Changes and improvements to documentation
+- Introduce potentially breaking changes in metrics paths and details gathered from SolidFire (see Release Notes v0.7 and FAQs)
+- Fixes:
+  - SFCollector: wrapper script can contain special characters (issue #2). Set Docker base OS to Alpine v3.1.2
+  - SFCollector: SolidFire deduplication efficiency formula changed to reflect space in snapshots (issue #3)
+  - Grafana: configure Legend and Axis Y values in most panels to display 0 decimals (enforce integer values where apppropriate (e.g. byte count) and lower the level of unnecesary detail elsewhere)
+  - Grafana: change deprecated gauge caunters to new gauge counters
+  - Grafana: replace deprecated Grafana renderer with new renderer container
+  - Update third party container images (graphite-statsd v1.1.7-2, grafana v6.7.4, vsphere-graphite v0.8b). Grafana v6.7.4 fixes a security risk that does not impact HCICollector because it disables Grafana avatars
 
-## Updates in .v6
+## Changes in v0.6.1
+
+- Fix for the bad dedupe factor formula (issue #3) in .v6
+- Prior to v0.7, sfcollector used latest version of base OS, so there's a risk to rebuilding containers as base OS updates may break sfcollector
+- If you want to try, download branch [v0.6.1](https://github.com/scaleoutsean/hcicollector/tree/v0.6.1) and rebuild, or just apply the [change](https://github.com/jedimt/hcicollector/compare/master...scaleoutsean:v0.6.1) to existing sfcollector/solidfire_graphite_collector.py and rebuild only that container (sfcollector)
+
+## Changes in .v6
 
 - Changed file layout to be more consistent with container names and roles
 - Retooled for Grafana 5.0.0
@@ -21,29 +32,29 @@
 - New detailed install document
 - Added a very basic installation script
 
-## Updates in .5
+## Changes in .5
 
 - Extensive dashboard updates. Dashboards now available on [grafana.com](https://grafana.com/dashboards?search=HCI)
 - Added additional metrics to collection
 - Updated to Trident from NDVP for persistent storage
 
-## Updates in .4
+## Changes in .4
 
 - Added a vSphere collectored based heavily on the work of cblomart's vsphere-graphite collector
 - Dashboard updates
 - New dashboards for vSphere components
 
-## Updates in .3
+## Changes in .3
 
 - Changed the collector container to Alpine which dramatically cut down container size and build time.
 - Other minor changes
 
-### Changes for .v2
+## Changes in .v2
 
 - Added "&" in wrapper.sh script to make the collector calls async. Previously the script was waiting for the collector script to finish before continuing the loop. This caused the time between collections to stack which caused holes in the dataset. Now stats should be returned every minute
 - Changed graphs to use the summerize function for better accuracy
 
-### Changes for .v1
+## Changes in .v1
 
 - Initial release
 

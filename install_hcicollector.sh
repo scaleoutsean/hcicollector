@@ -25,33 +25,43 @@ Purple='\033[0;35m'       # Purple
 Cyan='\033[0;36m'         # Cyan
 White='\033[0;37m'        # White
 
-# Read in variables
-
+# Best don't customize this parameter
 GRAPHITEVOL="graphite"
 
-echo -e ${Red} "Enter the SolidFire management virtual IP (MVIP): "
+# Read in variables
+
+echo "Main info needed by this install script:"
+echo "1) SolidFire MVIP and credentials"
+echo "2) VMware vCenter IP and credentials"
+echo "3) One IP of this VM where Grafana Web UI will be exposed"
+echo ""
+echo "You can use CTRL+C to stop this script and run it again when ready"
+echo ""
+
+echo -e ${Red} "Enter the SolidFire management virtual IP (MVIP):"
 read SFMVIP
-echo -e ${Red} "Enter the SolidFire username (e.g.'monitor'): "
+echo -e ${Red} "Enter the SolidFire username (e.g. 'monitor'):"
 read SFUSER
 echo -e ${Red} "Enter the Solidfire password: "
 read -s SFPASSWORD
-echo -e ${Yellow} "Enter the initial password to use for the Grafana admin account: "
+echo -e ${Yellow} "Enter the initial password to use for the Grafana admin account:"
 read -s GPASSWORD
-echo -e ${Green} "Enter the vCenter username: "
-read VCENTERUSER
-echo -e ${Green} "Enter the vCenter password: "
-read -s VCENTERPASSWORD
-echo -e ${Green} "Enter the vCenter hostname or IP (e.g. 'vcsa' or '10.10.10.10'): "
+echo -e ${Green} "Enter the vCenter DNS hostname or IP (e.g. 'vcsa' or '10.10.10.10'):"
 read VCENTERHOSTNAME
-echo -e ${Green} "Enter the vCenter domain (e.g. 'company.com' or 'local')"
+echo -e ${Green} "Enter the vCenter username (e.g. administrator@vsphere.local):"
+read -e -i 'administrator@vsphere.local' VCENTERUSER || VCENTERUSER=administrator@vsphere.local
+echo -e ${Green} "Enter the vCenter password:"
+read -s VCENTERPASSWORD
+echo -e ${Green} "Enter the vCenter DNS domain (e.g. 'vi.company.com' or 'local' if none)"
 read VCENTERDOMAIN
-echo -e ${Green} "ESXi hosts in this vCenter cannot be resolved in DNS - true or false? (e.g. 'true') "
-read VCENTERIPBASED
-echo -e ${White} "Enter the IP address of this VM Docker host:"
+echo -e ${Green} "The ESXi hostnames resolve in DNS: yes or no? (e.g. 'no' for IP-based hosts)"
+read VCENTERHASDNS
+echo -e ${White} "Enter the IP address of this Docker VM:"
 read DOCKERIP
-echo -e ${White} "Beginning Install"
-
-echo "Installing Trident and creating the Graphite volume"
+echo ""
+echo "To stop now without having to wipe this folder or fiddle with config files, press CTRL+C within 3s"
+sleep 3
+echo -e ${White} "Beginning install..."
 
 # Docker compose configuration
 echo "Creating the docker-compose.yml file"
@@ -76,6 +86,9 @@ services:
   grafana:
     build: ./grafana
     container_name: grafana-v0.7
+    volumes:
+        - grafana:/var/lib/grafana
+        - ./grafana/provisioning/:/etc/grafana/provisioning/
     restart: always
     ports:
         - "80:3000"
@@ -83,13 +96,28 @@ services:
         - net_hcicollector
     environment:
         #Set password for Grafana web interface
-        - GF_SECURITY_ADMIN_PASSWORD=$GPASSWORD
+        GF_SECURITY_ADMIN_PASSWORD: ${GPASSWORD} 
         #Optional SMTP configuration for alert queries
-        #- GF_SMTP_ENABLED=true
-        #- GF_SMTP_HOST=smtp.gmail.com:465
-        #- GF_SMTP_USER=<email address>
-        #- GF_SMTP_PASSWORD=<email password>
-        #- GF_SMTP_SKIP_VERIFY=true
+        # GF_SMTP_ENABLED: true
+        # GF_SMTP_HOST: smtp.gmail.com:465
+        # GF_SMTP_USER: <email address>
+        # GF_SMTP_PASSWORD: <email password>
+        # GF_SMTP_SKIP_VERIFY: true
+        GF_RENDERING_SERVER_URL: http://renderer:8081/render
+        GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+        GF_LOG_FILTERS: rendering:debug
+
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    container_name: renderer-v0.7
+    ports:
+      - 8081
+    environment:
+      ENABLE_METRICS: 'true'
+      # GF_RENDERER_PLUGIN_GRPC_PORT: 50059
+      GF_RENDERER_PLUGIN_IGNORE_HTTPS_ERRORS: 'true'
+      # GF_RENDERER_PLUGIN_VERBOSE_LOGGING: 'false'
+      # GF_RENDERER_PLUGIN_TZ: Europe/London
 
   sfcollector:
     build: ./sfcollector
@@ -114,6 +142,8 @@ networks:
 volumes:
   ${GRAPHITEVOL}:
     external: false
+  grafana:
+    external: false
 EOF
 chmod 740 docker-compose.yml
 
@@ -123,11 +153,11 @@ cat << EOF > ./sfcollector/wrapper.sh
 #!/usr/bin/env bash
 while true
 do
-/usr/bin/python /solidfire_graphite_collector.py -s $SFMVIP -u $SFUSER -p $SFPASSWORD -g graphite &
+/usr/bin/env python3 /solidfire_graphite_collector.py -s $SFMVIP -u $SFUSER -p "$SFPASSWORD" -g graphite &
 sleep 60
 done
 EOF
-chmod 740 sfcollector/wrapper.sh
+chmod 740 ./sfcollector/wrapper.sh
 
 # Create the storage-schemas.conf file for Graphite
 echo "Creating the storage-schemas.conf file"
@@ -175,6 +205,13 @@ EOF
 
 # Create the vsphere-graphite.json file for the vSphere-Graphite collector
 echo "Creating the vsphere-graphite.json file"
+if [ $VCENTERHASDNS == 'no' ]
+then
+    VCENTERIPBASED='true'
+else
+    VCENTERIPBASED='false'
+fi
+
 cat << EOF > ./vmwcollector/vsphere-graphite.json
 {
   "Domain": ".$VCENTERDOMAIN",
@@ -244,32 +281,29 @@ cat << EOF > ./vmwcollector/vsphere-graphite.json
         { "Metric": "datastore.totalReadLatency.average", "Instances": "*" },
         { "Metric": "datastore.totalWriteLatency.average", "Instances": "*" },
         { "Metric": "datastore.write.average", "Instances": "*" },
-        { "Metric": "mem.state.latest", "Instances": "" }
+        { "Metric": "mem.state.latest", "Instances": "" },
+        { "Metric": "cpu.ready.summation", "Instance": ""},
+        { "Metric": "cpu.usagemhz.average", "Instance": ""},
+        { "Metric": "cpu.usage.average", "Instance": ""}
       ]
     }
   ]
 }
 EOF
+# This below won't work
+# sudo chmod 740 ./vmwcollector/vsphere-graphite.json
 
 # Create the datasource.yml file for the dashboards
-mkdir -p ./grafana/provisioning/datasources/
-cat << EOF > ./grafana/provisioning/datasources/datasource.yml
-apiVersion: 1
-datasources:
-  - name: $GRAPHITEVOL
-    type: graphite
-    access: direct
-    orgId: 1
-    url: http://$DOCKERIP:8080
-    isDefault: true
-    version: 1
-    editable: true
-    basicAuth: false
-EOF
+# If you customized GRAPHITEVOL (which you shouldn't have), also modify `name` in:
+# ./grafana/provisioning/datasources/dashboards/datasource.yml
+# Change GraphiteDB IP in Grafana
+sed -i  "s#url: http://DOCKERIP:8080#url: http://${DOCKERIP}:8080#g"  ./grafana/provisioning/datasources/datasource.yml
 
-# Change the "datasource": instance in the provisoined dashboards to match the GRAPHITEVOL
-echo "Modifying the default 'datasource' values in the pre-packeged dashboards"
+# Modify hard-coded SolidFire MVIP (SFMVIP) in sample dashboards
 DASHBOARDS=$(ls grafana/dashboards/*.json)
-sed -i '/-- Grafana --/b; s/\("datasource": "\).*\(".*$\)/\1'$GRAPHITEVOL'\2/g' $DASHBOARDS
+sed -i "s#https://192.168.1.30#https://${SFMVIP}#g" $DASHBOARDS
 
-echo -e ${White} "Script complete. 'sudo docker-compose up' to start the containers"
+echo -e ${White} "Script complete. 'sudo docker-compose up' to start the containers the first time"
+echo ""
+echo -e ${White} "Before you run docker-compose, you may want to consider adding a few firewall rules..."
+sleep 2

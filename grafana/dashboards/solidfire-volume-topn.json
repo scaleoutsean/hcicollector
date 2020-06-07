@@ -17,11 +17,24 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "iteration": 1523021489641,
-  "links": [],
+  "id": 1,
+  "iteration": 1591464613738,
+  "links": [
+    {
+      "$$hashKey": "object:5573",
+      "icon": "external link",
+      "tags": [],
+      "targetBlank": true,
+      "title": "SolidFire UI - Volume Perfomance",
+      "tooltip": "View volume performance by Name & ID",
+      "type": "link",
+      "url": "https://192.168.1.30/cluster/#/reporting/volume-performance?page=1"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -39,10 +52,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 0,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -50,6 +65,7 @@
         "x": 0,
         "y": 1
       },
+      "hiddenSeries": false,
       "id": 14,
       "legend": {
         "alignAsTable": true,
@@ -66,6 +82,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -84,6 +103,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Top $TopN WriteOps/s",
       "tooltip": {
@@ -102,14 +122,17 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:3896",
+          "decimals": 0,
           "format": "iops",
           "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:3897",
           "format": "bytes",
           "label": null,
           "logBase": 1,
@@ -117,17 +140,23 @@
           "min": null,
           "show": false
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 0,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -135,6 +164,7 @@
         "x": 12,
         "y": 1
       },
+      "hiddenSeries": false,
       "id": 15,
       "legend": {
         "alignAsTable": true,
@@ -151,12 +181,16 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:4015",
           "alias": "Avg IOP Size",
           "bars": false,
           "color": "#890F02",
@@ -178,6 +212,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Top $TopN Read Ops/s",
       "tooltip": {
@@ -196,32 +231,42 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:4038",
+          "decimals": 0,
           "format": "iops",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:4039",
+          "decimals": 0,
           "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 0,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -229,6 +274,7 @@
         "x": 0,
         "y": 9
       },
+      "hiddenSeries": false,
       "id": 16,
       "legend": {
         "alignAsTable": true,
@@ -245,12 +291,16 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:4160",
           "alias": "Avg IOP Size",
           "bars": false,
           "color": "#890F02",
@@ -273,6 +323,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Top $TopN Write Bytes/s",
       "tooltip": {
@@ -291,32 +342,42 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:4183",
+          "decimals": 0,
           "format": "Bps",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:4184",
+          "decimals": 0,
           "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 0,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -324,6 +385,7 @@
         "x": 12,
         "y": 9
       },
+      "hiddenSeries": false,
       "id": 17,
       "legend": {
         "alignAsTable": true,
@@ -340,12 +402,16 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:4469",
           "alias": "Avg IOP Size",
           "bars": false,
           "color": "#890F02",
@@ -374,6 +440,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Top $TopN Read Bytes/s",
       "tooltip": {
@@ -392,32 +459,42 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:4492",
+          "decimals": 0,
           "format": "Bps",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:4493",
+          "decimals": 0,
           "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 0,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -425,6 +502,7 @@
         "x": 0,
         "y": 17
       },
+      "hiddenSeries": false,
       "id": 18,
       "legend": {
         "alignAsTable": true,
@@ -441,6 +519,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -459,6 +540,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Top $TopN Write Latency",
       "tooltip": {
@@ -477,32 +559,42 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:4607",
+          "decimals": 0,
           "format": "µs",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:4608",
+          "decimals": 0,
           "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 0,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -510,6 +602,7 @@
         "x": 12,
         "y": 17
       },
+      "hiddenSeries": false,
       "id": 19,
       "legend": {
         "alignAsTable": true,
@@ -526,12 +619,16 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:4716",
           "alias": "Avg IOP Size",
           "bars": false,
           "color": "#890F02",
@@ -553,6 +650,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Top $TopN Read Latency",
       "tooltip": {
@@ -571,26 +669,34 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:4739",
+          "decimals": 0,
           "format": "µs",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:4740",
+          "decimals": 0,
           "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 16,
+  "schemaVersion": 22,
   "style": "dark",
   "tags": [
     "SolidFire",
@@ -601,12 +707,14 @@
       {
         "allValue": "*",
         "current": {
-          "text": "GHOSTRIDER",
-          "value": "GHOSTRIDER"
+          "text": "PROD",
+          "value": "PROD"
         },
-        "datasource": "graphite-db-dev",
+        "datasource": "graphite",
+        "definition": "",
         "hide": 0,
         "includeAll": false,
+        "index": -1,
         "label": null,
         "multi": false,
         "name": "Cluster",
@@ -614,6 +722,7 @@
         "query": "netapp.solidfire.cluster.*",
         "refresh": 1,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -626,8 +735,9 @@
         "auto_count": 30,
         "auto_min": "10s",
         "current": {
-          "text": "5",
-          "value": "5"
+          "selected": false,
+          "text": "2",
+          "value": "2"
         },
         "datasource": null,
         "hide": 0,
@@ -643,22 +753,23 @@
           },
           {
             "selected": true,
-            "text": "5",
-            "value": "5"
+            "text": "2",
+            "value": "2"
           },
           {
             "selected": false,
-            "text": "10",
-            "value": "10"
+            "text": "4",
+            "value": "4"
           },
           {
             "selected": false,
-            "text": "20",
-            "value": "20"
+            "text": "8",
+            "value": "8"
           }
         ],
-        "query": "1,5,10,20",
+        "query": "1,2,4,8",
         "refresh": 2,
+        "skipUrlSync": false,
         "type": "interval"
       }
     ]
@@ -695,5 +806,8 @@
   "timezone": "browser",
   "title": "NetApp HCI - SolidFire Volume TopN",
   "uid": "7D04zBezz",
-  "version": 3
+  "variables": {
+    "list": []
+  },
+  "version": 2
 }

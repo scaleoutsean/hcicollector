@@ -2,6 +2,7 @@
   "annotations": {
     "list": [
       {
+        "$$hashKey": "object:1530",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -16,11 +17,23 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "iteration": 1554391783218,
-  "links": [],
+  "id": 3,
+  "iteration": 1591495796130,
+  "links": [
+    {
+      "$$hashKey": "object:4901",
+      "icon": "external link",
+      "tags": [],
+      "targetBlank": true,
+      "title": "SolidFire UI - Cluster $Cluster",
+      "type": "link",
+      "url": "https://192.168.1.30/"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -34,6 +47,56 @@
       "type": "row"
     },
     {
+      "bgColor": "#8F3BB8",
+      "clockType": "12 hour",
+      "countdownSettings": {
+        "customFormat": null,
+        "endCountdownTime": "2020-06-06T17:28:00.000Z",
+        "endText": "00:00:00"
+      },
+      "datasource": null,
+      "dateSettings": {
+        "dateFormat": "YYYY-MM-DD",
+        "fontSize": "20px",
+        "fontWeight": "normal",
+        "showDate": true
+      },
+      "description": "",
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 43,
+      "mode": "time",
+      "refreshSettings": {
+        "syncWithDashboard": false
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "target": ""
+        }
+      ],
+      "timeFrom": null,
+      "timeSettings": {
+        "customFormat": "HH:mm:ss",
+        "fontSize": "40px",
+        "fontWeight": "normal"
+      },
+      "timeShift": null,
+      "timezone": "Asia/Taipei",
+      "timezoneSettings": {
+        "fontSize": "11px",
+        "fontWeight": "normal",
+        "showTimezone": true,
+        "zoneFormat": "nameOffset"
+      },
+      "title": "",
+      "type": "grafana-clock-panel"
+    },
+    {
       "cacheTimeout": null,
       "colorBackground": true,
       "colorValue": false,
@@ -42,7 +105,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -54,20 +117,28 @@
       "gridPos": {
         "h": 4,
         "w": 2,
-        "x": 0,
+        "x": 6,
         "y": 1
       },
       "height": "",
       "id": 34,
       "interval": null,
-      "links": [],
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Active Alerts (Warnings)",
+          "url": "https://192.168.1.30/cluster/#/reporting/alerts?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D,%22severity%22:%7B%22func%22:%22contains%22,%22params%22:%7B%22value%22:%22warning%22%7D%7D%7D"
+        }
+      ],
       "mappingType": 1,
       "mappingTypes": [
         {
+          "$$hashKey": "object:3503",
           "name": "value to text",
           "value": 1
         },
         {
+          "$$hashKey": "object:3504",
           "name": "range to text",
           "value": 2
         }
@@ -106,6 +177,7 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
+          "$$hashKey": "object:3506",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -122,7 +194,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -134,19 +206,27 @@
       "gridPos": {
         "h": 4,
         "w": 2,
-        "x": 2,
+        "x": 8,
         "y": 1
       },
       "id": 35,
       "interval": null,
-      "links": [],
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Active Alerts (Errors)",
+          "url": "https://192.168.1.30/cluster/#/reporting/alerts?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D,%22severity%22:%7B%22func%22:%22contains%22,%22params%22:%7B%22value%22:%22error%22%7D%7D%7D"
+        }
+      ],
       "mappingType": 1,
       "mappingTypes": [
         {
+          "$$hashKey": "object:3722",
           "name": "value to text",
           "value": 1
         },
         {
+          "$$hashKey": "object:3723",
           "name": "range to text",
           "value": 2
         }
@@ -185,6 +265,7 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
+          "$$hashKey": "object:3725",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -201,7 +282,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -213,12 +294,18 @@
       "gridPos": {
         "h": 4,
         "w": 2,
-        "x": 4,
+        "x": 10,
         "y": 1
       },
       "id": 36,
       "interval": null,
-      "links": [],
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Active Alerts (Critical Events)",
+          "url": "https://192.168.1.30/cluster/#/reporting/alerts?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D,%22severity%22:%7B%22func%22:%22contains%22,%22params%22:%7B%22value%22:%22critical%22%7D%7D%7D"
+        }
+      ],
       "mappingType": 1,
       "mappingTypes": [
         {
@@ -276,19 +363,23 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "docker-db-dev",
-      "fill": 1,
+      "datasource": "graphite",
+      "decimals": 0,
+      "description": "List of cluster faults. Visit the SolidFire Web UI or check your log aggregator for any event details",
+      "fill": 0,
+      "fillGradient": 0,
       "gridPos": {
         "h": 4,
-        "w": 18,
-        "x": 6,
+        "w": 12,
+        "x": 12,
         "y": 1
       },
+      "hiddenSeries": false,
       "id": 33,
       "legend": {
         "alignAsTable": true,
         "avg": false,
-        "current": false,
+        "current": true,
         "hideEmpty": false,
         "hideZero": false,
         "max": false,
@@ -296,12 +387,21 @@
         "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
-      "links": [],
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Resolved Alerts (History)",
+          "url": "https://192.168.1.30/cluster/#/reporting/alerts?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22resolved%22%7D%7D%7D"
+        }
+      ],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 2,
       "points": true,
@@ -328,11 +428,21 @@
           "target": "alias(sumSeries(netapp.solidfire.cluster.$Cluster.fault.warning), 'Cluster Warnigs')"
         }
       ],
-      "thresholds": [],
+      "thresholds": [
+        {
+          "$$hashKey": "object:659",
+          "colorMode": "warning",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 0,
+          "yaxis": "left"
+        }
+      ],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Fault History",
+      "title": "$Cluster Fault History",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -348,7 +458,8 @@
       },
       "yaxes": [
         {
-          "decimals": null,
+          "$$hashKey": "object:629",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -357,11 +468,13 @@
           "show": true
         },
         {
+          "$$hashKey": "object:630",
+          "decimals": 0,
           "format": "short",
-          "label": null,
+          "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         }
       ],
@@ -372,6 +485,7 @@
     },
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -393,8 +507,9 @@
         "rgba(237, 129, 40, 0.89)",
         "rgba(50, 172, 45, 0.97)"
       ],
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
       "decimals": 2,
+      "description": "Changes in compression factor are not instantly obvservable. \n\nIt may take up to an hour for changes to reflect in values obtained from cluster API ",
       "editable": true,
       "error": false,
       "format": "none",
@@ -475,8 +590,9 @@
         "rgba(237, 129, 40, 0.89)",
         "rgba(50, 172, 45, 0.97)"
       ],
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
       "decimals": 2,
+      "description": "Changes in deduplication factor are not instantly obvservable. \n\nIt may take up to an hour for changes to reflect in values obtained from cluster API ",
       "editable": true,
       "error": false,
       "format": "none",
@@ -500,10 +616,12 @@
       "mappingType": 1,
       "mappingTypes": [
         {
+          "$$hashKey": "object:2350",
           "name": "value to text",
           "value": 1
         },
         {
+          "$$hashKey": "object:2351",
           "name": "range to text",
           "value": 2
         }
@@ -542,6 +660,7 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
+          "$$hashKey": "object:2353",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -558,7 +677,7 @@
         "rgba(237, 129, 40, 0.89)",
         "rgba(50, 172, 45, 0.97)"
       ],
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
       "decimals": null,
       "editable": true,
       "error": false,
@@ -640,7 +759,8 @@
         "rgba(237, 129, 40, 0.89)",
         "rgba(50, 172, 45, 0.97)"
       ],
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
+      "description": "Efficiency factor shown here is the product of Compression and Deduplication. \n\nIt can easily be modified to also consider Thin Provisioning",
       "editable": true,
       "error": false,
       "format": "none",
@@ -663,10 +783,12 @@
       "mappingType": 1,
       "mappingTypes": [
         {
+          "$$hashKey": "object:3415",
           "name": "value to text",
           "value": 1
         },
         {
+          "$$hashKey": "object:3416",
           "name": "range to text",
           "value": 2
         }
@@ -695,16 +817,17 @@
       "targets": [
         {
           "refId": "A",
-          "target": "netapp.solidfire.cluster.$Cluster.efficiency_factor",
+          "target": "netapp.solidfire.cluster.$Cluster.efficiency_cxd_factor",
           "textEditor": false
         }
       ],
-      "thresholds": "4,8",
+      "thresholds": "2, 2.5, 3",
       "title": "Efficiency Factor",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
         {
+          "$$hashKey": "object:3418",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -714,6 +837,7 @@
     },
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -731,14 +855,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 0,
         "y": 10
       },
+      "hiddenSeries": false,
       "id": 30,
       "legend": {
         "alignAsTable": false,
@@ -754,6 +881,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -801,6 +931,8 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1840",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -809,8 +941,10 @@
           "show": true
         },
         {
+          "$$hashKey": "object:1841",
+          "decimals": 0,
           "format": "short",
-          "label": null,
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -827,10 +961,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 0,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -838,6 +974,7 @@
         "x": 8,
         "y": 10
       },
+      "hiddenSeries": false,
       "hideTimeOverride": false,
       "id": 8,
       "legend": {
@@ -854,6 +991,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -907,6 +1047,8 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:2063",
+          "decimals": 0,
           "format": "Bps",
           "label": null,
           "logBase": 1,
@@ -915,6 +1057,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:2064",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -931,30 +1074,37 @@
     {
       "aliasColors": {},
       "bars": false,
+      "cacheTimeout": "",
       "dashLength": 10,
       "dashes": false,
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 16,
         "y": 10
       },
+      "hiddenSeries": false,
       "id": 31,
       "legend": {
-        "avg": false,
+        "avg": true,
         "current": false,
         "max": false,
         "min": false,
-        "show": false,
+        "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -989,6 +1139,8 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:2160",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -997,6 +1149,8 @@
           "show": true
         },
         {
+          "$$hashKey": "object:2161",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1012,6 +1166,7 @@
     },
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1026,23 +1181,7 @@
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
-      "datasource": "docker-db-dev",
-      "decimals": 2,
-      "format": "percentunit",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": true,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
+      "datasource": "graphite",
       "gridPos": {
         "h": 7,
         "w": 8,
@@ -1050,80 +1189,87 @@
         "y": 18
       },
       "id": 29,
-      "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "decimals": 0,
+            "mappings": [
+              {
+                "$$hashKey": "object:2452",
+                "id": 0,
+                "op": "=",
+                "text": "N/A",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "max": 100,
+            "min": 0,
+            "nullValueMode": "connected",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "#299c46",
+                  "value": null
+                },
+                {
+                  "color": "rgba(237, 129, 40, 0.89)",
+                  "value": 60
+                },
+                {
+                  "color": "#d44a3a",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": [],
+          "values": false
         },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true
+        "orientation": "horizontal",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
       },
-      "tableColumn": "",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
           "refId": "A",
           "target": "netapp.solidfire.cluster.$Cluster.clusterUtilization"
         }
       ],
-      "thresholds": "60,80",
       "title": "$Cluster Cluster Utilization",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "type": "gauge"
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "description": "CPU utilization of all SolidFire nodes in the selected cluster over time",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 8,
         "y": 18
       },
+      "hiddenSeries": false,
       "id": 28,
       "legend": {
         "avg": false,
         "current": false,
         "max": false,
         "min": false,
-        "show": false,
+        "show": true,
         "total": false,
         "values": false
       },
@@ -1131,6 +1277,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -1165,19 +1314,23 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:2553",
+          "decimals": 0,
           "format": "percent",
           "label": null,
           "logBase": 1,
-          "max": null,
+          "max": "100",
           "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:2554",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
+          "max": "100",
+          "min": "0",
           "show": true
         }
       ],
@@ -1191,14 +1344,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 16,
         "y": 18
       },
+      "hiddenSeries": false,
       "id": 32,
       "legend": {
         "avg": false,
@@ -1211,8 +1367,17 @@
       },
       "lines": true,
       "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Active Storage Nodes",
+          "url": "https://192.168.1.30/cluster/#/system/nodes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
+        }
+      ],
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -1248,19 +1413,23 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:2268",
+          "decimals": 0,
           "format": "short",
-          "label": null,
+          "label": "",
           "logBase": 1,
-          "max": null,
-          "min": null,
+          "max": "100",
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:2269",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
+          "max": "100",
+          "min": "0",
           "show": true
         }
       ],
@@ -1270,35 +1439,25 @@
       }
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 25
-      },
-      "id": 41,
-      "panels": [],
-      "repeat": null,
-      "title": "Cluster Metrics",
-      "type": "row"
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
+      "description": "Active iSCSI sessions may be up to several hundred per storage node (see Element documentation) and depending on other factors (multipathing, number of clients connecting to each volume) it can be 2X or more of the number of active volumes.\n\nClusters with lots of volumes (Kubernetes, for example) may need to pay attention to this number.\n\nWhen the number of sessions goes up and down by the same number, there may be iSCSI clients out there trying to connect to non-existing targets",
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 26
+        "y": 25
       },
+      "hiddenSeries": false,
       "id": 19,
       "legend": {
         "alignAsTable": false,
@@ -1307,20 +1466,30 @@
         "max": true,
         "min": false,
         "rightSide": false,
-        "show": false,
+        "show": true,
         "total": false,
         "values": true
       },
       "lines": true,
       "linewidth": 2,
-      "links": [],
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - iSCSI Sessions",
+          "url": ""
+        }
+      ],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:2980",
           "alias": "peakActiveSessions",
           "bars": false,
           "fill": 0,
@@ -1330,7 +1499,7 @@
       ],
       "spaceLength": 10,
       "stack": false,
-      "steppedLine": false,
+      "steppedLine": true,
       "targets": [
         {
           "refId": "B",
@@ -1365,6 +1534,8 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:2999",
+          "decimals": 0,
           "format": "none",
           "label": null,
           "logBase": 1,
@@ -1373,6 +1544,122 @@
           "show": true
         },
         {
+          "$$hashKey": "object:3000",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "graphite",
+      "decimals": 0,
+      "description": "It is expected to see one Block (used for volume metadata) and several Data (used for client data) disks per each SolidFire storage node.\n\nUnexpected changes should be examined.\n\n",
+      "editable": true,
+      "error": false,
+      "fill": 1,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 25
+      },
+      "height": "",
+      "hiddenSeries": false,
+      "id": 27,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Disk Drives",
+          "url": "https://192.168.1.30/cluster/#/system/drives?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
+        }
+      ],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refCount": 0,
+          "refId": "B",
+          "target": "aliasByNode(keepLastValue(netapp.solidfire.cluster.$Cluster.drives.type.block, 5), 6)",
+          "textEditor": false
+        },
+        {
+          "refCount": 0,
+          "refId": "A",
+          "target": "aliasByNode(keepLastValue(netapp.solidfire.cluster.$Cluster.drives.type.volume, 5), 6)",
+          "textEditor": false
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "$Cluster Drive Status",
+      "tooltip": {
+        "msResolution": false,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:3429",
+          "decimals": 0,
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:3430",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1391,31 +1678,43 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "docker-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
         "w": 8,
-        "x": 8,
-        "y": 26
+        "x": 16,
+        "y": 25
       },
+      "hiddenSeries": false,
       "id": 4,
       "legend": {
         "avg": false,
         "current": false,
         "max": false,
         "min": false,
-        "show": false,
+        "show": true,
         "total": false,
         "values": false
       },
       "lines": true,
       "linewidth": 2,
-      "links": [],
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Volume Performance",
+          "url": "https://192.168.1.30/cluster/#/reporting/volume-performance?page=1"
+        }
+      ],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 1,
       "points": false,
@@ -1451,6 +1750,8 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:3096",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1459,104 +1760,14 @@
           "show": true
         },
         {
+          "$$hashKey": "object:3097",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "docker-db-dev",
-      "editable": true,
-      "error": false,
-      "fill": 1,
-      "grid": {},
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 26
-      },
-      "height": "",
-      "id": 27,
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "hideEmpty": false,
-        "hideZero": true,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "refId": "B",
-          "target": "aliasByNode(keepLastValue(netapp.solidfire.cluster.$Cluster.drives.*.*, 5), 6)",
-          "textEditor": true
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "$Cluster Drive Status",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "none",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
         }
       ],
       "yaxis": {
@@ -1566,7 +1777,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 18,
+  "schemaVersion": 22,
   "style": "dark",
   "tags": [
     "SolidFire",
@@ -1577,14 +1788,15 @@
       {
         "allValue": null,
         "current": {
-          "text": "sfps-grimlock-cluster",
-          "value": "sfps-grimlock-cluster"
+          "text": "PROD",
+          "value": "PROD"
         },
-        "datasource": "docker-db-dev",
+        "datasource": "graphite",
         "definition": "",
         "hide": 0,
         "includeAll": false,
-        "label": "$cluster",
+        "index": -1,
+        "label": "Cluster Name",
         "multi": false,
         "name": "Cluster",
         "options": [],
@@ -1602,7 +1814,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {
@@ -1633,5 +1845,8 @@
   "timezone": "browser",
   "title": "NetApp HCI - SolidFire Cluster",
   "uid": "T6iPgf6kz",
-  "version": 1
+  "variables": {
+    "list": []
+  },
+  "version": 9
 }

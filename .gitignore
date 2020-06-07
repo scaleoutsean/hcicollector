@@ -1,4 +1,4 @@
+cleanup.sh
 docker-compose.yml
 sfcollector/wrapper.sh
 vmwcollector/vsphere-graphite.json
-grafana/provisioning/datasources/datasource.yml

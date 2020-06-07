@@ -17,11 +17,24 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "iteration": 1523021403562,
-  "links": [],
+  "id": 5,
+  "iteration": 1591374474234,
+  "links": [
+    {
+      "$$hashKey": "object:6817",
+      "icon": "external link",
+      "tags": [],
+      "targetBlank": true,
+      "title": "SolidFire UI - Storage Nodes",
+      "tooltip": "Performance details for storage nodes",
+      "type": "link",
+      "url": "https://192.168.1.30/cluster/#/system/nodes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -31,81 +44,67 @@
       "id": 90,
       "panels": [],
       "repeat": null,
-      "title": "Current CPU Utilization",
+      "title": "Current Processor, Memory and Network Utilization",
       "type": "row"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": true,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": true,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
+      "datasource": "graphite",
+      "description": "This value is generally not important as storage node performance is determined by QoS settings and activity of the volumes active on the node.",
       "gridPos": {
-        "h": 5,
-        "w": 6,
+        "h": 7,
+        "w": 24,
         "x": 0,
         "y": 1
       },
-      "height": "200px",
       "id": 18,
-      "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "decimals": 0,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "dark-orange",
+                  "value": 60
+                },
+                {
+                  "color": "semi-dark-red",
+                  "value": 90
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": [],
+          "values": false
         },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": "Node",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "pluginVersion": "6.7.4",
+      "repeat": "Cluster",
+      "repeatDirection": "h",
       "repeatIteration": 1480760272097,
       "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-11",
-          "value": "SF-11"
+        "Cluster": {
+          "selected": true,
+          "text": "PROD",
+          "value": "PROD"
         }
       },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true
-      },
-      "tableColumn": "",
       "targets": [
         {
           "refId": "B",
@@ -113,1638 +112,181 @@
           "textEditor": true
         }
       ],
-      "thresholds": "75,90",
-      "title": "$Node",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "$Node CPU Utilization",
+      "type": "stat"
+    },
+    {
+      "datasource": "graphite",
+      "description": "This value is generally not important as storage node performance is much smaller than network bandwidth available on SolidFire nodes.\n\nIt can be of interest in parallel backup or during distributed recovery from failed nodes or disk drives.",
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 72,
+      "links": [],
+      "maxPerRow": 12,
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "decimals": 0,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 60
+                },
+                {
+                  "color": "semi-dark-red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percent"
+          },
+          "overrides": [],
+          "values": false
+        },
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "pluginVersion": "6.7.4",
+      "repeat": "Node",
+      "repeatDirection": "h",
+      "scopedVars": {
+        "Node": {
+          "selected": false,
+          "text": "tw1",
+          "value": "tw1"
+        }
+      },
+      "targets": [
         {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
+          "refId": "A",
+          "target": "aliasByNode(netapp.solidfire.cluster.$Cluster.node.$Node.networkUtilizationCluster, 5)"
         }
       ],
-      "valueName": "current"
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "$Node Node Network Utilization",
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": true,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": true,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
+      "datasource": "graphite",
+      "description": "Generally not important, as RAM is appropriately sized for the node to deliver rated IOPS with compression and deduplication enabled",
       "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 6,
-        "y": 1
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 15
       },
-      "height": "200px",
       "id": 96,
-      "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
+      "maxPerRow": 12,
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "decimals": 1,
+            "mappings": [
+              {
+                "$$hashKey": "object:306",
+                "id": 0,
+                "op": "=",
+                "text": "N/A",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "nullValueMode": "connected",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "semi-dark-blue",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "bytes"
+          },
+          "overrides": [],
+          "values": false
         },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 18,
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal"
+      },
+      "pluginVersion": "6.7.4",
+      "repeat": "Node",
+      "repeatDirection": "h",
       "scopedVars": {
         "Node": {
           "selected": false,
-          "text": "SF-12",
-          "value": "SF-12"
+          "text": "tw1",
+          "value": "tw1"
         }
       },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true
-      },
-      "tableColumn": "",
       "targets": [
         {
-          "refId": "B",
-          "target": "netapp.solidfire.cluster.$Cluster.node.$Node.cpu",
-          "textEditor": true
+          "refId": "A",
+          "target": "aliasByMetric(netapp.solidfire.cluster.$Cluster.node.$Node.usedMemory)"
         }
       ],
-      "thresholds": "75,90",
-      "title": "$Node",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": true,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": true,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 12,
-        "y": 1
-      },
-      "height": "200px",
-      "id": 97,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 18,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-13",
-          "value": "SF-13"
-        }
-      },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "refId": "B",
-          "target": "netapp.solidfire.cluster.$Cluster.node.$Node.cpu",
-          "textEditor": true
-        }
-      ],
-      "thresholds": "75,90",
-      "title": "$Node",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": true,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": true,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 18,
-        "y": 1
-      },
-      "height": "200px",
-      "id": 98,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 18,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-14",
-          "value": "SF-14"
-        }
-      },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "refId": "B",
-          "target": "netapp.solidfire.cluster.$Cluster.node.$Node.cpu",
-          "textEditor": true
-        }
-      ],
-      "thresholds": "75,90",
-      "title": "$Node",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
+      "title": "$Node RAM Utilization",
+      "type": "stat"
     },
     {
       "collapsed": false,
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 6
-      },
-      "id": 91,
-      "panels": [],
-      "repeat": null,
-      "title": "Disks",
-      "type": "row"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 0,
-        "y": 7
-      },
-      "id": 56,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": "Node",
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-11",
-          "value": "SF-11"
-        }
-      },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "refId": "A",
-          "target": "netapp.solidfire.cluster.$Cluster.node.$Node.drives.status.failed"
-        }
-      ],
-      "thresholds": "1,2",
-      "title": "Failed Drives",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 6,
-        "y": 7
-      },
-      "id": 99,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 56,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-12",
-          "value": "SF-12"
-        }
-      },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "refId": "A",
-          "target": "netapp.solidfire.cluster.$Cluster.node.$Node.drives.status.failed"
-        }
-      ],
-      "thresholds": "1,2",
-      "title": "Failed Drives",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 12,
-        "y": 7
-      },
-      "id": 100,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 56,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-13",
-          "value": "SF-13"
-        }
-      },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "refId": "A",
-          "target": "netapp.solidfire.cluster.$Cluster.node.$Node.drives.status.failed"
-        }
-      ],
-      "thresholds": "1,2",
-      "title": "Failed Drives",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 18,
-        "y": 7
-      },
-      "id": 101,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 56,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-14",
-          "value": "SF-14"
-        }
-      },
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "refId": "A",
-          "target": "netapp.solidfire.cluster.$Cluster.node.$Node.drives.status.failed"
-        }
-      ],
-      "thresholds": "1,2",
-      "title": "Failed Drives",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "avg"
-    },
-    {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 10
+        "y": 22
       },
       "id": 92,
-      "panels": [
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "graphite-db-dev",
-          "fill": 1,
-          "gridPos": {
-            "h": 7,
-            "w": 6,
-            "x": 0,
-            "y": 9
-          },
-          "id": 89,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "minSpan": 6,
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "repeat": "Node",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "alias(keepLastValue(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.readOps), 5), 'Read IOPS')"
-            },
-            {
-              "refId": "B",
-              "target": "alias(keepLastValue(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.writeOps), 5), 'Write IOPS')"
-            },
-            {
-              "refId": "C",
-              "target": "alias(sumSeries(#A,#B),'Total IOPS')",
-              "targetFull": "alias(sumSeries(alias(keepLastValue(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.readOps), 5), 'Read IOPS'),alias(keepLastValue(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.writeOps), 5), 'Write IOPS')),'Total IOPS')",
-              "textEditor": true
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "$Node Node IOPS",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": "0",
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        }
-      ],
+      "panels": [],
       "repeat": null,
       "title": "Node Performance",
       "type": "row"
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 11
-      },
-      "id": 93,
-      "panels": [],
-      "repeat": null,
-      "title": "Storage Interface",
-      "type": "row"
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
       "decimals": 0,
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 0,
-        "y": 12
-      },
-      "id": 40,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "repeat": "Node",
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-11",
-          "value": "SF-11"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "hide": false,
-          "refId": "A",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesIn), 'In')",
-          "textEditor": false
-        },
-        {
-          "hide": false,
-          "refId": "B",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesOut), 'Out')",
-          "textEditor": false
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$Node",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ]
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "graphite-db-dev",
-      "decimals": 0,
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 6,
-        "y": 12
-      },
-      "id": 102,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 40,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-12",
-          "value": "SF-12"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "hide": false,
-          "refId": "A",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesIn), 'In')",
-          "textEditor": false
-        },
-        {
-          "hide": false,
-          "refId": "B",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesOut), 'Out')",
-          "textEditor": false
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$Node",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ]
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "graphite-db-dev",
-      "decimals": 0,
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 12,
-        "y": 12
-      },
-      "id": 103,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 40,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-13",
-          "value": "SF-13"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "hide": false,
-          "refId": "A",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesIn), 'In')",
-          "textEditor": false
-        },
-        {
-          "hide": false,
-          "refId": "B",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesOut), 'Out')",
-          "textEditor": false
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$Node",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ]
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "graphite-db-dev",
-      "decimals": 0,
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 18,
-        "y": 12
-      },
-      "id": 104,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 40,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-14",
-          "value": "SF-14"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "hide": false,
-          "refId": "A",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesIn), 'In')",
-          "textEditor": false
-        },
-        {
-          "hide": false,
-          "refId": "B",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesOut), 'Out')",
-          "textEditor": false
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$Node",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ]
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 17
-      },
-      "id": 94,
-      "panels": [],
-      "repeat": null,
-      "title": "Management Interface",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 0,
-        "y": 18
-      },
-      "id": 39,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "repeat": "Node",
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-11",
-          "value": "SF-11"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "refId": "A",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesIn), 'In')",
-          "textEditor": false
-        },
-        {
-          "refId": "B",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesOut), 'Out')",
-          "textEditor": false
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$Node",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ]
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 6,
-        "y": 18
-      },
-      "id": 105,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 39,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-12",
-          "value": "SF-12"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "refId": "A",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesIn), 'In')",
-          "textEditor": false
-        },
-        {
-          "refId": "B",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesOut), 'Out')",
-          "textEditor": false
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$Node",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ]
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 12,
-        "y": 18
-      },
-      "id": 106,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 39,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-13",
-          "value": "SF-13"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "refId": "A",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesIn), 'In')",
-          "textEditor": false
-        },
-        {
-          "refId": "B",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesOut), 'Out')",
-          "textEditor": false
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$Node",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ]
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "graphite-db-dev",
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 18,
-        "y": 18
-      },
-      "id": 107,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "minSpan": 6,
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatIteration": 1523021403562,
-      "repeatPanelId": 39,
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "SF-14",
-          "value": "SF-14"
-        }
-      },
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "refId": "A",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesIn), 'In')",
-          "textEditor": false
-        },
-        {
-          "refId": "B",
-          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesOut), 'Out')",
-          "textEditor": false
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$Node",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ]
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 23
-      },
-      "id": 95,
-      "panels": [],
-      "repeat": null,
-      "title": "Network Utilization",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "graphite-db-dev",
+      "description": "Nodes are not expected to be equally busy, but with many more active volumes than storage nodes, eventually they tend to be similarly busy.\n\nOutliers may appear during storage-offloaded operations (Storage vMotion, for example).",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 23
       },
-      "id": 72,
+      "hiddenSeries": false,
+      "id": 89,
       "legend": {
         "avg": false,
         "current": false,
@@ -1757,11 +299,24 @@
       "lines": true,
       "linewidth": 1,
       "links": [],
+      "maxPerRow": 4,
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
+      "repeat": "Node",
+      "repeatDirection": "h",
+      "scopedVars": {
+        "Node": {
+          "selected": false,
+          "text": "tw1",
+          "value": "tw1"
+        }
+      },
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
@@ -1769,13 +324,24 @@
       "targets": [
         {
           "refId": "A",
-          "target": "aliasByNode(netapp.solidfire.cluster.$Cluster.node.$Node.networkUtilizationCluster, 5)"
+          "target": "alias(keepLastValue(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.readOps), 5), 'Read IOPS')"
+        },
+        {
+          "refId": "B",
+          "target": "alias(keepLastValue(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.writeOps), 5), 'Write IOPS')"
+        },
+        {
+          "refId": "C",
+          "target": "alias(sumSeries(#A,#B),'Total IOPS')",
+          "targetFull": "alias(sumSeries(alias(keepLastValue(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.readOps), 5), 'Read IOPS'),alias(keepLastValue(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.writeOps), 5), 'Write IOPS')),'Total IOPS')",
+          "textEditor": true
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
-      "title": "$Node Node Network Utilization",
+      "title": "$Node Node IOPS",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1791,6 +357,8 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:580",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1799,6 +367,8 @@
           "show": true
         },
         {
+          "$$hashKey": "object:581",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1806,11 +376,274 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 93,
+      "panels": [],
+      "repeat": null,
+      "title": "Storage Interface",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "graphite",
+      "decimals": 0,
+      "description": "iSCSI Network Traffic in bytes per second. \n\nWe can use this chart to check if parallel backup is keeping all storage nodes equally busy, or how much additional bandwidth is used after volume replication traffic is enabled ",
+      "editable": true,
+      "error": false,
+      "fill": 0,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "hiddenSeries": false,
+      "id": 40,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 4,
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "Node",
+      "repeatDirection": "h",
+      "scopedVars": {
+        "Node": {
+          "selected": false,
+          "text": "tw1",
+          "value": "tw1"
+        }
+      },
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "hide": false,
+          "refId": "A",
+          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesIn), 'In')",
+          "textEditor": false
+        },
+        {
+          "hide": false,
+          "refId": "B",
+          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.sBytesOut), 'Out')",
+          "textEditor": false
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "$Node Node iSCSI Network Traffic",
+      "tooltip": {
+        "msResolution": false,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:724",
+          "decimals": 0,
+          "format": "Bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:725",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 94,
+      "panels": [],
+      "repeat": null,
+      "title": "Management Interface",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "graphite",
+      "decimals": 0,
+      "description": "Network traffic on management interface",
+      "editable": true,
+      "error": false,
+      "fill": 0,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "hiddenSeries": false,
+      "id": 39,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 4,
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "Node",
+      "repeatDirection": "h",
+      "scopedVars": {
+        "Node": {
+          "selected": false,
+          "text": "tw1",
+          "value": "tw1"
+        }
+      },
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesIn), 'In')",
+          "textEditor": false
+        },
+        {
+          "refId": "B",
+          "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.node.$Node.mBytesOut), 'Out')",
+          "textEditor": false
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "$Node Node Management Network Traffic",
+      "tooltip": {
+        "msResolution": false,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:865",
+          "decimals": 0,
+          "format": "Bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:866",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 16,
+  "schemaVersion": 22,
   "style": "dark",
   "tags": [
     "SolidFire",
@@ -1821,19 +654,22 @@
       {
         "allValue": null,
         "current": {
-          "text": "GHOSTRIDER",
-          "value": "GHOSTRIDER"
+          "text": "PROD",
+          "value": "PROD"
         },
-        "datasource": "graphite-db-dev",
+        "datasource": "graphite",
+        "definition": "",
         "hide": 0,
         "includeAll": false,
-        "label": null,
+        "index": -1,
+        "label": "SolidFire Cluster Name",
         "multi": false,
         "name": "Cluster",
         "options": [],
         "query": "netapp.solidfire.cluster.*",
         "refresh": 1,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -1844,19 +680,23 @@
       {
         "allValue": null,
         "current": {
+          "selected": false,
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "graphite-db-dev",
+        "datasource": "graphite",
+        "definition": "",
         "hide": 0,
         "includeAll": true,
-        "label": null,
+        "index": -1,
+        "label": "SolidFire Node",
         "multi": false,
         "name": "Node",
         "options": [],
         "query": "netapp.solidfire.cluster.$Cluster.node.*",
         "refresh": 1,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -1867,7 +707,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -1898,5 +738,8 @@
   "timezone": "browser",
   "title": "NetApp HCI - SolidFire Node",
   "uid": "MPWsgfezz",
+  "variables": {
+    "list": []
+  },
   "version": 2
 }

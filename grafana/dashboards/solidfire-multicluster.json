@@ -2,6 +2,7 @@
   "annotations": {
     "list": [
       {
+        "$$hashKey": "object:928",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -15,7 +16,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "iteration": 1554393802283,
+  "id": 3,
+  "iteration": 1591496745914,
   "links": [],
   "panels": [
     {
@@ -27,7 +29,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
       "decimals": 2,
       "format": "percentunit",
       "gauge": {
@@ -77,8 +79,8 @@
       "scopedVars": {
         "Cluster": {
           "selected": false,
-          "text": "sfps-grimlock-cluster",
-          "value": "sfps-grimlock-cluster"
+          "text": "PROD",
+          "value": "PROD"
         }
       },
       "sparkline": {
@@ -112,14 +114,16 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 24,
         "x": 0,
         "y": 5
       },
+      "hiddenSeries": false,
       "id": 30,
       "legend": {
         "alignAsTable": false,
@@ -135,6 +139,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -144,8 +151,8 @@
       "scopedVars": {
         "Cluster": {
           "selected": false,
-          "text": "sfps-grimlock-cluster",
-          "value": "sfps-grimlock-cluster"
+          "text": "PROD",
+          "value": "PROD"
         }
       },
       "seriesOverrides": [],
@@ -221,10 +228,11 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
       "editable": true,
       "error": false,
       "fill": 0,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -232,6 +240,7 @@
         "x": 0,
         "y": 12
       },
+      "hiddenSeries": false,
       "hideTimeOverride": false,
       "id": 40,
       "legend": {
@@ -248,6 +257,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -257,8 +269,8 @@
       "scopedVars": {
         "Cluster": {
           "selected": false,
-          "text": "sfps-grimlock-cluster",
-          "value": "sfps-grimlock-cluster"
+          "text": "PROD",
+          "value": "PROD"
         }
       },
       "seriesOverrides": [],
@@ -337,10 +349,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite-db-dev",
+      "datasource": "graphite",
+      "decimals": 0,
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -349,6 +363,7 @@
         "y": 19
       },
       "height": "",
+      "hiddenSeries": false,
       "id": 20,
       "legend": {
         "alignAsTable": false,
@@ -367,6 +382,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -376,14 +394,14 @@
       "scopedVars": {
         "Cluster": {
           "selected": false,
-          "text": "sfps-grimlock-cluster",
-          "value": "sfps-grimlock-cluster"
+          "text": "PROD",
+          "value": "PROD"
         }
       },
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
-      "steppedLine": false,
+      "steppedLine": true,
       "targets": [
         {
           "refId": "B",
@@ -412,29 +430,33 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1001",
+          "decimals": 0,
           "format": "none",
-          "label": null,
+          "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
-          "format": "short",
-          "label": null,
+          "$$hashKey": "object:1002",
+          "decimals": 0,
+          "format": "none",
+          "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
-          "show": false
+          "min": "0",
+          "show": true
         }
       ],
       "yaxis": {
-        "align": false,
+        "align": true,
         "alignLevel": null
       }
     }
   ],
-  "schemaVersion": 18,
+  "schemaVersion": 22,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -447,10 +469,11 @@
             "$__all"
           ]
         },
-        "datasource": "graphite-db-dev",
+        "datasource": "graphite",
         "definition": "",
         "hide": 0,
         "includeAll": true,
+        "index": -1,
         "label": null,
         "multi": true,
         "name": "Cluster",
@@ -498,7 +521,10 @@
     ]
   },
   "timezone": "",
-  "title": "Multi-Cluster NOC View",
+  "title": "NetApp HCI - SolidFire Multi-Cluster NOC View",
   "uid": "AWltdqzmz",
-  "version": 1
+  "variables": {
+    "list": []
+  },
+  "version": 3
 }

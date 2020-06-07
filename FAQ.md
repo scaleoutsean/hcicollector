@@ -1,91 +1,143 @@
 # FAQs
 
-## HELP - stuff doesn't wokr and I needed it to work yesterday
+## HLEP!! It doesn't wokr and I needed it to work yesterday
 
-If you must have a working solution ASAP, please consider one of alternative solutions (say, NetApp ActiveIQ or the free version of NetApp Cloud Insights) while you figure out how to make this thing work.
+If you must have a working solution ASAP, pleaseconsider one of the alternativess (say, NetApp ActiveIQ or the free version of NetApp Cloud Insights) while you figure out how to make this thing work. For NetApp Cloud Insights you just need to register at cloud.netapp.com, download and deploy acquisition VM and you'll have something that works well.
 
-Since v0.7 there's really not much that can go wrong, so my best advice would be to read the docs. You may also try the NetApp HCI channel in NetApp Community Slack (go to https://netapp.io, then join Slack) to see if you can find someone who has experience with HCICollector. For help with external projecs, check out their own resources.
+But if you still want to try HCICollector, since v0.7 there's really not much that can go wrong so first get familiar with Docker and the HCICollector docs. You may also try the netapp-hci channel in the NetApp Community Slack (join [here](https://netapp.io)) to see if you can find someone who has experience with HCICollector. For help with 3rd party projects, please refer to their documentation & community resources.
 
 ## Where are the configuration files and what's in them
 
 Most of these files are created by the installation script. If you change them, you may need to rebuild the containers.
 
-- `docker-compose.yml` - Initial Grafana password 
-- `graphite/carbon.conf` and `graphite/*.conf`: GraphiteDB (service user identity) and StatsD configuration files
-- `solidfire/wrapper.sh`: it is created after configuration is done. It executes `solidfire/solidfire_graphite_collector.py` which gathers metrics and events
-- `grafana/provisioning/datasources/datasource.yml` - Grafana configuration
-- `grafana/Dockerfile` - HTTP/HTTPS settings for Grafana as well as optional email notification
-- `sfcollector/wrapper.sh` - SolidFire account and password
-- `vmwcollector/vsphere-graphite.json` - VMware account and password
+- `docker-compose.yml` - Initial Grafana password (you'll be prompted to change it the first time you log in) 
+- `grafana/provisioning/*/*.yml` and `grafana/Dockerfile` - Grafana configuration
+- `graphite/carbon.conf` and `graphite/*.conf` - GraphiteDB (service user identity) and StatsD configuration files (including IP address)
+- `sfcollector/wrapper.sh` - SolidFire cluster admin account and password. It is created by install script. wrapper.sh periodically executes `solidfire/solidfire_graphite_collector.py` which gathers metrics and events and sends them to Graphite
+- `vmwcollector/vsphere-graphite.json` and `vmwcollector/Dockerfile` - VMware vCenter monitoring account and password and container details
 
-## Do passwords have to be stored unencrypted
+## Do passwords really have to be stored unencrypted
 
-For now yes, but your pull request that fixes that would be welcome.
+For now yes, but your pull request that fixes that would be welcome. The VM is your last line of defense. Protect it.
 
-The entire VM should be made off limits to non-administrators. For example you should run it on Management Network. 
+The entire VM (apart from the Grafana Web UI, of course) should be made off limits to non-administrators. Suggested configuration:
 
-Another thing that should be considered is a reporting-role admin account on SolidFire storage or NetApp HCI (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide) and you may do that if you do _not_ wish to use QoS histograms. The same goes for VMware - vSphere administrator account with limited permissions should be used for monitoring. If you don't manage the SolidFire or VMware cluster, you may ask the admin(s) to create a reporting-only admin account for you (for Element v11, if you do not use QoS histograms). For VMware vCenter please see the documentation for vsphere-graphite.
+- VM with two interfaces (Management & User Network)
+- Management Network: connection to vCenter, SolidFire/Element
+  - Graphite (carbon.conf) listening on this network
+- User Network: expose Grafana via HTTPS 
+  - Firewall that permits only access to port 443
+
+Another thing that should be considered is a cluster admin account on SolidFire or NetApp HCI limited to Read & Reporting role (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide) and you may do that if you do _not_ wish to use QoS histograms. Starting with SolidFire/Element v12.0 these can be gathered by a cluster admin account with only Read &  Reporting access.
+
+The same goes for VMware - a vSphere administrator account with limited permissions (read-only) should be used for VMware cluster monitoring. If you don't manage the SolidFire or VMware cluster(s) you want to monitor, you may ask the admin(s) to create a reporting-only admin account for you (for Element v11, if you do not use QoS histograms; for VMware vCenter please refer to the vsphere-graphite and VMware documentation.)
+
+## Where is the SolidFire collector log?
+
+For the container engine and 3rd party containers please see their respective documentation. 
+
+For the container running solidfire_graphite_collector.py (SFCollector) see `sfcollector/solidfire_graphite_collector.py --help`. You can edit wrapper.sh (example below), (re)build the container, start and enter the container to run `tail -f /log.txt`
+
+```shell
+/usr/bin/python /solidfire_graphite_collector.py -s 10.10.10.10 -u monitor -p "monitor1234" -g graphite -l log.txt &
+```
+
+## How to rerecover from a failed run of install script
+
+It's just Docker, so use standard Docker (including docker-compose) commands to delete the containers, networks, etc. To remove Docker data, look into removing the Docker Graphite volume, too.
 
 ## How to integrate HCICollector with persistent container storage
 
-Deploy Docker CE or Kubernetes, deploy NetApp Trident (there are two versions - one for Docker and one for Kubernetes - and you probably want the former) and make sure this works with your backend. Then, instead of creating a local volume for GraphiteDB or any other data you want to persist to external storage, create a volume on external storage (Element OS, ONTAP, etc.) and edit the Docker compose file to make HCICollector store GraphiteDB data on it (in docker-compose.yaml generated by installation script find `graphite` in volumes section and change `external: true`, then rebuild the graphite container).
+Deploy Docker CE or Kubernetes, deploy a NetApp Trident container (there are two versions - one for Docker and one for Kubernetes) and make sure it works with your backend (ONTAP or SolidFire or whatever you use to store these metrics). Then, instead of creating a local volume for GraphiteDB or any other data you want to persist to external storage, create a Trident volume on external storage (Element OS, ONTAP, etc.) and edit your Docker compose file to make HCICollector store GraphiteDB data on it (in `docker-compose.yaml` generated by installation script find `graphite` (volumes section) and set `external: true`. Then rebuild the Graphite container). You may need to refer to install script from a previous releases of HCICollector and reference various configuration files (mostly for Grafana and Graphite).
 
 If you want to migrate data from a local to an external volume, you could create a new external volume and use a custom container (that mounts the both) and then copy data from old to new volume. Obviously you'd have to do this while GraphiteDB isn't being used, so maybe temporarily modify its Dockerfile and roll back the modification after data has been copied over. Next time the container is started it should be mounting only one (new) Graphite volume on external storage. Create a snapshot before this if you want to protect your data. You'd also have to rebuild the graphite container.
 
 ## How to update HCICollector from an older version
 
-Users are advised to make a backup or take a snapshot of current version, stop and destroy containers (while leaving configuration files in place), then clone and start the latest release.
-If everything works out, any snapshot or backup may be removed if no longer necessary. If you encounter a problem, revert to that backup or snapshot you created.
+Users are advised to make a backup or take a snapshot of current version, stop and destroy containers (while leaving configuration files in place), then clone and start the latest release. If everything works out, any snapshot or backup may be removed if no longer necessary. If you encounter a problem, revert to that backup or snapshot you created.
 
-## Update some component to a newer version
+I would advise against that because that hasn't been tested and changes may break it (see Changes in v0.7).
 
-It may work, but it generally isn't recommended unless there's a security bug that affects you, or you want to add functionality unavailable in current release.
+## How to update individual HCICollector container to a newer version
+
+Edit Dockerfile and rebuild the container. You may want to do this if there's a security bug that affects you or you want to add functionality unavailable in current release. 
+
+Using container and config files from newer releases may not work because there are several moving parts.
 
 ## Add own data feeds and dashboards
 
-Feel free to do it by yourself. Metrics can be sent to StatsD or directly to Graphite (see `graphite/Dockerfile`). Additional ports may be `EXPOSE`'d if necessary. Dashboards can be imported from the Graphana Web interface.
+Feel free to do it by yourself. Metrics can be sent to StatsD or directly to Graphite (see `graphite/Dockerfile`). Additional ports may be `EXPOSE`'d if necessary. Dashboards can be imported from the Graphana Web interface. Since v0.7, it is possible to edit (or remove) built-in sample dashboards and import or create your own.
+
+## Install a plugin from the Grafana Web site
+
+Modify the Grafana Dockerfile and rebuild the container. 
 
 ## How to create SolidFire histograms and other dashboards
 
-In Grafana UI, use Explore or New Dashboard.
- - Method A: Query: default. In query Series, click on `select metric` and do `netapp` > `solidfire` > `cluster` > `YOUR_CLUSTER_NAME` > ` volumeID` > `YOUR_VOLUME_ID` > `YOUR_HISTOGRAM` > `YOUR_BUCKET(S)`. That should get you something that looks like this [sample dash](images/dashboard-solidfire-volume-min-to-max-histogram.png): `aliasByMetric(netapp.solidfire.cluster.taiwan.volumeID.37.minToMaxIopsPercentages.*)`
- - Method B: in Grafana UI, go to Dashboards > Manage > enter Grafana.com Dashboard ID 11684 and then Load. It doesn't do much but it's a good starting point.
+See samples included in HCICollector. A separate problem is what function should be used to visualize histogram metrics. Derivative seems to provide better results than perSecond (both of these can be found under Transform functions.)
 
-The sharp-eyed may notice that metrics are a bit weird - for example volume metrics can be found under respective user accounts and also "directly" under the "cluster" object. This is something that needs to be improved and then documented.
+## How to monitor container volumes
+
+One way would be to duplicate existing dashboards and edit their queries to show only volumes owned by the Kubernetes storage provisioning account. NetApp Trident is often deployed to use the storage account name `trident`, but those who use several clusters could use dashboards with Account ID variables and manually added aliases that translate to the Account Name or even the Kubernetes cluster Name.
+
+The hard way would be to send native NetApp Trident performance metrics to Prometheus, add Prometheus to Grafana sources, and create a new dashboard for that source.
 
 ## How to add 3rd party feeds and dashboards to Grafana
 
-Edit the Dockerfile to copy them to `grafana/dashboards`. Also see "Add own data fees and dashboards" above.
+Edit the Dockerfile to copy them to `grafana/dashboards`. You can also imort them from the Grafana Web UI. 
 
-## Feed SolidFire storage cluster metrics to existing GraphiteDB
+Also see "Add own data fees and dashboards" above.
+
+## How to gather and send SolidFire storage cluster metrics to existing GraphiteDB with a Python script (without running all HCICollector containers)
 
 Use the `sfcollector` container. Create a `solidfire/wrapper.sh` to run `solidfire/solidfire_graphite_collector.py` and send it to existing StatsD or Graphite.
 
 - Use `solidfire_graphite_collector.py`. Provide your own Graphite server destination with the `--graphite` argument. You may also need to provide a custom `--metricroot` suitable for your environment.
-- Alternatively, modify HCICollector to send data to StatsD first. StatsD can send data to built-in GraphiteDB and also to another Graphite (such as your own). Mind the `metricroot` of secondary destination. You may also modify the script to send data to Telegram or other destnation.
+- Alternatively, modify HCICollector to send data to StatsD first. StatsD can send data to built-in GraphiteDB and also to another Graphite (such as your own). Mind the `metricroot` of secondary destination. You may also modify the script to send data to Telegram or other destnation(s).
 
 ## Use HCICollector without vCenter
 
 If you don't have a vCenter (you use Hyper-V, for example) or VMware in your environment, you may still use the installation script and then remove the vmwcollector (vsphere-graphite) section (before you run docker-compose).
 
+## Use HCICollector with a pre-11.7 version of SolidFire/Element
+
+Change version string in sfcollector/solidfire_graphite_collector.py (min 7.0). Note that Python SDK must support that version. 
+
+Some sample panels may not be able to work with data gathered from older API (and they can be deleted from affected sample dashboards, if you want to use those that do work.)
+
+## Reset Grafana password
+
+If your username is admin: enter the container, run `apk add sqlite; cd /var/lib/grafana; sqlite3 grafana.db` and set admin password to admin.
+
+```sql
+sqlite> update user set password = '59acf18b94d7eb0694c61e60ce44c110c7a683ac6a8f09580d626f90f4a242000746579358d77dd9e570e83fa24faa88a8a6', salt = 'F3FAxVm33R' where login = 'admin';
+sqlite> .exit
+```
+
 ## Alternative approaches to telemetry gathering
 
 Several of the many options:
 
-- Enterprise: please consider either the gratis or paid version of [NetApp Cloud Insights](https://cloud.netapp.com/cloud-insights), a proven, comprehensive, cloud-hosted service for cloud and on-premises environments.
+- Enterprise: please consider either the gratis or paid version of [NetApp Cloud Insights](https://cloud.netapp.com/cloud-insights), a proven, comprehensive, cloud-hosted service for cloud and on-premises environments. The free/lite version can monitor main NetApp storage products and NetApp HCI
 - Enterprise: if you own a NetApp HCI or SolidFire ("storage-only") cluster, you can choose to allow NetApp ActiveIQ to gather metrics and send them to ActiveIQ service, but with better trending and alerting. ActiveIQ also has an API and a mobile application which is superior for support-related monitoring (as opposed to gathering and visualization of performance-related metrics.)
 - Gratis: [NABox](https://nabox.org) (at some point it may be able to monitor Element storage clusters; until then you may try to integrate the SolidFire Graphite collector script on your own.)
 - Gratis: enable and use SNMP v2/v3 on Element software cluster (as well as other monitored components). This can work with any tool which can receive SNMP traps (Zabbix, [Nagios/Icinga](https://github.com/scaleoutsean/nagfire), etc.)
 
+## How to export data from Graphite
+
+- Manual: click at the top of a panel and in drop-down menu select `More` > `Export to CSV`. You can also get the URL for your query or panel and poll it periodically to export/download data.
+- Automated: see the [Graphite API docs](https://graphite.readthedocs.io/en/latest/render_api.html). Of course, because we control data as it's being gathered, we can store it in both Graphite and another location and eliminate the need to export it to begin with, but if you want to store just one copy and export a subset later, Graphite API is a convenient way to do that.
+
 ## Roadmap
 
-At this time the primary goal is to keep components up to date and ensure the thing installs and runs. Depending on time and skills, we may add a thing or two. Tested pull requests are welcome, but if possible create an issue first to put it up for discussion.
+At this time my primary goal is to keep the components up to date and ensure this thing installs and runs. 
 
-## What is the reason Trident was removed
+As noted in Change Log for v0.7, there are issues with the namespace organization. To fix that it would seem necessary to create a mapping service or application (API for SolidFire IDs to Names and vice versa) and then all dashboards would have to be overhauled to accommodate those changes.
 
-Because it was confusing to people unfamiliar with Trident, the installation script couldn't handle Trident uploads and various other concerns (such as, for example, the fact that more and more users use Trident in production so there's a risk of conflict with other workloads). Additionally, my primary goal is to make it easier to install and use SolidFire collector in existing monitoring infrastructure rather than create new instances of Grafana and Graphite rather than introduce additional dependencies.
+## What is the reason Trident was removed from HCICollector
+
+Because it was confusing to people unfamiliar with Trident, the installation script couldn't handle Trident updates and various other concerns (such as, for example, the fact that more and more NetApp customers use Trident in production so there's a growing risk of unintentianal conflict with other users and workloards). Additionally, my primary goal is to make it easier to install and use SolidFire collector in existing monitoring infrastructure rather than create new instances of Grafana and Graphite or introduce additional dependencies.
 
 ## Is this repo associated with or sponspored by NetApp
 
 No, it is not.
-
