@@ -8,7 +8,7 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 ## Description
 
-The HCICollector is a fully packaged metrics collection and graphing project for Element OS 11+ and vSphere 6+ clusters. It is based on these containers:
+The HCICollector is a fully packaged metrics collection and graphing project for Element OS 11+ and vSphere 6+ clusters. It is based on the following components packaged as individual containers:
 
 - sfcollector: container with SolidFire Python SDK. Runs a Python script that collects storage cluster data and feeds it to GraphiteDB
 - vmwcollector: vSphere stats collector. Collects vSphere data and feeds it to GraphiteDB
@@ -21,8 +21,9 @@ HCICollector uses internal VM disk space, but advanced users can use [NetApp Tri
 
 ![HCICollector architecture overview](images/hcicollector_architecture_overview.jpg)
 
-- [HCICollector walk-through](https://youtu.be/CNXgxkpActo)
-- [Volume Histograms demo](https://youtu.be/yggMCgSX2KM)
+- [HCICollector walk-through for v0.7](https://youtu.be/wjie6niB2VE)
+- [Demo of sfcollector using Element v11+ Volume Histograms](https://youtu.be/yggMCgSX2KM)
+- [HCICollector walk-through for an older version](https://youtu.be/CNXgxkpActo)
 
 ## Prerequisites and requirements
 

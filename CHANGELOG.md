@@ -3,9 +3,9 @@
 ## Changes in v0.7
 
 - Fork upstream hcicollector by jedimt (this release builds upon upstream branch .v7, here renamed to v0.7)
-- Remove NetApp Trident-related steps from install script (see the FAQs)
+- Remove NetApp Trident-related steps from install script (see the FAQs). HCICollector now by default uses two local Docker volumes: one for GraphiteDB and another for Grafana settings
 - Remove the NetApp Technical Report PDF and video demo files from the repo for faster repository cloning. Add video links to YouTube demo videos
-- Changes and improvements to documentation
+- Changes and improvements to documentation as well as online help (links to SolidFire UI and basic descriptions in various panels)
 - Introduce potentially breaking changes in metrics paths and details gathered from SolidFire (see Release Notes v0.7 and FAQs)
 - Fixes:
   - SFCollector: wrapper script can contain special characters (issue #2). Set Docker base OS to Alpine v3.1.2
@@ -14,6 +14,10 @@
   - Grafana: change deprecated gauge caunters to new gauge counters
   - Grafana: replace deprecated Grafana renderer with new renderer container
   - Update third party container images (graphite-statsd v1.1.7-2, grafana v6.7.4, vsphere-graphite v0.8b). Grafana v6.7.4 fixes a security risk that does not impact HCICollector because it disables Grafana avatars
+- Known issues:
+  - Built-in dashboard links to SolidFire UI work for configurations with single SolidFire storage cluster. HCICollector environments that monitor multiple SolidFire clusters can add a MVIP variable to dashboard and reference it in URLs to modify URLs on the fly
+  - Install script configures only one vCenter cluster and only one SolidFire cluster. See the FAQs for workarounds
+  - Some visualizations use Beta-release plugins from Grafana which may have issues. There are bugs in browsers and Grafana
 
 ## Changes in v0.6.1
 

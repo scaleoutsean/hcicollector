@@ -17,8 +17,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 3,
-  "iteration": 1591495796130,
+  "id": 1,
+  "iteration": 1591531822959,
   "links": [
     {
       "$$hashKey": "object:4901",
@@ -508,6 +508,91 @@
         "rgba(50, 172, 45, 0.97)"
       ],
       "datasource": "graphite",
+      "description": "Efficiency factor shown here is the product of Compression and Deduplication. \n\nIt can easily be modified to also consider Thin Provisioning",
+      "editable": true,
+      "error": false,
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
+      "id": 23,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "$$hashKey": "object:3415",
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "$$hashKey": "object:3416",
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": "200",
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": ":1",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "refId": "A",
+          "target": "netapp.solidfire.cluster.$Cluster.efficiency_cxd_factor",
+          "textEditor": false
+        }
+      ],
+      "thresholds": "2, 2.5, 3",
+      "title": "Efficiency Factor",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "$$hashKey": "object:3418",
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "rgba(245, 54, 54, 0.9)",
+        "rgba(237, 129, 40, 0.89)",
+        "rgba(50, 172, 45, 0.97)"
+      ],
+      "datasource": "graphite",
       "decimals": 2,
       "description": "Changes in compression factor are not instantly obvservable. \n\nIt may take up to an hour for changes to reflect in values obtained from cluster API ",
       "editable": true,
@@ -523,7 +608,7 @@
       "gridPos": {
         "h": 3,
         "w": 6,
-        "x": 0,
+        "x": 6,
         "y": 6
       },
       "id": 22,
@@ -606,7 +691,7 @@
       "gridPos": {
         "h": 3,
         "w": 6,
-        "x": 6,
+        "x": 12,
         "y": 6
       },
       "height": "",
@@ -692,7 +777,7 @@
       "gridPos": {
         "h": 3,
         "w": 6,
-        "x": 12,
+        "x": 18,
         "y": 6
       },
       "id": 20,
@@ -743,91 +828,6 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "rgba(245, 54, 54, 0.9)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(50, 172, 45, 0.97)"
-      ],
-      "datasource": "graphite",
-      "description": "Efficiency factor shown here is the product of Compression and Deduplication. \n\nIt can easily be modified to also consider Thin Provisioning",
-      "editable": true,
-      "error": false,
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 18,
-        "y": 6
-      },
-      "id": 23,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "$$hashKey": "object:3415",
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "$$hashKey": "object:3416",
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": "200",
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": ":1",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
-      },
-      "tableColumn": "",
-      "targets": [
-        {
-          "refId": "A",
-          "target": "netapp.solidfire.cluster.$Cluster.efficiency_cxd_factor",
-          "textEditor": false
-        }
-      ],
-      "thresholds": "2, 2.5, 3",
-      "title": "Efficiency Factor",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "$$hashKey": "object:3418",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -1191,6 +1191,7 @@
       "id": 29,
       "links": [],
       "options": {
+        "colorMode": "value",
         "fieldOptions": {
           "calcs": [
             "lastNotNull"
@@ -1232,9 +1233,9 @@
           "overrides": [],
           "values": false
         },
-        "orientation": "horizontal",
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal"
       },
       "pluginVersion": "6.7.4",
       "targets": [
@@ -1244,7 +1245,7 @@
         }
       ],
       "title": "$Cluster Cluster Utilization",
-      "type": "gauge"
+      "type": "stat"
     },
     {
       "aliasColors": {},
@@ -1476,7 +1477,7 @@
         {
           "targetBlank": true,
           "title": "SolidFire UI - iSCSI Sessions",
-          "url": ""
+          "url": "https://192.168.1.30/cluster/#/reporting/sessions?page=1"
         }
       ],
       "nullPointMode": "null",
@@ -1848,5 +1849,5 @@
   "variables": {
     "list": []
   },
-  "version": 9
+  "version": 3
 }

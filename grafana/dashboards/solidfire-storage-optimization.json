@@ -13,12 +13,12 @@
       }
     ]
   },
-  "description": "Experimental SolidFire Panels",
+  "description": "Dashboard with storage optimization-focused panels",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
-  "iteration": 1591462218269,
+  "id": 3,
+  "iteration": 1591528465655,
   "links": [
     {
       "$$hashKey": "object:5588",
@@ -28,6 +28,17 @@
       "title": "SolidFire UI - Volume Management",
       "type": "link",
       "url": "https://192.168.1.30/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
+    },
+    {
+      "$$hashKey": "object:1419",
+      "icon": "external link",
+      "includeVars": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "SolidFire UI - Map selected Account ID Num to Name",
+      "tooltip": "Resolve selected Account ID to Account Name",
+      "type": "link",
+      "url": "https://192.168.1.30/cluster/#/management/accounts?page=1&filter=%7B%22accountID%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:$accountIdNum%7D%7D%7D"
     }
   ],
   "panels": [
@@ -838,7 +849,7 @@
   "style": "dark",
   "tags": [
     "SolidFire",
-    "NetApp HCI"
+    "HCI"
   ],
   "templating": {
     "list": [
@@ -899,7 +910,6 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
           "text": "vcenter",
           "value": "vcenter"
         },
@@ -926,7 +936,6 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
           "text": "1",
           "value": "1"
         },
@@ -976,5 +985,5 @@
   "variables": {
     "list": []
   },
-  "version": 16
+  "version": 4
 }

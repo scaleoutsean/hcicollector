@@ -16,8 +16,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 3,
-  "iteration": 1591496745914,
+  "id": 7,
+  "iteration": 1591527370684,
   "links": [],
   "panels": [
     {
@@ -458,7 +458,10 @@
   ],
   "schemaVersion": 22,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "HCI",
+    "SolidFire"
+  ],
   "templating": {
     "list": [
       {
@@ -526,5 +529,5 @@
   "variables": {
     "list": []
   },
-  "version": 3
+  "version": 2
 }

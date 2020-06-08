@@ -32,6 +32,17 @@ Another thing that should be considered is a cluster admin account on SolidFire 
 
 The same goes for VMware - a vSphere administrator account with limited permissions (read-only) should be used for VMware cluster monitoring. If you don't manage the SolidFire or VMware cluster(s) you want to monitor, you may ask the admin(s) to create a reporting-only admin account for you (for Element v11, if you do not use QoS histograms; for VMware vCenter please refer to the vsphere-graphite and VMware documentation.)
 
+## What does the comment about multiple interfaces on HCICollector VM mean? 
+
+Generally - and considering the nature of this container (passwords in config files, etc.) - it is expected that there be two interfaces:
+
+- Internal, for IT team to access the VM, and for containers to access Managements IPs of vCenter and SolidFire (incoming port 22 (optional), outgoing destination port 443 (required, directly or via trusted proxy))
+- External, for users (from IT or elsewhere), to access Graphana Web UI (incoming port 80)
+
+When install script creates config files for you, it sets all services to "external" IP, including but not limited, Graphite (incoming port 8080). To prevent outside users from accessing this VM, either change config files to not expose services on this interface (hard) or add firewall rules to only allow access to port 80 on External IP. Yes, 443 (HTTPS) would be even better, but you'd have to supply TLS certificates Grafana (see `grafana/Dockerfile` and Grafana documentation) and rebuild that container, or add another container, a reverse proxy that would terminate HTTPS and redirect to HTTP (Graphana service port). 
+
+Another point should be made about Grafana accounts. If you don't access Grafana over HTTPS, it may not be a great idea to have any accounts on it because with HTTP passwords are transmitted in clear. You should definitively NOT use your "default" admin password for Grafana! Best practice: read the Grafana manual and rebuild the container to work with HTTPS, and then create appropriate Grafana accounts.
+
 ## Where is the SolidFire collector log?
 
 For the container engine and 3rd party containers please see their respective documentation. 
@@ -44,7 +55,12 @@ For the container running solidfire_graphite_collector.py (SFCollector) see `sfc
 
 ## How to rerecover from a failed run of install script
 
-It's just Docker, so use standard Docker (including docker-compose) commands to delete the containers, networks, etc. To remove Docker data, look into removing the Docker Graphite volume, too.
+It's just Docker, so use regular Docker (including docker-compose) commands to delete the containers, networks, etc. To remove Docker data, look into removing the Docker Graphite volume, too.
+
+## How to add multiple vCenter and SolidFire clusters?
+
+- For vCenter, edit `vmwcollector/vsphere-graphite.json` and rebuild. See upstream documentation.
+- For SolidFire, edit `sfcollector/wrapper.sh` to run against additional MVIP's and rebuild.
 
 ## How to integrate HCICollector with persistent container storage
 
@@ -53,8 +69,6 @@ Deploy Docker CE or Kubernetes, deploy a NetApp Trident container (there are two
 If you want to migrate data from a local to an external volume, you could create a new external volume and use a custom container (that mounts the both) and then copy data from old to new volume. Obviously you'd have to do this while GraphiteDB isn't being used, so maybe temporarily modify its Dockerfile and roll back the modification after data has been copied over. Next time the container is started it should be mounting only one (new) Graphite volume on external storage. Create a snapshot before this if you want to protect your data. You'd also have to rebuild the graphite container.
 
 ## How to update HCICollector from an older version
-
-Users are advised to make a backup or take a snapshot of current version, stop and destroy containers (while leaving configuration files in place), then clone and start the latest release. If everything works out, any snapshot or backup may be removed if no longer necessary. If you encounter a problem, revert to that backup or snapshot you created.
 
 I would advise against that because that hasn't been tested and changes may break it (see Changes in v0.7).
 
@@ -81,6 +95,12 @@ See samples included in HCICollector. A separate problem is what function should
 One way would be to duplicate existing dashboards and edit their queries to show only volumes owned by the Kubernetes storage provisioning account. NetApp Trident is often deployed to use the storage account name `trident`, but those who use several clusters could use dashboards with Account ID variables and manually added aliases that translate to the Account Name or even the Kubernetes cluster Name.
 
 The hard way would be to send native NetApp Trident performance metrics to Prometheus, add Prometheus to Grafana sources, and create a new dashboard for that source.
+
+## How much disks capacity do I need for HCICollector's Graphite volume?
+
+As always "it depends."
+
+Probably no more than 1 GB/VM, unless there is Kubernetes in the environment. It also depends on how one adjusts Graphite container settings - check Grafana and Graphite documentation for details on that.
 
 ## How to add 3rd party feeds and dashboards to Grafana
 
@@ -132,7 +152,7 @@ Several of the many options:
 
 At this time my primary goal is to keep the components up to date and ensure this thing installs and runs. 
 
-As noted in Change Log for v0.7, there are issues with the namespace organization. To fix that it would seem necessary to create a mapping service or application (API for SolidFire IDs to Names and vice versa) and then all dashboards would have to be overhauled to accommodate those changes.
+As noted in Change Log for v0.7, there are issues with the metrics namespace created by sfcollector. To fix that we'd need a mapping service or API for SolidFire ID to Name mapping and then all dashboards would have to be overhauled to accommodate those changes.
 
 ## What is the reason Trident was removed from HCICollector
 
