@@ -1,4 +1,36 @@
 # FAQs
+- [FAQs](#faqs)
+  - [HLEP!! It doesn't wokr and I needed it to work yesterday](#hlep-it-doesnt-wokr-and-i-needed-it-to-work-yesterday)
+  - [Where are the configuration files and what's in them](#where-are-the-configuration-files-and-whats-in-them)
+  - [Do passwords really have to be stored unencrypted](#do-passwords-really-have-to-be-stored-unencrypted)
+  - [What does the comment about multiple interfaces on HCICollector VM mean?](#what-does-the-comment-about-multiple-interfaces-on-hcicollector-vm-mean)
+  - [Where is the SolidFire collector log?](#where-is-the-solidfire-collector-log)
+  - [How to rerecover from a failed run of install script](#how-to-rerecover-from-a-failed-run-of-install-script)
+  - [How to add multiple vCenter and SolidFire clusters?](#how-to-add-multiple-vcenter-and-solidfire-clusters)
+  - [How to integrate HCICollector with persistent container storage](#how-to-integrate-hcicollector-with-persistent-container-storage)
+  - [How to update HCICollector from an older version](#how-to-update-hcicollector-from-an-older-version)
+  - [How to update individual HCICollector container to a newer version](#how-to-update-individual-hcicollector-container-to-a-newer-version)
+  - [Add own data feeds and dashboards](#add-own-data-feeds-and-dashboards)
+  - [Install a plugin from the Grafana Web site](#install-a-plugin-from-the-grafana-web-site)
+  - [How to create SolidFire histograms and other dashboards](#how-to-create-solidfire-histograms-and-other-dashboards)
+  - [I imported a sample dashboard and it's not showing anything](#i-imported-a-sample-dashboard-and-its-not-showing-anything)
+  - [How to monitor container volumes](#how-to-monitor-container-volumes)
+  - [How much disks capacity do I need for HCICollector's Graphite volume?](#how-much-disks-capacity-do-i-need-for-hcicollectors-graphite-volume)
+  - [How to add 3rd party feeds and dashboards to HCICollector's Grafana instance](#how-to-add-3rd-party-feeds-and-dashboards-to-hcicollectors-grafana-instance)
+  - [How to gather and send SolidFire storage cluster metrics to existing GraphiteDB with a Python script (without running all HCICollector containers)](#how-to-gather-and-send-solidfire-storage-cluster-metrics-to-existing-graphitedb-with-a-python-script-without-running-all-hcicollector-containers)
+  - [Use HCICollector without vCenter](#use-hcicollector-without-vcenter)
+  - [Use HCICollector with a pre-11.7 version of SolidFire/Element](#use-hcicollector-with-a-pre-117-version-of-solidfireelement)
+  - [Reset Grafana password](#reset-grafana-password)
+  - [Alternative approaches to telemetry gathering](#alternative-approaches-to-telemetry-gathering)
+  - [How to export data from Graphite](#how-to-export-data-from-graphite)
+  - [It seems there are dashboard for NetApp HCI Compute node hardware monitoring (IPMI via BMC), but they aren't deployed. What's up with that](#it-seems-there-are-dashboard-for-netapp-hci-compute-node-hardware-monitoring-ipmi-via-bmc-but-they-arent-deployed-whats-up-with-that)
+  - [How to gather *hardware* metrics from NetApp HCI Series nodes](#how-to-gather-hardware-metrics-from-netapp-hci-series-nodes)
+  - [Is it possible to use hardware monitoring dhasboards to monitor SolidFire or NetApp HCI storage nodes](#is-it-possible-to-use-hardware-monitoring-dhasboards-to-monitor-solidfire-or-netapp-hci-storage-nodes)
+  - [What about H300E, H500E, H700 compute nodes](#what-about-h300e-h500e-h700-compute-nodes)
+  - [Why do the two hardware monitoring dashboards for H410C and H615C have different metrics and dashboards](#why-do-the-two-hardware-monitoring-dashboards-for-h410c-and-h615c-have-different-metrics-and-dashboards)
+  - [What's the roadmap, Kenneth](#whats-the-roadmap-kenneth)
+  - [What is the reason Trident was removed from HCICollector](#what-is-the-reason-trident-was-removed-from-hcicollector)
+  - [Is this repo associated with or sponspored by NetApp](#is-this-repo-associated-with-or-sponspored-by-netapp)
 
 ## HLEP!! It doesn't wokr and I needed it to work yesterday
 
@@ -88,7 +120,18 @@ Modify the Grafana Dockerfile and rebuild the container.
 
 ## How to create SolidFire histograms and other dashboards
 
-See samples included in HCICollector. A separate problem is what function should be used to visualize histogram metrics. Derivative seems to provide better results than perSecond (both of these can be found under Transform functions.)
+See samples included in HCICollector. 
+
+A separate but related problem is what Grafan function should be used to visualize histogram metrics. Derivative seems to provide better results than perSecond (both of these can be found under panel Transform functions.)
+
+## I imported a sample dashboard and it's not showing anything
+
+Things that can go wrong:
+
+- Grafana's source DB (instance of GraphiteDB): is Source working? Make sure of the type and name of your Grafana data source (in Grafana settings, make Graphite or Default or whatever is functional)
+- Dashboard's source: edit imported Dashboard and in Source pick the correct (Default or Graphite or whatever) Source that contains data to be visualized
+- Panels: due to changes in metric paths, a dashboard or panel from v0.7 may not work in v0.7.5. Download the file from the right repo branch
+- Dashboard and Panel URLs: they get correctly set up on the fly by HCICollector install script, which uses the SolidFire MVIP you provide to spare you from doing that manually for every Dashboard or Panel. If you just import a dashboard, you may end up with URLs pointing to MVIP 192.168.1.30. You can correct them manually in Grafana or open the JSON file before and run a file-wide Search-and-Replace and then import that modified dashboard. 
 
 ## How to monitor container volumes
 
@@ -102,9 +145,9 @@ As always "it depends."
 
 Probably no more than 1 GB/VM, unless there is Kubernetes in the environment. It also depends on how one adjusts Graphite container settings - check Grafana and Graphite documentation for details on that.
 
-## How to add 3rd party feeds and dashboards to Grafana
+## How to add 3rd party feeds and dashboards to HCICollector's Grafana instance
 
-Edit the Dockerfile to copy them to `grafana/dashboards`. You can also imort them from the Grafana Web UI. 
+Import them from the Grafana Web UI. 
 
 Also see "Add own data fees and dashboards" above.
 
@@ -148,9 +191,45 @@ Several of the many options:
 - Manual: click at the top of a panel and in drop-down menu select `More` > `Export to CSV`. You can also get the URL for your query or panel and poll it periodically to export/download data.
 - Automated: see the [Graphite API docs](https://graphite.readthedocs.io/en/latest/render_api.html). Of course, because we control data as it's being gathered, we can store it in both Graphite and another location and eliminate the need to export it to begin with, but if you want to store just one copy and export a subset later, Graphite API is a convenient way to do that.
 
-## Roadmap
+## It seems there are dashboard for NetApp HCI Compute node hardware monitoring (IPMI via BMC), but they aren't deployed. What's up with that
 
-At this time my primary goal is to keep the components up to date and ensure this thing installs and runs. 
+Those are a very late addition (in v0.7 beta 2) and not tested nearly enough, but considering the quirky nature of IPMI some users may find them useful. YMMV.
+
+## How to gather *hardware* metrics from NetApp HCI Series nodes
+
+- For storage nodes, it's included in the API (see the repo Awesome SolidFire) and indirectly used by integrated SolidFire platform software (Element OS)
+- For compute nodes, HCI Collector v0.7 uses a OS-independent approach, IPMI
+
+**WARNING**: as mentioned elsewhere, Grafana in HCICollector has the ability to configure alerts, but they are not enabled by default. Related to that, some gauges in the hardware monitoring dashboards have visual clues about the status of certain indicators (e.g. hot for overheated System Board). While care has been taken to use conservative values, these do not represent manufacturers' (NetApp, Intel, NVIDIA) recommendations and do not activate alerts or notifications in the Grafana UI. Independently of Grafana, BMC itself can create alerts (`SELEnabled` and `SELSensor` in collectd documentation), but that is not enabled in the example configuration file in this repo.
+
+Please refer to the official sites for information on operating environment and safety, starting with the official NetApp HCI documentation.
+
+IPMI polling may also fail, resulting in one or more dashboards showing outdated information. Please review the thresholds and do not rely on HCICollector for decision making in environments where the malfunctioning of these components could increase the risk of fire hazard, injury, etc.
+
+One way to do it is:
+
+- Use the ipmitool command to create a new USER type of user for read-only access to IPMI IP's
+- Deploy a VM or container with collectd (see a mini how-to in the config-examples directory). This VM or container needs to access IPMI IPs and Graphite (to submit gathered data)
+- Metric root for the BMC metrics is `netapp.hci.compute` and depending on how you configure collectd, your metrics can be found under `netapp.hci.compute.h615.$hostname.ipmi.` or similar
+- Deploy one or both hardware-monitoring dashboards (for the H410C or H615C), in each dashboard pick the right platform (e.g. H615C) and hostname (e.g. H615T4). If you have multiple systems, you can select All, although in that case you may need to make adjustments to panels. These dashboards were tested with one system per platform, so they probably need to be significantly modified to nicely display multiple systems in a single dashboard
+
+## Is it possible to use hardware monitoring dhasboards to monitor SolidFire or NetApp HCI storage nodes
+
+Yes, but those nodes already expose system-level warnings, so while gathering BMC metrics from those systems will work, it creates more workload on the storage nodes' BMC without significantly increasing their manageability.
+
+## What about H300E, H500E, H700 compute nodes
+
+Use the H410 platform
+
+## Why do the two hardware monitoring dashboards for H410C and H615C have different metrics and dashboards
+
+Because they use different BMCs and different hardware platforms. The collectd IPMI plugin by default gathers "basic" IPMI metrics, so if one wanted to find a non-trivial common set of metrics that would be possible, but it'd also require extra time (get all metrics, figure out which are equivalent, and so on).
+
+Up to four nodes in e H400 Series chassis share (two) chassis fans, so if one were to to show only sensor info common to both platforms, neither H615C fans nor H410 shared chassis fans would be shown.
+
+## What's the roadmap, Kenneth
+
+Don't have it! At this time my primary goal is to keep the components up to date and ensure this thing installs and runs.
 
 As noted in Change Log for v0.7, there are issues with the metrics namespace created by sfcollector. To fix that we'd need a mapping service or API for SolidFire ID to Name mapping and then all dashboards would have to be overhauled to accommodate those changes.
 

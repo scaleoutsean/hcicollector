@@ -13,11 +13,14 @@
   - Grafana: configure Legend and Axis Y values in most panels to display 0 decimals (enforce integer values where apppropriate (e.g. byte count) and lower the level of unnecesary detail elsewhere)
   - Grafana: change deprecated gauge caunters to new gauge counters
   - Grafana: replace deprecated Grafana renderer with new renderer container
-  - Update third party container images (graphite-statsd v1.1.7-2, grafana v6.7.4, vsphere-graphite v0.8b). Grafana v6.7.4 fixes a security risk that does not impact HCICollector because it disables Grafana avatars
+  - Update third party container images (graphite-statsd v1.1.7-2, grafana v6.7.4, vsphere-graphite v0.8b). Grafana v6.7.4 fixes a security risk that does not impact HCICollector because HCICOllector disables the Grafana avatar feature
 - Known issues:
   - Built-in dashboard links to SolidFire UI work for configurations with single SolidFire storage cluster. HCICollector environments that monitor multiple SolidFire clusters can add a MVIP variable to dashboard and reference it in URLs to modify URLs on the fly
   - Install script configures only one vCenter cluster and only one SolidFire cluster. See the FAQs for workarounds
   - Some visualizations use Beta-release plugins from Grafana which may have issues. There are bugs in browsers and Grafana
+  - Dashboards and panels contain hard-coded URLs (to 192.168.1.30): search-and-replace this link with your own before you import them. HCICollector install script does this for you, but direct import bypasses that step. The proper solution would be to add the MVIP variable to all dashboards and use it in URLs
+- Experimental features:
+  - Two sample dashboards for hardware monitoring of NetApp H-Series Compute nodes: this is not deployed by default - it requires read-only access to the compute node IPMI interface, manual deployment of collectd VM or container (see the config-examples directory and FAQs) and potentially modifications to the dashboards to make them usable)
 
 ## Changes in v0.6.1
 
