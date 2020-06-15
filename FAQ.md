@@ -25,7 +25,7 @@
   - [How to export data from Graphite](#how-to-export-data-from-graphite)
   - [It seems there are dashboard for NetApp HCI Compute node hardware monitoring (IPMI via BMC), but they aren't deployed. What's up with that](#it-seems-there-are-dashboard-for-netapp-hci-compute-node-hardware-monitoring-ipmi-via-bmc-but-they-arent-deployed-whats-up-with-that)
   - [How to gather *hardware* metrics from NetApp HCI Series nodes](#how-to-gather-hardware-metrics-from-netapp-hci-series-nodes)
-  - [Is it possible to use hardware monitoring dhasboards to monitor SolidFire or NetApp HCI storage nodes](#is-it-possible-to-use-hardware-monitoring-dhasboards-to-monitor-solidfire-or-netapp-hci-storage-nodes)
+  - [Can these hardware monitoring dahasboards be used to monitor SolidFire or NetApp HCI storage nodes](#can-these-hardware-monitoring-dahasboards-be-used-to-monitor-solidfire-or-netapp-hci-storage-nodes)
   - [What about H300E, H500E, H700 compute nodes](#what-about-h300e-h500e-h700-compute-nodes)
   - [Why do the two hardware monitoring dashboards for H410C and H615C have different metrics and dashboards](#why-do-the-two-hardware-monitoring-dashboards-for-h410c-and-h615c-have-different-metrics-and-dashboards)
   - [What's the roadmap, Kenneth](#whats-the-roadmap-kenneth)
@@ -141,9 +141,17 @@ The hard way would be to send native NetApp Trident performance metrics to Prome
 
 ## How much disks capacity do I need for HCICollector's Graphite volume?
 
-As always "it depends."
+As always, "it depends."
 
-Probably no more than 1 GB/VM, unless there is Kubernetes in the environment. It also depends on how one adjusts Graphite container settings - check Grafana and Graphite documentation for details on that.
+Settings for SolidFire and VMware in v0.7: 
+- 1 minute frequency (retain 2 days)
+- 5 minute (8 days)
+- 15 minute (30 days)
+- 1 hour (1 year)
+
+For standard VM infra environments Graphite probably needs less than 1 GB/VM using default settings. Static environments with few VMs may want to keep fine-grained metrics longer. Dynamic DevTest or Kubernetes environments may want the opposite. If you hold Graphite on NetApp E-Series or similar array, you can keep fine-grained metrics and application logs for years.
+
+Feel free to modify Graphite settings (storage-schemas.conf) to suit your requirements. Check Graphite documentation for the details.
 
 ## How to add 3rd party feeds and dashboards to HCICollector's Grafana instance
 
@@ -209,11 +217,11 @@ IPMI polling may also fail, resulting in one or more dashboards showing outdated
 One way to do it is:
 
 - Use the ipmitool command to create a new USER type of user for read-only access to IPMI IP's
-- Deploy a VM or container with collectd (see a mini how-to in the config-examples directory). This VM or container needs to access IPMI IPs and Graphite (to submit gathered data)
+- Deploy a VM or container with collectd (see a mini how-to in the config-examples directory). This VM or container needs to access IPMI IPs and Graphite (to submit gathered data). Go easy on the IPMI information gathering interval - BMC isn't a Web appliance... Set collectd to gather info every 3-5 minutes
 - Metric root for the BMC metrics is `netapp.hci.compute` and depending on how you configure collectd, your metrics can be found under `netapp.hci.compute.h615.$hostname.ipmi.` or similar
 - Deploy one or both hardware-monitoring dashboards (for the H410C or H615C), in each dashboard pick the right platform (e.g. H615C) and hostname (e.g. H615T4). If you have multiple systems, you can select All, although in that case you may need to make adjustments to panels. These dashboards were tested with one system per platform, so they probably need to be significantly modified to nicely display multiple systems in a single dashboard
 
-## Is it possible to use hardware monitoring dhasboards to monitor SolidFire or NetApp HCI storage nodes
+## Can these hardware monitoring dahasboards be used to monitor SolidFire or NetApp HCI storage nodes
 
 Yes, but those nodes already expose system-level warnings, so while gathering BMC metrics from those systems will work, it creates more workload on the storage nodes' BMC without significantly increasing their manageability.
 

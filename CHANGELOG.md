@@ -7,6 +7,7 @@
 - Remove the NetApp Technical Report PDF and video demo files from the repo for faster repository cloning. Add video links to YouTube demo videos
 - Changes and improvements to documentation as well as online help (links to SolidFire UI and basic descriptions in various panels)
 - Introduce potentially breaking changes in metrics paths and details gathered from SolidFire (see Release Notes v0.7 and FAQs)
+- Slighly adjust Graphite data retention policy to increase slowly
 - Fixes:
   - SFCollector: wrapper script can contain special characters (issue #2). Set Docker base OS to Alpine v3.1.2
   - SFCollector: SolidFire deduplication efficiency formula changed to reflect space in snapshots (issue #3)
