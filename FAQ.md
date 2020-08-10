@@ -58,9 +58,9 @@ The entire VM (apart from the Grafana Web UI, of course) should be made off limi
 - Management Network: connection to vCenter, SolidFire/Element
   - Graphite (carbon.conf) listening on this network
 - User Network: expose Grafana via HTTPS 
-  - Firewall that permits only access to port 443
+  - Firewall that permits access only to port 443 of this interface (or 80, if you don't want to create TLS certificates and register this interface in DNS)
 
-Another thing that should be considered is a cluster admin account on SolidFire or NetApp HCI limited to Read & Reporting role (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide) and you may do that if you do _not_ wish to use QoS histograms. Starting with SolidFire/Element v12.0 these can be gathered by a cluster admin account with only Read &  Reporting access.
+Another thing that should be considered by users of Element OS v12 or newer is to set up a dedicated cluster admin account on SolidFire or NetApp HCI limited to Read & Reporting role (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide). Older Element releases require full-featured cluster admin account for Read &  Reporting.
 
 The same goes for VMware - a vSphere administrator account with limited permissions (read-only) should be used for VMware cluster monitoring. If you don't manage the SolidFire or VMware cluster(s) you want to monitor, you may ask the admin(s) to create a reporting-only admin account for you (for Element v11, if you do not use QoS histograms; for VMware vCenter please refer to the vsphere-graphite and VMware documentation.)
 
@@ -92,7 +92,7 @@ It's just Docker, so use regular Docker (including docker-compose) commands to d
 ## How to add multiple vCenter and SolidFire clusters?
 
 - For vCenter, edit `vmwcollector/vsphere-graphite.json` and rebuild. See upstream documentation.
-- For SolidFire, edit `sfcollector/wrapper.sh` to run against additional MVIP's and rebuild.
+- For SolidFire, edit `sfcollector/wrapper.sh` to run against additional MVIP's and rebuild. Note that dashboard panel links may need to be modified to use variables, as the way they're currently created is hardcoded based on single storage cluster.
 
 ## How to integrate HCICollector with persistent container storage
 
@@ -129,15 +129,16 @@ A separate but related problem is what Grafan function should be used to visuali
 Things that can go wrong:
 
 - Grafana's source DB (instance of GraphiteDB): is Source working? Make sure of the type and name of your Grafana data source (in Grafana settings, make Graphite or Default or whatever is functional)
-- Dashboard's source: edit imported Dashboard and in Source pick the correct (Default or Graphite or whatever) Source that contains data to be visualized
-- Panels: due to changes in metric paths, a dashboard or panel from v0.7 may not work in v0.7.5. Download the file from the right repo branch
-- Dashboard and Panel URLs: they get correctly set up on the fly by HCICollector install script, which uses the SolidFire MVIP you provide to spare you from doing that manually for every Dashboard or Panel. If you just import a dashboard, you may end up with URLs pointing to MVIP 192.168.1.30. You can correct them manually in Grafana or open the JSON file before and run a file-wide Search-and-Replace and then import that modified dashboard. 
+- Dashboard's source: edit imported Dashboard and in Source pick the correct (Default or Graphite or whatever) Source that contains GraphiteDB data to be visualized
+- Dashboard attempts to use wrong MVIP or cluster: delete pre-installed Dashboard, check source code for the dashboard (e.g. by browsing the HCICollector source code on Github) and look for SolidFire MVIP or cluster name. Replace those with your own MVIP or cluster name, copy the file to where other Dashboards are lcoated (`./grafana/...`) and rebuild Grafana container
+- Panels: due to changes in metric paths, a dashboard or panel from v0.7 may not work in (say) v0.7.5. Download the file from the right repo branch
+- Metric path, URL or cluster name in Dashboard imported using the Grafana UI: things get correctly set up by the HCICollector install script, which uses the SolidFire MVIP you provide to spare you from doing that manually for every Dashboard or Panel. You can correct these details in text editor or Grafana and run a file-wide Search-and-Replace before you Import the dashboard (see other hints on how).
 
 ## How to monitor container volumes
 
 One way would be to duplicate existing dashboards and edit their queries to show only volumes owned by the Kubernetes storage provisioning account. NetApp Trident is often deployed to use the storage account name `trident`, but those who use several clusters could use dashboards with Account ID variables and manually added aliases that translate to the Account Name or even the Kubernetes cluster Name.
 
-The hard way would be to send native NetApp Trident performance metrics to Prometheus, add Prometheus to Grafana sources, and create a new dashboard for that source.
+The hard way would be to send native NetApp Trident performance metrics to Prometheus, add Prometheus to Grafana sources, and create a new dashboard for that source. HCICollector v0.7 and earlier does not use InfluxDB, so you'd have to have InfluxDB for that.
 
 ## How much disks capacity do I need for HCICollector's Graphite volume?
 
@@ -159,12 +160,14 @@ Import them from the Grafana Web UI.
 
 Also see "Add own data fees and dashboards" above.
 
-## How to gather and send SolidFire storage cluster metrics to existing GraphiteDB with a Python script (without running all HCICollector containers)
+## How to gather and send SolidFire storage cluster metrics to existing GraphiteDB with a Python script (without running all HCICollector containers) such as NAbox or other?
 
 Use the `sfcollector` container. Create a `solidfire/wrapper.sh` to run `solidfire/solidfire_graphite_collector.py` and send it to existing StatsD or Graphite.
 
 - Use `solidfire_graphite_collector.py`. Provide your own Graphite server destination with the `--graphite` argument. You may also need to provide a custom `--metricroot` suitable for your environment.
 - Alternatively, modify HCICollector to send data to StatsD first. StatsD can send data to built-in GraphiteDB and also to another Graphite (such as your own). Mind the `metricroot` of secondary destination. You may also modify the script to send data to Telegram or other destnation(s).
+- Metrics retention periods are set externally in your existing instance of Graphite (see the answer for GraphiteDB disk capacity estimate, above)
+- If your existing Grafana setup doesn't use Graphite, you can also deploy the Graphite container from HCICollector and even reuse dashboards included in HCICollector. Then you'd add this Graphite instance as a new data source in Grafana
 
 ## Use HCICollector without vCenter
 
@@ -172,7 +175,7 @@ If you don't have a vCenter (you use Hyper-V, for example) or VMware in your env
 
 ## Use HCICollector with a pre-11.7 version of SolidFire/Element
 
-Change version string in sfcollector/solidfire_graphite_collector.py (min 7.0). Note that Python SDK must support that version. 
+Change the Element API version string in sfcollector/solidfire_graphite_collector.py (min `7.0`). Note that SolidFire Python SDK must support that version.
 
 Some sample panels may not be able to work with data gathered from older API (and they can be deleted from affected sample dashboards, if you want to use those that do work.)
 
@@ -189,7 +192,7 @@ sqlite> .exit
 
 Several of the many options:
 
-- Enterprise: please consider either the gratis or paid version of [NetApp Cloud Insights](https://cloud.netapp.com/cloud-insights), a proven, comprehensive, cloud-hosted service for cloud and on-premises environments. The free/lite version can monitor main NetApp storage products and NetApp HCI
+- Enterprise: please consider either the gratis or paid version of [NetApp Cloud Insights](https://cloud.netapp.com/cloud-insights), a proven, comprehensive, cloud-hosted service for cloud and on-premises environments. The free/lite version can monitor most NetApp storage products including NetApp HCI
 - Enterprise: if you own a NetApp HCI or SolidFire ("storage-only") cluster, you can choose to allow NetApp ActiveIQ to gather metrics and send them to ActiveIQ service, but with better trending and alerting. ActiveIQ also has an API and a mobile application which is superior for support-related monitoring (as opposed to gathering and visualization of performance-related metrics.)
 - Gratis: [NABox](https://nabox.org) (at some point it may be able to monitor Element storage clusters; until then you may try to integrate the SolidFire Graphite collector script on your own.)
 - Gratis: enable and use SNMP v2/v3 on Element software cluster (as well as other monitored components). This can work with any tool which can receive SNMP traps (Zabbix, [Nagios/Icinga](https://github.com/scaleoutsean/nagfire), etc.)
@@ -227,13 +230,13 @@ Yes, but those nodes already expose system-level warnings, so while gathering BM
 
 ## What about H300E, H500E, H700 compute nodes
 
-Use the H410 platform
+Use the instructions for the H410 platform
 
 ## Why do the two hardware monitoring dashboards for H410C and H615C have different metrics and dashboards
 
 Because they use different BMCs and different hardware platforms. The collectd IPMI plugin by default gathers "basic" IPMI metrics, so if one wanted to find a non-trivial common set of metrics that would be possible, but it'd also require extra time (get all metrics, figure out which are equivalent, and so on).
 
-Up to four nodes in e H400 Series chassis share (two) chassis fans, so if one were to to show only sensor info common to both platforms, neither H615C fans nor H410 shared chassis fans would be shown.
+Up to four nodes in the H400 Series chassis share (two) chassis fans, so if one were to to show only sensor info common to both platforms, neither H615C fans nor H410 shared chassis fans would be shown.
 
 ## What's the roadmap, Kenneth
 
@@ -248,3 +251,4 @@ Because it was confusing to people unfamiliar with Trident, the installation scr
 ## Is this repo associated with or sponspored by NetApp
 
 No, it is not.
+

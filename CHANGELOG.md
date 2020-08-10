@@ -5,21 +5,30 @@
 - Fork upstream hcicollector by jedimt (this release builds upon upstream branch .v7, here renamed to v0.7)
 - Remove NetApp Trident-related steps from install script (see the FAQs). HCICollector now by default uses two local Docker volumes: one for GraphiteDB and another for Grafana settings
 - Remove the NetApp Technical Report PDF and video demo files from the repo for faster repository cloning. Add video links to YouTube demo videos
-- Changes and improvements to documentation as well as online help (links to SolidFire UI and basic descriptions in various panels)
+- Changes and improvements to documentation as well as online help (links to the SolidFire UI and basic descriptions in various panels)
 - Introduce potentially breaking changes in metrics paths and details gathered from SolidFire (see Release Notes v0.7 and FAQs)
-- Slighly adjust Graphite data retention policy to increase slowly
+- Slighly adjust Graphite data retention policy to use less space for GraphiteDB
 - Fixes:
-  - SFCollector: wrapper script can contain special characters (issue #2). Set Docker base OS to Alpine v3.1.2
-  - SFCollector: SolidFire deduplication efficiency formula changed to reflect space in snapshots (issue #3)
-  - Grafana: configure Legend and Axis Y values in most panels to display 0 decimals (enforce integer values where apppropriate (e.g. byte count) and lower the level of unnecesary detail elsewhere)
+  - SFCollector: wrapper script can contain special characters (issue #2). Change Docker base OS to Python 3.8.5 (slim Buster)
+  - SFCollector: gather more SolidFire metrics relevant to administrators and operations staff
+  - SFCollector: deduplication efficiency formula changed to account for space used for snapshots (issue #3)
+  - SFCollector: set SolidFire API call timeout to a lower value than default (issue #6)
+  - SFCollector: add the option to validate TLS certificate of SolidFire API endpoint(s)
+  - SFCollector: patch SolidFire Python SDK 1.5.0.87 (common/model.py) to unbreak `.to_json()` which for some reason stopped working
+  - Grafana: configure Legend and Axis Y values in most panels to display 0 decimals (enforce integer values where apppropriate (e.g. byte count) and lower the level of unnecesary detail elsewhere), adjust precision and make other usability improvements
   - Grafana: change deprecated gauge caunters to new gauge counters
   - Grafana: replace deprecated Grafana renderer with new renderer container
-  - Update third party container images (graphite-statsd v1.1.7-2, grafana v6.7.4, vsphere-graphite v0.8b). Grafana v6.7.4 fixes a security risk that does not impact HCICollector because HCICOllector disables the Grafana avatar feature
+  - Grafana: add new panels to existing dashboards, including iSCSI connections, disk wear level, QoS histograms and more
+  - Grafana: change some dashboards to make it easier to see key panels without scrolling
+  - Update third party container images:
+    - graphite-statsd v1.1.7-6: considerably smaller Docker image
+    - grafana v6.7.4: fixes a security risk that does not impact HCICollector with default settings (because HCICollector doesn't enable the feature)
+    - vsphere-graphite v0.8b: support for vSphere 7 API
 - Known issues:
   - Built-in dashboard links to SolidFire UI work for configurations with single SolidFire storage cluster. HCICollector environments that monitor multiple SolidFire clusters can add a MVIP variable to dashboard and reference it in URLs to modify URLs on the fly
   - Install script configures only one vCenter cluster and only one SolidFire cluster. See the FAQs for workarounds
-  - Some visualizations use Beta-release plugins from Grafana which may have issues. There are bugs in browsers and Grafana
-  - Dashboards and panels contain hard-coded URLs (to 192.168.1.30): search-and-replace this link with your own before you import them. HCICollector install script does this for you, but direct import bypasses that step. The proper solution would be to add the MVIP variable to all dashboards and use it in URLs
+  - Some visualizations use Beta-release plugins from Grafana which may have issues related to visualization or configuration (editing of panel settings). There are bugs in browsers and Grafana too
+  - Dashboards and panels may contain hard-coded URLs (e.g. 192.168.1.30) or SolidFire cluster name (e.g. PROD): search-and-replace this link with your own before you import them. HCICollector install script does this for you, but direct import bypasses that step. The proper solution would be to add the MVIP variable to all dashboards and use it in URLs
 - Experimental features:
   - Two sample dashboards for hardware monitoring of NetApp H-Series Compute nodes: this is not deployed by default - it requires read-only access to the compute node IPMI interface, manual deployment of collectd VM or container (see the config-examples directory and FAQs) and potentially modifications to the dashboards to make them usable)
 

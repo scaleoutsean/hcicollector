@@ -178,7 +178,7 @@ def send_volume_stats(sfe, prefix):
 def send_volume_histogram_stats(sfe, prefix):
     """
     Send volume QoS histogram stats. Requires API v11 or above
-    Note: as of now (June 2020), the API is not properly documented so
+    Note: as of August 2020, this API method is not well documented so
         stuff may not mean what we think it means.
     """
     hmetrics = ['belowMinIopsPercentages', 'minToMaxIopsPercentages',
@@ -404,13 +404,15 @@ def to_num(metric):
 # Parse commandline arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--solidfire',
-                    help='Hostname, IP or FQDN of SolidFire cluster Management Virtual IP from which metrics should be collected')
+                    help='MVIP or FQDN of SolidFire cluster from which metrics should be collected')
 parser.add_argument('-u', '--username', default='admin',
                     help='username for SolidFire array. Default: admin (NOTE: consider using a dedicated reporting admin account)')
 parser.add_argument('-p', '--password', default='password',
-                    help='password for SolidFire array. Default: password')
+                    help='password for admin account on SolidFire cluster. Default: password')
 parser.add_argument('-o', '--timeout', default=15,
-                    help='Timeout for SolidFire API calls to complete. Default: 15 (seconds)')
+                    help='timeout for SolidFire Collector to connect to SolidFire API. Default: 15 (seconds)')
+parser.add_argument('-c', '--validatecert', default=False,
+                    help='Validate SF TLS certificate. Default: False (allow self-signed). For "True", --solidfire must use FQDN')
 parser.add_argument('-g', '--graphite', default='localhost',
                     help='hostname of Graphite server to send to. Default: localhost. (NOTE: "debug" sends metrics to logfile)')
 parser.add_argument('-t', '--port', type=int, default=2003,
@@ -418,7 +420,7 @@ parser.add_argument('-t', '--port', type=int, default=2003,
 parser.add_argument('-v', '--version', default="11.0",
                     help='Element API version. Default: 11.0. Version must be supported by SolidFire Python SDK in sfcollector')
 parser.add_argument('-m', '--metricroot', default='netapp.solidfire.cluster',
-                    help='graphite metric root. Default: netapp.solidfire.cluster')
+                    help='Graphite metric root for sfcollector. Default: netapp.solidfire.cluster')
 parser.add_argument('-l', '--logfile', 
                     help='logfile. Default: none. Required if Graphite hostname is "debug" and metrics sent to logfile')
 args = parser.parse_args()
@@ -441,8 +443,11 @@ else:
 
 LOG.info("Metrics Collection for array: {0}".format(args.solidfire))
 try:
-    sfe = ElementFactory.create(args.solidfire, args.username, args.password, args.version)
-    sfe.timeout(args.timeout)
+    sfe = ElementFactory.create(args.solidfire, args.username, args.password, args.version, verify_ssl=args.validatecert, print_ascii_art=False)
+    # There are two kinds of timeouts (one is for individual API requests)
+    # https://github.com/solidfire/solidfire-sdk-python/pull/39/files
+    sfe.timeout(5)
+    sfe.connect_timeout(args.timeout)
 except solidfire.common.ApiServerError as e:
     LOG.warning("ApiServerError: {0}".format(str(e)))
     sfe = None

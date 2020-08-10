@@ -1,4 +1,34 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_GRAPHITE",
+      "label": "graphite",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "graphite",
+      "pluginName": "Graphite"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "6.7.4"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "graphite",
+      "name": "Graphite",
+      "version": "1.0.0"
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -13,12 +43,12 @@
       }
     ]
   },
-  "description": "\"Top 10\" list for solidfire volumes",
+  "description": "TopN Solidfire volumes by Average IOPS",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 1,
-  "iteration": 1591464613738,
+  "id": null,
+  "iteration": 1597057670082,
   "links": [
     {
       "$$hashKey": "object:5573",
@@ -28,13 +58,13 @@
       "title": "SolidFire UI - Volume Perfomance",
       "tooltip": "View volume performance by Name & ID",
       "type": "link",
-      "url": "https://192.168.1.30/cluster/#/reporting/volume-performance?page=1"
+      "url": "https://10.128.59.69/cluster/#/reporting/volume-performance?page=1"
     }
   ],
   "panels": [
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -52,7 +82,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "editable": true,
       "error": false,
@@ -151,7 +181,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "editable": true,
       "error": false,
@@ -261,7 +291,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "editable": true,
       "error": false,
@@ -372,7 +402,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "editable": true,
       "error": false,
@@ -489,7 +519,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "editable": true,
       "error": false,
@@ -589,7 +619,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "editable": true,
       "error": false,
@@ -700,17 +730,14 @@
   "style": "dark",
   "tags": [
     "SolidFire",
-    "HCI"
+    "NetApp HCI"
   ],
   "templating": {
     "list": [
       {
         "allValue": "*",
-        "current": {
-          "text": "PROD",
-          "value": "PROD"
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "",
         "hide": 0,
         "includeAll": false,
@@ -736,8 +763,8 @@
         "auto_min": "10s",
         "current": {
           "selected": false,
-          "text": "2",
-          "value": "2"
+          "text": "5",
+          "value": "5"
         },
         "datasource": null,
         "hide": 0,
@@ -753,21 +780,21 @@
           },
           {
             "selected": true,
-            "text": "2",
-            "value": "2"
+            "text": "5",
+            "value": "5"
           },
           {
             "selected": false,
-            "text": "4",
-            "value": "4"
+            "text": "10",
+            "value": "10"
           },
           {
             "selected": false,
-            "text": "8",
-            "value": "8"
+            "text": "20",
+            "value": "20"
           }
         ],
-        "query": "1,2,4,8",
+        "query": "1,5,10,20",
         "refresh": 2,
         "skipUrlSync": false,
         "type": "interval"
@@ -809,5 +836,5 @@
   "variables": {
     "list": []
   },
-  "version": 2
+  "version": 3
 }

@@ -1,4 +1,40 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_GRAPHITE",
+      "label": "graphite",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "graphite",
+      "pluginName": "Graphite"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "6.7.4"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "graphite",
+      "name": "Graphite",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -17,8 +53,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 5,
-  "iteration": 1591374474234,
+  "id": null,
+  "iteration": 1597051499109,
   "links": [
     {
       "$$hashKey": "object:6817",
@@ -28,13 +64,13 @@
       "title": "SolidFire UI - Storage Nodes",
       "tooltip": "Performance details for storage nodes",
       "type": "link",
-      "url": "https://192.168.1.30/cluster/#/system/nodes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
+      "url": "https://10.128.59.69/cluster/#/system/nodes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
     }
   ],
   "panels": [
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -49,8 +85,8 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "graphite",
-      "description": "This value is generally not important as storage node performance is determined by QoS settings and activity of the volumes active on the node.",
+      "datasource": "${DS_GRAPHITE}",
+      "description": "This value is generally not important as storage node performance is determined by QoS settings and activity of the volumes active on the node.\n\nHowever in the case of extended periods of high CPU utilization, you may want to take a look at the sum of Burst or Maximum settings and check client-side workloads.",
       "gridPos": {
         "h": 7,
         "w": 24,
@@ -63,7 +99,7 @@
         "colorMode": "value",
         "fieldOptions": {
           "calcs": [
-            "mean"
+            "lastNotNull"
           ],
           "defaults": {
             "decimals": 0,
@@ -72,12 +108,16 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
+                  "color": "dark-green",
                   "value": null
                 },
                 {
-                  "color": "dark-orange",
+                  "color": "light-green",
                   "value": 60
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 75
                 },
                 {
                   "color": "semi-dark-red",
@@ -90,39 +130,33 @@
           "overrides": [],
           "values": false
         },
-        "graphMode": "area",
-        "justifyMode": "auto",
+        "graphMode": "none",
+        "justifyMode": "center",
         "orientation": "auto"
       },
       "pluginVersion": "6.7.4",
       "repeat": "Cluster",
       "repeatDirection": "h",
       "repeatIteration": 1480760272097,
-      "scopedVars": {
-        "Cluster": {
-          "selected": true,
-          "text": "PROD",
-          "value": "PROD"
-        }
-      },
       "targets": [
         {
           "refId": "B",
-          "target": "netapp.solidfire.cluster.$Cluster.node.$Node.cpu",
-          "textEditor": true
+          "target": "aliasByNode(netapp.solidfire.cluster.$Cluster.node.$Node.cpu, 5)",
+          "textEditor": false
         }
       ],
       "timeFrom": null,
       "timeShift": null,
       "title": "$Node CPU Utilization",
+      "transparent": true,
       "type": "stat"
     },
     {
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "description": "This value is generally not important as storage node performance is much smaller than network bandwidth available on SolidFire nodes.\n\nIt can be of interest in parallel backup or during distributed recovery from failed nodes or disk drives.",
       "gridPos": {
-        "h": 7,
-        "w": 24,
+        "h": 4,
+        "w": 6,
         "x": 0,
         "y": 8
       },
@@ -167,13 +201,6 @@
       "pluginVersion": "6.7.4",
       "repeat": "Node",
       "repeatDirection": "h",
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "tw1",
-          "value": "tw1"
-        }
-      },
       "targets": [
         {
           "refId": "A",
@@ -187,13 +214,13 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "description": "Generally not important, as RAM is appropriately sized for the node to deliver rated IOPS with compression and deduplication enabled",
       "gridPos": {
-        "h": 7,
-        "w": 24,
+        "h": 4,
+        "w": 6,
         "x": 0,
-        "y": 15
+        "y": 12
       },
       "id": 96,
       "links": [],
@@ -238,13 +265,6 @@
       "pluginVersion": "6.7.4",
       "repeat": "Node",
       "repeatDirection": "h",
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "tw1",
-          "value": "tw1"
-        }
-      },
       "targets": [
         {
           "refId": "A",
@@ -256,12 +276,100 @@
     },
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 16
+      },
+      "id": 113,
+      "panels": [],
+      "repeat": null,
+      "title": "Node iSCSI Connections",
+      "type": "row"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "${DS_GRAPHITE}",
+      "description": "Nodes in this panel are NOT ordered (limitation of Grafana and visualization type chosen that's needs a work around). \n\nPlease use the SolidFire UI to identify connections per node (Reporting > iSCSI Connections).\n\nMaximum number of connections can be found in the SolidFire documentation (few hundred per node)",
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 130,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - iSCSI Connections ",
+          "url": "https://192.168.1.30/cluster/#/reporting/sessions?page=1"
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "decimals": 0,
+            "mappings": [],
+            "max": 500,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "dark-green",
+                  "value": null
+                },
+                {
+                  "color": "light-green",
+                  "value": 100
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 200
+                },
+                {
+                  "color": "dark-orange",
+                  "value": 300
+                }
+              ]
+            },
+            "title": "sessions",
+            "unit": "short"
+          },
+          "overrides": [],
+          "values": false
+        },
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical"
+      },
+      "pluginVersion": "6.7.4",
+      "targets": [
+        {
+          "refId": "A",
+          "target": "substr(netapp.solidfire.cluster.$Cluster.drives.*.sessions, 4, 6)"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Distribution of iSCSI Connections",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": "${DS_GRAPHITE}",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
       },
       "id": 92,
       "panels": [],
@@ -270,20 +378,24 @@
       "type": "row"
     },
     {
-      "aliasColors": {},
+      "aliasColors": {
+        "Read IOPS": "semi-dark-green",
+        "Total IOPS": "dark-blue",
+        "Write IOPS": "semi-dark-orange"
+      },
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "description": "Nodes are not expected to be equally busy, but with many more active volumes than storage nodes, eventually they tend to be similarly busy.\n\nOutliers may appear during storage-offloaded operations (Storage vMotion, for example).",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
-        "w": 24,
+        "w": 6,
         "x": 0,
-        "y": 23
+        "y": 25
       },
       "hiddenSeries": false,
       "id": 89,
@@ -310,13 +422,6 @@
       "renderer": "flot",
       "repeat": "Node",
       "repeatDirection": "h",
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "tw1",
-          "value": "tw1"
-        }
-      },
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
@@ -384,25 +489,27 @@
     },
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 32
       },
       "id": 93,
       "panels": [],
       "repeat": null,
-      "title": "Storage Interface",
+      "title": "Storage Interfaces",
       "type": "row"
     },
     {
-      "aliasColors": {},
+      "aliasColors": {
+        "Out": "light-yellow"
+      },
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "description": "iSCSI Network Traffic in bytes per second. \n\nWe can use this chart to check if parallel backup is keeping all storage nodes equally busy, or how much additional bandwidth is used after volume replication traffic is enabled ",
       "editable": true,
@@ -412,9 +519,9 @@
       "grid": {},
       "gridPos": {
         "h": 7,
-        "w": 24,
+        "w": 6,
         "x": 0,
-        "y": 31
+        "y": 33
       },
       "hiddenSeries": false,
       "id": 40,
@@ -442,13 +549,6 @@
       "renderer": "flot",
       "repeat": "Node",
       "repeatDirection": "h",
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "tw1",
-          "value": "tw1"
-        }
-      },
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
@@ -514,17 +614,17 @@
     },
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 40
       },
       "id": 94,
       "panels": [],
       "repeat": null,
-      "title": "Management Interface",
+      "title": "Management Interfaces",
       "type": "row"
     },
     {
@@ -532,7 +632,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "description": "Network traffic on management interface",
       "editable": true,
@@ -542,9 +642,9 @@
       "grid": {},
       "gridPos": {
         "h": 7,
-        "w": 24,
+        "w": 6,
         "x": 0,
-        "y": 39
+        "y": 41
       },
       "hiddenSeries": false,
       "id": 39,
@@ -573,13 +673,6 @@
       "renderer": "flot",
       "repeat": "Node",
       "repeatDirection": "h",
-      "scopedVars": {
-        "Node": {
-          "selected": false,
-          "text": "tw1",
-          "value": "tw1"
-        }
-      },
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
@@ -647,17 +740,14 @@
   "style": "dark",
   "tags": [
     "SolidFire",
-    "HCI"
+    "NetApp HCI"
   ],
   "templating": {
     "list": [
       {
         "allValue": null,
-        "current": {
-          "text": "PROD",
-          "value": "PROD"
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "",
         "hide": 0,
         "includeAll": false,
@@ -679,18 +769,14 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "",
         "hide": 0,
         "includeAll": true,
         "index": -1,
         "label": "SolidFire Node",
-        "multi": false,
+        "multi": true,
         "name": "Node",
         "options": [],
         "query": "netapp.solidfire.cluster.$Cluster.node.*",
@@ -741,5 +827,5 @@
   "variables": {
     "list": []
   },
-  "version": 2
+  "version": 17
 }

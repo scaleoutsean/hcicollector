@@ -19,13 +19,13 @@ We should probably also monitor the monitor, that is enable gathering of collect
 
 ## References and Tips
 
-- On Debian and Ubuntu, it is probably easiest to install collectd with apt, avoid installing recommended packages, and chose None when asked about Apache or Lighttpd integration
+- On Debian and Ubuntu, it is probably easiest to install collectd with apt, avoid installing recommended packages, and choose None when asked about Apache or Lighttpd integration
 - Getting started with collectd: https://collectd.org/wiki/index.php/First_steps
 
 ## Minimal /etc/collectd.conf
 
-- I haven't tried to monitor several systems' of the same platform (H400 or H615C) IPMI from one collectd instance using different `<Instance>` [blocks](https://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_ipmi); if that cannot be done effectively, consider using collectd container for each IPMI/BMC host
-- H400 Series chasis are shared among several nodes; if you have multiple systems that share the same chassis, there is no reason to have a panel for chassis or PSU for each of those nodes. Therefore, if you use Instance blocks in the IPMI plugin, you could use this approach:L
+- I haven't tried to monitor more than one system of the same platform (H400 or H615C) at the same time using from single collectd instance using different `<Instance>` [blocks](https://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_ipmi); if that cannot be done effectively, consider using a separate collectd container for each IPMI/BMC host you have
+- H400 Series chasis are shared among several nodes; if you have multiple systems that share the same chassis, there is no reason to have a panel for chassis or PSU for each of those nodes. Therefore, if you use Instance blocks in the IPMI plugin, you could use this approach:
   - Instance Ch1 - shared IPMI metrics (e.g. chassis PSU1, PSU2)
   - Instance Ch2 - shared metrics
   - Instance Ch1Cn1 - compute node-level metrics (e.g. system Temperature sensors for Compute Node in Chassis 1, Slot 1)

@@ -1,8 +1,44 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_GRAPHITE",
+      "label": "graphite",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "graphite",
+      "pluginName": "Graphite"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "btplc-trend-box-panel",
+      "name": "Trend Box",
+      "version": "0.1.9"
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "6.7.4"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "graphite",
+      "name": "Graphite",
+      "version": "1.0.0"
+    }
+  ],
   "annotations": {
     "list": [
       {
-        "$$hashKey": "object:5384",
+        "$$hashKey": "object:9318",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -13,87 +49,108 @@
       }
     ]
   },
+  "description": "Experimental SolidFire Panels",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
-  "iteration": 1591375927001,
+  "id": null,
+  "iteration": 1597051016208,
   "links": [
     {
-      "$$hashKey": "object:5840",
+      "$$hashKey": "object:5588",
       "icon": "external link",
-      "includeVars": true,
       "tags": [],
       "targetBlank": true,
-      "title": "SolidFire UI - Volume Performance Details",
-      "tooltip": "Volume performance details in SolidFire Web UI",
+      "title": "SolidFire UI - Volume Management",
       "type": "link",
-      "url": "https://192.168.1.30/cluster/#/management/volumes/volume-details?page=1&volumeID=$volumeID"
+      "url": "https://10.128.59.69/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
     }
   ],
   "panels": [
     {
-      "aliasColors": {
-        "averageIOPSize": "red"
-      },
-      "bars": true,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "fill": 0,
-      "fillGradient": 0,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
-        "h": 8,
+        "h": 1,
         "w": 24,
         "x": 0,
         "y": 0
       },
+      "id": 14,
+      "panels": [],
+      "repeat": "clusterID",
+      "title": "Cluster Level Information",
+      "type": "row"
+    },
+    {
+      "aliasColors": {
+        "Data Capacity Used by Unique Blocks": "semi-dark-blue",
+        "Maximum Block Storage Capacity": "dark-red"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": 1,
+      "description": "When Max UsedSpace is hit, cluster has no space to write new data.\n\nMost admins shouldn't wait until the value nonZeroBlocks gets very close to maxUsedSpace (especially if they desire to tolerate the loss of one node) - it is suggested to consider Warning Level which is Max Used Capacity of (N-1) nodes minus  (this value can be set in Cluster settings) 3%)\n\nNote that capacity utilization is updated once per hour (after each Garbage Collection run)",
+      "fill": 0,
+      "fillGradient": 9,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
       "hiddenSeries": false,
       "id": 11,
       "legend": {
-        "alignAsTable": false,
         "avg": false,
-        "current": false,
+        "current": true,
         "max": false,
         "min": false,
-        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
-      "lines": false,
-      "linewidth": 2,
-      "nullPointMode": "null as zero",
+      "lines": true,
+      "linewidth": 5,
+      "maxPerRow": 2,
+      "nullPointMode": "null",
       "options": {
         "dataLinks": []
       },
-      "percentage": true,
+      "percentage": false,
+      "pluginVersion": "6.7.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
+      "repeat": null,
+      "repeatDirection": "h",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
           "refCount": 0,
           "refId": "A",
-          "target": "aliasByMetric(derivative(netapp.solidfire.cluster.$cluster.volumeID.$volumeID.readBlockSizes.*))",
-          "textEditor": false
+          "target": "alias(netapp.solidfire.cluster.$clusterID.maxUsedSpace, 'Maximum Block Storage Capacity')"
+        },
+        {
+          "refCount": 0,
+          "refId": "C",
+          "target": "alias(netapp.solidfire.cluster.$clusterID.uniqueBlocksUsedSpace, 'Data Capacity Used by Unique Blocks')"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Histogram of Read Requests for Volume $volumeID",
+      "title": "$clusterID - Data Space Utilization and Total Capacity",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -104,22 +161,23 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:6472",
-          "decimals": 0,
-          "format": "short",
-          "label": "Number of requests per Bucket",
+          "$$hashKey": "object:11848",
+          "decimals": 2,
+          "format": "bytes",
+          "label": "",
           "logBase": 1,
           "max": null,
-          "min": "0",
+          "min": null,
           "show": true
         },
         {
-          "$$hashKey": "object:6473",
+          "$$hashKey": "object:11849",
+          "decimals": 0,
           "format": "short",
-          "label": "Bucket size of added IO requests",
+          "label": null,
           "logBase": 1,
           "max": null,
-          "min": "0",
+          "min": null,
           "show": false
         }
       ],
@@ -130,68 +188,75 @@
     },
     {
       "aliasColors": {
-        "averageIOPSize": "red"
+        "Maximum Metadata Capacity": "dark-red",
+        "Used Metadata Capacity": "light-blue"
       },
-      "bars": true,
+      "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": 1,
+      "description": "maxUsedMetadata space is the maximum amount of space available for volume metadata. It does not account for N-1 (node or metadata disk drive loss) so it is recommended to have spare metadata capacity to be able to tolerate the loss of at least one node or metadata disk drive.\n\nIf usedMetadata space is growing quickly, make sure users or automation tools aren't leaving behind unnecessary clones or snapshots.\n\nNote that metadata capacity utilization is updated once per hour (after each Garbage Collection run).\n",
       "fill": 0,
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 8
+        "w": 12,
+        "x": 12,
+        "y": 1
       },
       "hiddenSeries": false,
       "id": 12,
       "legend": {
-        "alignAsTable": false,
         "avg": false,
-        "current": false,
-        "hideEmpty": false,
-        "hideZero": false,
+        "current": true,
         "max": false,
         "min": false,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
-      "lines": false,
-      "linewidth": 2,
-      "nullPointMode": "null as zero",
+      "lines": true,
+      "linewidth": 5,
+      "maxPerRow": 2,
+      "nullPointMode": "null",
       "options": {
         "dataLinks": []
       },
-      "percentage": true,
+      "percentage": false,
+      "pluginVersion": "6.7.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
+      "repeat": null,
+      "repeatDirection": "h",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
           "refCount": 0,
           "refId": "A",
-          "target": "aliasByMetric(derivative(netapp.solidfire.cluster.$cluster.volumeID.$volumeID.writeBlockSizes.*))",
-          "textEditor": false
+          "target": "alias(netapp.solidfire.cluster.$clusterID.maxUsedMetadataSpace, 'Maximum Metadata Capacity')"
+        },
+        {
+          "refCount": 0,
+          "refId": "C",
+          "target": "alias(netapp.solidfire.cluster.$clusterID.usedMetadataSpace, 'Used Metadata Capacity')"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Histogram of Write Requests for Volume $volumeID",
+      "title": "$clusterID - Metadata Space Utilization and Total Capacity",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -202,22 +267,374 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:6472",
+          "$$hashKey": "object:11848",
+          "decimals": 0,
+          "format": "bytes",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:11849",
           "decimals": 0,
           "format": "short",
-          "label": "Number of requests per Bucket",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "cacheTimeout": "300",
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": 2,
+      "defaultColor": "#3274D9",
+      "description": "Trend of change in Unique Block Space Used over observed period of time. \n\nNote that iSCSI clients need to unmap/trim FS in order to release space.\n\nMinimum recommended interval for trend observation is 1 day.",
+      "displayValue": "value",
+      "format": "bytes",
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 9
+      },
+      "id": 16,
+      "linkIndex": "0",
+      "numberSize": "24px",
+      "percentSize": "40px",
+      "repeat": null,
+      "repeatDirection": "v",
+      "targets": [
+        {
+          "refId": "A",
+          "target": "alias(netapp.solidfire.cluster.$clusterID.uniqueBlocksUsedSpace, 'Active Block Space')"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "$clusterID - Trend in Unique Block Space Use",
+      "titleSize": "20px",
+      "type": "btplc-trend-box-panel"
+    },
+    {
+      "cacheTimeout": "300",
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": "0",
+      "defaultColor": "#3274D9",
+      "description": "Trend of change in Non-Zero Snapshot Blocks (1 block = 4kB) over observed period of time \n\nThis figure can grow quickly when first snapshots are created in the cluster,  in which case we should watch its value to see if the growth in snapshot space utilization is concerning. \n\nNote that iSCSI clients need to unmap/trim FS in order to release space.\n\nMinimum recommended interval for trend observation is 1 day.",
+      "displayValue": "value",
+      "format": "none",
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 9
+      },
+      "id": 19,
+      "linkIndex": "0",
+      "maxPerRow": 2,
+      "numberSize": "14px",
+      "percentSize": "30px",
+      "repeat": null,
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "hide": false,
+          "refCount": 1,
+          "refId": "A",
+          "target": "alias(netapp.solidfire.cluster.$clusterID.snapshotNonZeroBlocks, 'Non-zero Snapshot Blocks')"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "$clusterID - Trend in Non-Zero Snapshot Use (4kB Blocks)",
+      "titleSize": "20px",
+      "type": "btplc-trend-box-panel"
+    },
+    {
+      "cacheTimeout": "300",
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": 2,
+      "defaultColor": "#8AB8FF",
+      "description": "Trend of change in Used Metadata Space over observed period of time.\n\nNote that iSCSI clients need to unmap/trim FS in order to release space.\n\nMinimum recommended interval for trend observation is 1 day.",
+      "displayValue": "value",
+      "format": "bytes",
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 9
+      },
+      "id": 17,
+      "linkIndex": "0",
+      "numberSize": "24px",
+      "percentSize": "40px",
+      "repeat": null,
+      "repeatDirection": "v",
+      "targets": [
+        {
+          "refId": "A",
+          "target": "alias(netapp.solidfire.cluster.$clusterID.usedMetadataSpace, 'Used Metadata Space')"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "$clusterID - Trend in Metadata Space Use",
+      "titleSize": "20px",
+      "type": "btplc-trend-box-panel"
+    },
+    {
+      "aliasColors": {
+        "Metadata Space Used by Snapshots": "light-blue"
+      },
+      "bars": false,
+      "cacheTimeout": "300",
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": null,
+      "description": "Metadata capacity (in bytes) used to preserve snapshots. \n\nChanges in this value may sometime seem odd because the size of Metadata Space used by Snapshots includes Metadata Space used by the original volume (technically that space is used for Snapshot Capacity because is cannot be released as long as there is has at least one snapshot).\n\nNote that iSCSI clients need to unmap/trim FS in order to release block space which lowers the use of metadata.\n",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 18,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pluginVersion": "6.7.4",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "repeat": null,
+      "repeatDirection": "v",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "hide": true,
+          "refCount": 1,
+          "refId": "A",
+          "target": "netapp.solidfire.cluster.$clusterID.usedMetadataSpaceInSnapshots"
+        },
+        {
+          "hide": true,
+          "refCount": 1,
+          "refId": "B",
+          "target": "netapp.solidfire.cluster.$clusterID.usedMetadataSpace"
+        },
+        {
+          "hide": false,
+          "refCount": 0,
+          "refId": "C",
+          "target": "alias(diffSeries(#B, #A), 'Metadata Space Used by Snapshots')",
+          "targetFull": "alias(diffSeries(netapp.solidfire.cluster.$clusterID.usedMetadataSpace, netapp.solidfire.cluster.$clusterID.usedMetadataSpaceInSnapshots), 'Metadata Space Used by Snapshots')"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "$clusterID - Metadata Space used by Snapshots ",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:15181",
+          "decimals": null,
+          "format": "bytes",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": "0",
           "show": true
         },
         {
-          "$$hashKey": "object:6473",
+          "$$hashKey": "object:15182",
           "format": "short",
-          "label": "Bucket size of added IO requests",
+          "label": null,
           "logBase": 1,
           "max": null,
-          "min": "0",
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": "${DS_GRAPHITE}",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 2,
+      "panels": [],
+      "repeat": "clusterID",
+      "title": "Volume Level Information",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "cacheTimeout": "",
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": 1,
+      "description": "These volumes may be candidates for efficiency improvements. Volumes with efficiency above 2X are not displayed.\n\nThis panel uses new metric paths (HCICollector v0.7) based on Volume IDs and in order to map IDs to Names click on the SolidFire UI link in top right corner of this dashboard and look it up in the SolidFire Web UI.\n",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 29
+      },
+      "hiddenSeries": false,
+      "id": 6,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Volume Details",
+          "url": "https://10.128.59.69/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D,%22volumeID%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:${volumeID}%7D%7D%7D"
+        }
+      ],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": [
+          {
+            "title": "",
+            "url": "https://${__data.fields[1]}"
+          }
+        ]
+      },
+      "percentage": false,
+      "pluginVersion": "6.7.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "repeat": null,
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "$$hashKey": "object:9689",
+          "aggregation": "Last",
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "refId": "A",
+          "target": "substr(removeAboveValue(netapp.solidfire.cluster.$clusterID.volumeID.$volumeID.volumeEfficiency, 2), 5, 6)",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "$clusterID - Volumes with 2X or lower Efficiency",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:9412",
+          "decimals": 1,
+          "format": "short",
+          "label": "Compr x Dedupe",
+          "logBase": 1,
+          "max": "2",
+          "min": "1",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:9413",
+          "decimals": 0,
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
           "show": false
         }
       ],
@@ -228,65 +645,76 @@
     },
     {
       "aliasColors": {},
-      "bars": true,
+      "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
-      "description": "Actual IOPS may be useful for comparison vs. by-bucket IO request size breakdown obtained from QoS histograms",
+      "description": "Potential candidates for lower Burst IO Setting.\n\nYou may want to adjust panel settings or create several similar indicators.\n\nThis panel uses new metric paths (HCICollector v0.7) based on Volume IDs and in order to map IDs to Names click on the SolidFire UI link in top right corner of this dashboard and look it up in the SolidFire Web UI.\n",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
-        "w": 22,
-        "x": 0,
-        "y": 16
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 29
       },
       "hiddenSeries": false,
-      "id": 2,
+      "id": 9,
       "legend": {
         "avg": false,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
         "total": false,
         "values": false
       },
-      "lines": false,
+      "lines": true,
       "linewidth": 1,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "SolidFire UI - Volume Details",
+          "url": "https://10.128.59.69/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D,%22volumeID%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:${volumeID}%7D%7D%7D"
+        }
+      ],
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "6.7.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:13381",
+          "alias": "1",
+          "yaxis": 1
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
-      "steppedLine": false,
+      "steppedLine": true,
       "targets": [
         {
-          "refCount": 0,
           "refId": "A",
-          "target": "substr(netapp.solidfire.cluster.$cluster.volumeID.$volumeID.actualIOPS, 5, 6)",
-          "textEditor": false
+          "target": "substr(removeBelowValue(netapp.solidfire.cluster.$clusterID.volumeID.$volumeID.burstIOPSCredit, 600000), 5, 6)"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Actual IOPS for Volume  $volumeID",
+      "title": "$clusterID - Volumes with Burst IOPS Credit > 600K",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -297,7 +725,7 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:2106",
+          "$$hashKey": "object:10123",
           "decimals": 0,
           "format": "short",
           "label": null,
@@ -307,260 +735,42 @@
           "show": true
         },
         {
-          "$$hashKey": "object:2107",
+          "$$hashKey": "object:10124",
           "decimals": 0,
           "format": "short",
-          "label": null,
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": "0",
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
         "align": false,
         "alignLevel": null
       }
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": null,
-      "description": "How much the client is using the volume (0% - it's not, 120% - it's using Burst IOPS)",
-      "gridPos": {
-        "h": 7,
-        "w": 2,
-        "x": 22,
-        "y": 16
-      },
-      "id": 17,
-      "links": [],
-      "options": {
-        "colorMode": "background",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "defaults": {
-            "decimals": 0,
-            "mappings": [],
-            "max": 150,
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "dark-yellow",
-                  "value": null
-                },
-                {
-                  "color": "semi-dark-orange",
-                  "value": 50
-                },
-                {
-                  "color": "semi-dark-red",
-                  "value": 75
-                }
-              ]
-            },
-            "title": "Busy",
-            "unit": "percent"
-          },
-          "overrides": [],
-          "values": false
-        },
-        "graphMode": "area",
-        "justifyMode": "center",
-        "orientation": "auto"
-      },
-      "pluginVersion": "6.7.4",
-      "targets": [
-        {
-          "$$hashKey": "object:2473",
-          "aggregation": "Last",
-          "decimals": 2,
-          "displayAliasType": "Warning / Critical",
-          "displayType": "Regular",
-          "displayValueWithAlias": "Never",
-          "hide": false,
-          "refCount": 0,
-          "refId": "B",
-          "target": "netapp.solidfire.cluster.$cluster.volumeID.$volumeID.volumeUtilization",
-          "units": "none",
-          "valueHandler": "Number Threshold"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Utilization",
-      "transparent": true,
-      "type": "stat"
-    },
-    {
-      "cards": {
-        "cardPadding": null,
-        "cardRound": null
-      },
-      "color": {
-        "cardColor": "#1F60C4",
-        "colorScale": "sqrt",
-        "colorScheme": "interpolateOranges",
-        "exponent": 0.9,
-        "min": null,
-        "mode": "opacity"
-      },
-      "dataFormat": "tsbuckets",
-      "datasource": null,
-      "description": "This charts loses meaning if QoS policies have been changed during observed period",
-      "gridPos": {
-        "h": 7,
-        "w": 22,
-        "x": 0,
-        "y": 23
-      },
-      "heatmap": {},
-      "hideZeroBuckets": true,
-      "highlightCards": true,
-      "id": 14,
-      "legend": {
-        "show": false
-      },
-      "pluginVersion": "6.5.1",
-      "reverseYBuckets": false,
-      "targets": [
-        {
-          "refCount": 0,
-          "refId": "A",
-          "target": "aliasByMetric(derivative(netapp.solidfire.cluster.$cluster.volumeID.$volumeID.belowMinIopsPercentages.*))",
-          "textEditor": false
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Volume Heatmap (Time Spent Below Min IOPS) Volume $volumeID",
-      "tooltip": {
-        "show": true,
-        "showHistogram": false
-      },
-      "transparent": true,
-      "type": "heatmap",
-      "xAxis": {
-        "show": true
-      },
-      "xBucketNumber": null,
-      "xBucketSize": null,
-      "yAxis": {
-        "decimals": 0,
-        "format": "short",
-        "logBase": 1,
-        "max": null,
-        "min": null,
-        "show": true,
-        "splitFactor": null
-      },
-      "yBucketBound": "middle",
-      "yBucketNumber": null,
-      "yBucketSize": null
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": null,
-      "description": "How much time the system is throttling this volume (0% - no throttling)",
-      "gridPos": {
-        "h": 7,
-        "w": 2,
-        "x": 22,
-        "y": 23
-      },
-      "id": 16,
-      "links": [],
-      "options": {
-        "colorMode": "background",
-        "fieldOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "defaults": {
-            "decimals": 0,
-            "mappings": [],
-            "max": 100,
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "light-blue",
-                  "value": null
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 50
-                },
-                {
-                  "color": "semi-dark-red",
-                  "value": 75
-                }
-              ]
-            },
-            "title": "Throttle",
-            "unit": "percentunit"
-          },
-          "overrides": [],
-          "values": false
-        },
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto"
-      },
-      "pluginVersion": "6.7.4",
-      "targets": [
-        {
-          "$$hashKey": "object:2473",
-          "aggregation": "Last",
-          "decimals": 2,
-          "displayAliasType": "Warning / Critical",
-          "displayType": "Regular",
-          "displayValueWithAlias": "Never",
-          "hide": false,
-          "refCount": 0,
-          "refId": "B",
-          "target": "netapp.solidfire.cluster.$cluster.volumeID.$volumeID.throttle",
-          "units": "none",
-          "valueHandler": "Number Threshold"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Throttle",
-      "transparent": true,
-      "type": "stat"
     }
   ],
-  "refresh": "30s",
+  "refresh": "1m",
   "schemaVersion": 22,
   "style": "dark",
   "tags": [
     "SolidFire",
-    "HCI"
+    "NetApp HCI"
   ],
   "templating": {
     "list": [
       {
         "allValue": null,
-        "current": {
-          "tags": [],
-          "text": "PROD",
-          "value": [
-            "PROD"
-          ]
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "netapp.solidfire.cluster.*",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "index": -1,
-        "label": "Element Cluster Name",
-        "multi": true,
-        "name": "cluster",
+        "label": "Cluster Name",
+        "multi": false,
+        "name": "clusterID",
         "options": [],
         "query": "netapp.solidfire.cluster.*",
         "refresh": 1,
@@ -575,17 +785,11 @@
       },
       {
         "allValue": null,
-        "current": {
-          "tags": [],
-          "text": "1",
-          "value": [
-            "1"
-          ]
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "netapp.solidfire.cluster.*.volumeID.*",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "index": -1,
         "label": "Volume ID",
         "multi": true,
@@ -595,7 +799,7 @@
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
-        "sort": 3,
+        "sort": 4,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
@@ -605,7 +809,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -623,10 +827,10 @@
     ]
   },
   "timezone": "",
-  "title": "NetApp HCI - SolidFire Volume Histograms",
-  "uid": "43IlzYaWz",
+  "title": "NetApp HCI - SolidFire Experimental Panels",
+  "uid": "0wbZ3ozMk",
   "variables": {
     "list": []
   },
-  "version": 2
+  "version": 25
 }

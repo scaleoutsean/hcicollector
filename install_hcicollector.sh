@@ -1,9 +1,8 @@
 #!/bin/bash
 ############################################################################# 
-# This sript has been deprecated in v0.7.                                   #
-# While it may work, it is recommended to:                                  # 
-#   - Use this script without enabling Trident                              #
-#   - Manually review and if necessary edit configuration files             #
+# This script has been deprecated in v0.7.                                  #
+# While works, it is recommended to:                                        # 
+#  - Review and, if necessary, manually edit configuration files            #
 #############################################################################
 
 # Check for proper permissions (https://stackoverflow.com/a/21622456)
@@ -30,12 +29,14 @@ GRAPHITEVOL="graphite"
 
 # Read in variables
 
-echo "Main info needed by this install script:"
+echo "Info needed by this install script:"
 echo "1) SolidFire MVIP and credentials"
 echo "2) VMware vCenter IP and credentials"
 echo "3) One IP of this VM where Grafana Web UI will be exposed"
 echo ""
 echo "You can use CTRL+C to stop this script and run it again when ready"
+echo ""
+echo "NOTE: HCICollector does not enforce validity of TLS certificates"
 echo ""
 
 echo -e ${Red} "Enter the SolidFire management virtual IP (MVIP):"
@@ -44,10 +45,15 @@ echo -e ${Red} "Enter the SolidFire username (e.g. 'monitor'):"
 read SFUSER
 echo -e ${Red} "Enter the Solidfire password: "
 read -s SFPASSWORD
+# We could get this via the API but not everyone has curl or Python installed so we ask
+echo -e ${Red} "Enter the Solidfire cluster name (NetApp HCI storage cluster name): "
+echo -e ${Red} "If unsure, visit https://${SFMVIP} to take a look (top right corner in Web UI)"
+read SFCLUSTER
 echo -e ${Yellow} "Enter the initial password to use for the Grafana admin account:"
 read -s GPASSWORD
 echo -e ${Green} "Enter the vCenter DNS hostname or IP (e.g. 'vcsa' or '10.10.10.10'):"
 read VCENTERHOSTNAME
+# Pre-populate with common username
 echo -e ${Green} "Enter the vCenter username (e.g. administrator@vsphere.local):"
 read -e -i 'administrator@vsphere.local' VCENTERUSER || VCENTERUSER=administrator@vsphere.local
 echo -e ${Green} "Enter the vCenter password:"
@@ -59,7 +65,7 @@ read VCENTERHASDNS
 echo -e ${White} "Enter the IP address of this Docker VM:"
 read DOCKERIP
 echo ""
-echo "To stop now without having to wipe this folder or fiddle with config files, press CTRL+C within 3s"
+echo "To stop now without having to wipe this folder or fiddle with the config files, press CTRL+C within 3s"
 sleep 3
 echo -e ${White} "Beginning install..."
 
@@ -150,7 +156,7 @@ chmod 740 docker-compose.yml
 # Wrapper script for the SolidFire collector
 echo "Creating the SolidFire collector wrapper.sh script"
 cat << EOF > ./sfcollector/wrapper.sh
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 while true
 do
 /usr/bin/env python3 /solidfire_graphite_collector.py -s $SFMVIP -u $SFUSER -p "$SFPASSWORD" -g graphite &
@@ -297,13 +303,14 @@ EOF
 # If you customized GRAPHITEVOL (which you shouldn't have), also modify `name` in:
 # ./grafana/provisioning/datasources/dashboards/datasource.yml
 # Change GraphiteDB IP in Grafana
-sed -i  "s#url: http://DOCKERIP:8080#url: http://${DOCKERIP}:8080#g"  ./grafana/provisioning/datasources/datasource.yml
+sed -i "s#url: http://DOCKERIP:8080#url: http://${DOCKERIP}:8080#g" ./grafana/provisioning/datasources/datasource.yml
 
-# Modify hard-coded SolidFire MVIP (SFMVIP) in sample dashboards
-DASHBOARDS=$(ls grafana/dashboards/*.json)
-sed -i "s#https://192.168.1.30#https://${SFMVIP}#g" $DASHBOARDS
+# Modify hard-coded SolidFire MVIP (SFMVIP) and cluster name in sample dashboards
+# DASHBOARDS=$(ls grafana/dashboards/*.json)
+sed -i "s#192\.168\.1\.30#$SFMVIP#g" grafana/dashboards/*.json
+sed -i "s#PROD#$SFCLUSTER#g" grafana/dashboards/*.json
 
-echo -e ${White} "Script complete. 'sudo docker-compose up' to start the containers the first time"
+echo -e ${White} "Script complete. Use 'sudo docker-compose up' to start the containers the first time"
 echo ""
-echo -e ${White} "Before you run docker-compose, you may want to consider adding a few firewall rules..."
+echo -e ${White} "Before you run docker-compose, you may want to consider adding a few firewall rules to allow remote access only to Grafana Web UI."
 sleep 2

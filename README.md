@@ -10,7 +10,7 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 The HCICollector is a fully packaged metrics collection and graphing project for Element OS 11+ and vSphere 6+ clusters. It is based on the following components packaged as individual containers:
 
-- sfcollector: container with SolidFire Python SDK. Runs a Python script that collects storage cluster data and feeds it to GraphiteDB
+- sfcollector: container with SolidFire Python SDK. Runs a Python script that collects SolidFire storage cluster data and feeds it to GraphiteDB
 - vmwcollector: vSphere stats collector. Collects vSphere data and feeds it to GraphiteDB
 - graphite: database that stores received time series data
 - grafana and grafana-renderer: graphing engine and a renderer with a Web UI that visualizes Graphite data through SolidFire and vSphere dashboards
@@ -30,9 +30,9 @@ HCICollector uses internal VM disk space, but advanced users can use [NetApp Tri
 HCICollector was tested with the following configuration (newer components might work):
 
 - Ubuntu 18.04, Debian 10
-- Docker CE v19.03.5 and docker-compose v1.24.0+
-- NetApp HCI (SolidFire, Element OS) v11.3 (any v11 release er v12.0)
-- VMware vSphere 6.7U3b (other 6.x releases should work - see vsphere-graphite documentation)
+- Docker CE v19.03.5 and docker-compose v1.26.0+
+- NetApp HCI (SolidFire, Element OS) v11.3 (any v11 release or newer)
+- VMware vSphere 6.7U3b or newer (other 6.x releases should work and so should vSphere 7 - see vsphere-graphite documentation)
 - NetApp HCI storage and vCenter management accounts with read access to Element storage and vCenter API
 
 Newer or older releases of each component may work. Element OS users with a pre-v11.0 software should check the FAQs.

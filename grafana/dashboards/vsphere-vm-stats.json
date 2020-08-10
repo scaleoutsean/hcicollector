@@ -1,4 +1,34 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_GRAPHITE",
+      "label": "graphite",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "graphite",
+      "pluginName": "Graphite"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "6.7.4"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "graphite",
+      "name": "Graphite",
+      "version": "1.0.0"
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -13,16 +43,17 @@
       }
     ]
   },
+  "description": "Top VMs by Highest Average CPU Usage",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 7,
-  "iteration": 1591494014090,
+  "id": null,
+  "iteration": 1597058557481,
   "links": [],
   "panels": [
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -40,7 +71,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -129,7 +160,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -214,7 +245,7 @@
     },
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -232,7 +263,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -317,7 +348,7 @@
     },
     {
       "collapsed": false,
-      "datasource": null,
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -335,7 +366,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "fill": 1,
       "fillGradient": 0,
@@ -446,7 +477,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "fill": 1,
       "fillGradient": 0,
@@ -485,7 +516,7 @@
       "targets": [
         {
           "refId": "A",
-          "target": "highestAverage(groupByNode(aliasByNode(vsphere.$vcenter.virtualmachine.$VM.virtualdisk.numberwriteaveraged.average.*, 3), 0, 'sum'), $TopN)",
+          "target": "aliasByNode(highestAverage(vsphere.$vcenter.virtualmachine.$VM.virtualdisk.numberwriteaveraged.average.*, $TopN), 3)",
           "textEditor": false
         }
       ],
@@ -493,7 +524,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "VM Write IOPS  (Selected or Top $TopN)",
+      "title": "$VM VM Write IOPS",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -537,10 +568,9 @@
     {
       "aliasColors": {},
       "bars": false,
-      "cacheTimeout": "",
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "fill": 1,
       "fillGradient": 0,
@@ -579,7 +609,7 @@
       "targets": [
         {
           "refId": "A",
-          "target": "groupByNode(aliasByNode(highestAverage(vsphere.$vcenter.virtualmachine.$VM.virtualdisk.numberreadaveraged.average.*, $TopN), 3, 7), 0, 'sum')",
+          "target": "aliasByNode(highestAverage(vsphere.$vcenter.virtualmachine.$VM.virtualdisk.numberreadaveraged.average.*, $TopN), 3)",
           "textEditor": false
         }
       ],
@@ -587,7 +617,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "VM Read IOPS (Selected or Top $TopN)",
+      "title": "$VM VM Read IOPS",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -633,9 +663,8 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
-      "description": "A VM with N slow VMDKs will be listed once even though it may have Top N disks with highest write latency",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -674,14 +703,14 @@
         {
           "refCount": 0,
           "refId": "C",
-          "target": "highestAverage(groupByNode(vsphere.$vcenter.virtualmachine.$VM.virtualdisk.totalwritelatency.average.*, 3, 'sum'), $TopN)"
+          "target": "groupByNode(highestAverage(vsphere.$vcenter.virtualmachine.$VM.virtualdisk.totalwritelatency.average.*, $TopN), 3, 'sum')"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Top $TopN or Selected VM by Write Latency",
+      "title": "Top $TopN VMDK by Write Latency",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -727,9 +756,8 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
-      "description": "A VM with N slow VMDKs will be listed once even though it may have Top N disks with highest read latency",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -769,7 +797,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "A",
-          "target": "highestAverage(groupByNode(aliasByNode(vsphere.$vcenter.virtualmachine.$VM.virtualdisk.totalreadlatency.average.*, 3), 0, 'sum'), $TopN)",
+          "target": "aliasByNode(highestAverage(vsphere.$vcenter.virtualmachine.$VM.virtualdisk.totalreadlatency.average.*, $TopN), 3)",
           "textEditor": false
         }
       ],
@@ -777,7 +805,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Top $TopN or Selected VM by Read Latency",
+      "title": "Top $TopN VMDK by Read Latency",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -823,20 +851,15 @@
   "schemaVersion": 22,
   "style": "dark",
   "tags": [
-    "HCI",
-    "ESXi"
+    "ESXi",
+    "NetApp HCI"
   ],
   "templating": {
     "list": [
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "tags": [],
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "",
         "hide": 0,
         "includeAll": true,
@@ -858,13 +881,8 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "tags": [],
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "",
         "hide": 0,
         "includeAll": true,
@@ -890,8 +908,8 @@
         "auto_min": "10s",
         "current": {
           "selected": false,
-          "text": "5",
-          "value": "5"
+          "text": "3",
+          "value": "3"
         },
         "hide": 0,
         "label": "Top N VMs",
@@ -903,12 +921,12 @@
             "value": "1"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "3",
             "value": "3"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "5",
             "value": "5"
           },
@@ -931,7 +949,7 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -965,5 +983,5 @@
   "variables": {
     "list": []
   },
-  "version": 4
+  "version": 5
 }

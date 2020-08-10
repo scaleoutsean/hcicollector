@@ -1,4 +1,46 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_GRAPHITE",
+      "label": "graphite",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "graphite",
+      "pluginName": "Graphite"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "6.7.4"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "graphite",
+      "name": "Graphite",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "singlestat",
+      "name": "Singlestat",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -17,8 +59,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 8,
-  "iteration": 1591496765352,
+  "id": null,
+  "iteration": 1597057240895,
   "links": [],
   "panels": [
     {
@@ -30,9 +72,9 @@
         "#FA6400",
         "#E02F44"
       ],
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 1,
-      "description": "Larger volumes take longer to backup, snapshot, replicate.... \n\nBest practice: try to keep volumes much smaller than the current Element maximum of 16TB. ",
+      "description": "Larger volumes take longer to backup, snapshot, replicate.... \n\nIt is a best practice to keep volumes smaller than the current Element maximum of 16T. ",
       "editable": true,
       "error": false,
       "format": "bytes",
@@ -110,7 +152,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 5,
         "w": 4,
@@ -197,7 +239,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 5,
         "w": 4,
@@ -265,7 +307,8 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
+      "description": "Percentage of time being throttled. \n\nThere's no recommended value, but over 60% could mean some workload(s) could benefit from QoS adjustments.",
       "gridPos": {
         "h": 5,
         "w": 4,
@@ -329,8 +372,8 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "graphite",
-      "description": "Over a short period (say, 5 min), Read + Write % may not equal 100.\n\nUsers may want to increase QoS for volumes that have lower read percentage and hit Max IOPS (Throttle) more than comfortable",
+      "datasource": "${DS_GRAPHITE}",
+      "description": "Over a short period (say, 5 min), Read + Write % may not equal 100.\n\nUsers may want to increase QoS for volumes that have lower read percentage and hit Max IOPS sooner than expected",
       "gridPos": {
         "h": 5,
         "w": 4,
@@ -410,7 +453,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "gridPos": {
         "h": 5,
         "w": 4,
@@ -491,7 +534,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "editable": true,
       "error": false,
@@ -499,7 +542,7 @@
       "fillGradient": 0,
       "grid": {},
       "gridPos": {
-        "h": 7,
+        "h": 6,
         "w": 24,
         "x": 0,
         "y": 5
@@ -512,7 +555,7 @@
         "current": false,
         "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
         "total": false,
         "values": true
@@ -603,11 +646,13 @@
       }
     },
     {
-      "aliasColors": {},
+      "aliasColors": {
+        "Avg IO Size": "dark-red"
+      },
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "editable": true,
       "error": false,
@@ -615,10 +660,10 @@
       "fillGradient": 0,
       "grid": {},
       "gridPos": {
-        "h": 7,
+        "h": 6,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 11
       },
       "hiddenSeries": false,
       "id": 14,
@@ -628,7 +673,7 @@
         "current": false,
         "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
         "total": false,
         "values": true
@@ -660,23 +705,27 @@
       "steppedLine": false,
       "targets": [
         {
+          "refCount": 0,
           "refId": "A",
           "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.accountID.$AccountID.volume.$Volume.readOps), 'Read')",
           "textEditor": false
         },
         {
+          "refCount": 0,
           "refId": "B",
           "target": "alias(perSecond(netapp.solidfire.cluster.$Cluster.accountID.$AccountID.volume.$Volume.writeOps), 'Write')",
           "textEditor": false
         },
         {
+          "refCount": 0,
           "refId": "D",
           "target": "alias(perSecond(sumSeries(netapp.solidfire.cluster.$Cluster.accountID.$AccountID.volume.$Volume.*Ops)), 'Total')",
           "textEditor": false
         },
         {
+          "refCount": 0,
           "refId": "C",
-          "target": "alias(netapp.solidfire.cluster.$Cluster.accountID.$AccountID.volume.$Volume.averageIOPSize, 'Avg IOP Size')",
+          "target": "alias(netapp.solidfire.cluster.$Cluster.accountID.$AccountID.volume.$Volume.averageIOPSize, 'Avg IO Size')",
           "textEditor": false
         }
       ],
@@ -684,7 +733,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Volume IOPS and Average Request Size",
+      "title": "Volume IOPS and Average IO Size",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -714,7 +763,7 @@
           "$$hashKey": "object:2401",
           "decimals": 0,
           "format": "bytes",
-          "label": "Avg IO Size",
+          "label": "Avg IOP Size",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -731,7 +780,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "graphite",
+      "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
       "description": "Volume latency is time taken to respond to received I/O requests. \n\nIt does not include RTT on the network and other overheads (hypervisor, container, etc.). Latency of non-cached I/O requests that application sees is always slightly higher\n\nVery low (e.g. 1) Queue Depth may indicate single-threaded application (if container or physical host is the iSCSI client). Persistently high 32 QD may indicate a very busy application that could benefit from having its data spread over several volumes.",
       "editable": true,
@@ -740,10 +789,10 @@
       "fillGradient": 0,
       "grid": {},
       "gridPos": {
-        "h": 7,
+        "h": 6,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 17
       },
       "hiddenSeries": false,
       "id": 18,
@@ -755,7 +804,7 @@
         "hideZero": false,
         "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
         "total": false,
         "values": true
@@ -806,7 +855,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Volume Latency and Queue Depth",
+      "title": "Latency & Queue Depth",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -854,17 +903,14 @@
   "style": "dark",
   "tags": [
     "SolidFire",
-    "HCI"
+    "NetApp HCI"
   ],
   "templating": {
     "list": [
       {
         "allValue": "*",
-        "current": {
-          "text": "PROD",
-          "value": "PROD"
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "",
         "hide": 0,
         "includeAll": false,
@@ -886,13 +932,8 @@
       },
       {
         "allValue": "*",
-        "current": {
-          "selected": false,
-          "tags": [],
-          "text": "vcenter",
-          "value": "vcenter"
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "",
         "hide": 0,
         "includeAll": true,
@@ -903,7 +944,7 @@
         "options": [],
         "query": "netapp.solidfire.cluster.$Cluster.accountID.*",
         "refresh": 1,
-        "regex": "",
+        "regex": "[a-zA-Z][a-zA-Z0-9].*",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
@@ -914,12 +955,8 @@
       },
       {
         "allValue": "*",
-        "current": {
-          "tags": [],
-          "text": "hcibench",
-          "value": "hcibench"
-        },
-        "datasource": "graphite",
+        "current": {},
+        "datasource": "${DS_GRAPHITE}",
         "definition": "",
         "hide": 0,
         "includeAll": false,
@@ -932,7 +969,7 @@
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
-        "sort": 0,
+        "sort": 1,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
@@ -942,7 +979,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -976,5 +1013,5 @@
   "variables": {
     "list": []
   },
-  "version": 2
+  "version": 8
 }
