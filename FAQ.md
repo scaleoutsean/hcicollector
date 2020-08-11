@@ -85,14 +85,14 @@ For the container running solidfire_graphite_collector.py (SFCollector) see `sfc
 /usr/bin/python /solidfire_graphite_collector.py -s 10.10.10.10 -u monitor -p "monitor1234" -g graphite -l log.txt &
 ```
 
-## How to rerecover from a failed run of install script
+## How to recover from a failed run of install script
 
-It's just Docker, so use regular Docker (including docker-compose) commands to delete the containers, networks, etc. To remove Docker data, look into removing the Docker Graphite volume, too.
+It's just Docker, so use regular Docker (including docker-compose) commands to delete the containers, networks, etc. To remove Docker data, look into removing the Docker Graphite and Grafana volumes, too.
 
 ## How to add multiple vCenter and SolidFire clusters?
 
 - For vCenter, edit `vmwcollector/vsphere-graphite.json` and rebuild. See upstream documentation.
-- For SolidFire, edit `sfcollector/wrapper.sh` to run against additional MVIP's and rebuild. Note that dashboard panel links may need to be modified to use variables, as the way they're currently created is hardcoded based on single storage cluster.
+- For SolidFire, edit `sfcollector/wrapper.sh` to run against additional MVIP's and rebuild. Note that dashboard panel links may need to be modified to use variables, as the way they're currently created is hardcoded based on single storage cluster use case.
 
 ## How to integrate HCICollector with persistent container storage
 
@@ -126,6 +126,8 @@ A separate but related problem is what Grafan function should be used to visuali
 
 ## I imported a sample dashboard and it's not showing anything
 
+First, give it time before you start reinstalling or making changes. I've seen it take 70 minutes for all panels to get populated. SSD disk- and ESXi-related panels take longer. As long as one panel works, that's valuable info for troubleshooting.
+
 Things that can go wrong:
 
 - Grafana's source DB (instance of GraphiteDB): is Source working? Make sure of the type and name of your Grafana data source (in Grafana settings, make Graphite or Default or whatever is functional)
@@ -133,6 +135,7 @@ Things that can go wrong:
 - Dashboard attempts to use wrong MVIP or cluster: delete pre-installed Dashboard, check source code for the dashboard (e.g. by browsing the HCICollector source code on Github) and look for SolidFire MVIP or cluster name. Replace those with your own MVIP or cluster name, copy the file to where other Dashboards are lcoated (`./grafana/...`) and rebuild Grafana container
 - Panels: due to changes in metric paths, a dashboard or panel from v0.7 may not work in (say) v0.7.5. Download the file from the right repo branch
 - Metric path, URL or cluster name in Dashboard imported using the Grafana UI: things get correctly set up by the HCICollector install script, which uses the SolidFire MVIP you provide to spare you from doing that manually for every Dashboard or Panel. You can correct these details in text editor or Grafana and run a file-wide Search-and-Replace before you Import the dashboard (see other hints on how).
+- Pilot error: typos in passwords, accounts, IPs... 
 
 ## How to monitor container volumes
 
@@ -144,15 +147,15 @@ The hard way would be to send native NetApp Trident performance metrics to Prome
 
 As always, "it depends."
 
-Settings for SolidFire and VMware in v0.7: 
+Example settings for SolidFire and VMware: 
 - 1 minute frequency (retain 2 days)
 - 5 minute (8 days)
 - 15 minute (30 days)
 - 1 hour (1 year)
 
-For standard VM infra environments Graphite probably needs less than 1 GB/VM using default settings. Static environments with few VMs may want to keep fine-grained metrics longer. Dynamic DevTest or Kubernetes environments may want the opposite. If you hold Graphite on NetApp E-Series or similar array, you can keep fine-grained metrics and application logs for years.
+For standard VM infra environments Graphite probably needs less than 1 GB/day/VM using default settings. Static environments with few VMs may want to keep fine-grained metrics longer. Dynamic DevTest or Kubernetes environments may want the opposite. If you hold Graphite on NetApp E-Series or similar array, you can keep fine-grained metrics and application logs for years. Run your environment for an hour, stop HCICollector, and compare Before vs. After.
 
-Feel free to modify Graphite settings (storage-schemas.conf) to suit your requirements. Check Graphite documentation for the details.
+Feel free to modify Graphite settings (storage-schemas.conf) to suit your requirements. Check the official Graphite documentation for the details.
 
 ## How to add 3rd party feeds and dashboards to HCICollector's Grafana instance
 

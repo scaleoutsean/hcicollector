@@ -40,14 +40,15 @@ Newer or older releases of each component may work. Element OS users with a pre-
 HCICollector has the following minimum requirements:
 
 - A recent Linux VM with Docker CE v19+
+  - Disk capacity: approximately 10GB for OS, 3GB/hour for GraphiteDB in a small environment (see the FAQs or Graphite docs on how to use less storage)
 - Read-only access to management API of SolidFire/Element v11 (Management IP or "MVIP") and vCenter. HCICollector can work with Element v10 and v11, but with v10 histogram metrics do not get collected and histogram panels won't work
 
 ## Installation and configuration
 
 - Read the Security section below and make a plan based on your security requirements
-- Deploy a VM with a sufficiently large disk (say, 50-100 GB)
+- Deploy a VM with a sufficiently large disk (say, 1,000 GB) or adjust Graphite to retain less data, or shorter
 - Install Docker CE and docker-compose. Enable and restart Docker service
-- Clone hcicollector repository (`git clone https://github.com/scaleoutsean/hcicollector`)
+- Clone hcicollector repository (`git clone https://github.com/scaleoutsean/hcicollector`) or download the source code from Releases
 - Execute the install script and provide requested inputs (`cd hcicollector; sudo ./install_hcicollector.sh`)
 - Examine the config files and run `sudo docker-compose up` (recommended the first time as you can visually inspect everything works; stop it with CTRL+C) or `sudo docker-compose up -d` (background mode)
 - Access Grafana at the VM port 80 (see under Security) and login with the temporary password from installation wizard. Default Grafana username is `admin`
@@ -138,3 +139,4 @@ NetApp HCI storage (SolidFire) dashboards may then by added from this repo (you'
 - `solidfire_graphite_collector.py`, SolidFire-related dashboards and scripts are licensed under the Apache License, Version 2.0
 - External, third party containers, scripts and applications may be licensed under their respective licenses
 - NetApp, SolidFire, and the marks listed at www.netapp.com/TM are trademarks of NetApp, Inc. Other marks belong to their respective owners
+

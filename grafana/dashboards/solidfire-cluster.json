@@ -66,7 +66,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1596985133883,
+  "iteration": 1597136723392,
   "links": [
     {
       "$$hashKey": "object:4901",
@@ -1621,6 +1621,7 @@
     {
       "aliasColors": {},
       "bars": false,
+      "cacheTimeout": "",
       "dashLength": 10,
       "dashes": false,
       "datasource": "${DS_GRAPHITE}",
@@ -1643,15 +1644,15 @@
       "legend": {
         "alignAsTable": false,
         "avg": false,
-        "current": false,
+        "current": true,
         "hideEmpty": false,
-        "hideZero": true,
+        "hideZero": false,
         "max": false,
         "min": false,
         "rightSide": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1677,14 +1678,14 @@
       "targets": [
         {
           "refCount": 0,
-          "refId": "B",
-          "target": "aliasByNode(keepLastValue(netapp.solidfire.cluster.$Cluster.drives.type.block, 5), 6)",
+          "refId": "C",
+          "target": "aliasByNode(keepLastValue(netapp.solidfire.cluster.$Cluster.drives.*.volume, 5), 6)",
           "textEditor": false
         },
         {
           "refCount": 0,
           "refId": "A",
-          "target": "aliasByNode(keepLastValue(netapp.solidfire.cluster.$Cluster.drives.type.volume, 5), 6)",
+          "target": "aliasByNode(keepLastValue(netapp.solidfire.cluster.$Cluster.drives.*.block, 5), 6)",
           "textEditor": false
         }
       ],
@@ -1692,7 +1693,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$Cluster Drive Status",
+      "title": "$Cluster Drive Count",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -1871,7 +1872,7 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -1905,5 +1906,5 @@
   "variables": {
     "list": []
   },
-  "version": 8
+  "version": 4
 }

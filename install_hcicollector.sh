@@ -1,8 +1,9 @@
 #!/bin/bash
 ############################################################################# 
-# This script has been deprecated in v0.7.                                  #
-# While works, it is recommended to:                                        # 
+# This script has been soft-deprecated in v0.7                              #
+# While it works, it is recommended to:                                     # 
 #  - Review and, if necessary, manually edit configuration files            #
+#  - Use OS f/w rules to only allow incoming TCP/80 (or TCP/443) and TCP/22 #
 #############################################################################
 
 # Check for proper permissions (https://stackoverflow.com/a/21622456)
@@ -32,18 +33,18 @@ GRAPHITEVOL="graphite"
 echo "Info needed by this install script:"
 echo "1) SolidFire MVIP and credentials"
 echo "2) VMware vCenter IP and credentials"
-echo "3) One IP of this VM where Grafana Web UI will be exposed"
+echo "3) One of the IPs of this VM where Grafana Web UI will be accessed"
 echo ""
 echo "You can use CTRL+C to stop this script and run it again when ready"
 echo ""
-echo "NOTE: HCICollector does not enforce validity of TLS certificates"
+echo "NOTE: HCICollector will not verify TLS certificates of SolidFire, vCenter and ESXi"
 echo ""
 
 echo -e ${Red} "Enter the SolidFire management virtual IP (MVIP):"
 read SFMVIP
 echo -e ${Red} "Enter the SolidFire username (e.g. 'monitor'):"
 read SFUSER
-echo -e ${Red} "Enter the Solidfire password: "
+echo -e ${Red} "Enter the password for:" $SFUSER
 read -s SFPASSWORD
 # We could get this via the API but not everyone has curl or Python installed so we ask
 echo -e ${Red} "Enter the Solidfire cluster name (NetApp HCI storage cluster name): "
@@ -51,6 +52,8 @@ echo -e ${Red} "If unsure, visit https://${SFMVIP} to take a look (top right cor
 read SFCLUSTER
 echo -e ${Yellow} "Enter the initial password to use for the Grafana admin account:"
 read -s GPASSWORD
+# echo -e ${Yellow} "Do you want to provision sample dashboards ("N" = import or create by yourself):"
+# read -e -i 'Y' GPPROVISION || GPPROVISION=Y
 echo -e ${Green} "Enter the vCenter DNS hostname or IP (e.g. 'vcsa' or '10.10.10.10'):"
 read VCENTERHOSTNAME
 # Pre-populate with common username
@@ -305,12 +308,16 @@ EOF
 # Change GraphiteDB IP in Grafana
 sed -i "s#url: http://DOCKERIP:8080#url: http://${DOCKERIP}:8080#g" ./grafana/provisioning/datasources/datasource.yml
 
-# Modify hard-coded SolidFire MVIP (SFMVIP) and cluster name in sample dashboards
-# DASHBOARDS=$(ls grafana/dashboards/*.json)
+# Modify any hard-coded SolidFire MVIP (SFMVIP) and cluster name in sample dashboards
 sed -i "s#192\.168\.1\.30#$SFMVIP#g" grafana/dashboards/*.json
 sed -i "s#PROD#$SFCLUSTER#g" grafana/dashboards/*.json
+# Work around Grafana issue # 10786
+sed -i "s#\${DS_GRAPHITE}#graphite#g" grafana/dashboards/*.json
+sed -i 's#\"DS_GRAPHITE\"#"graphite"#g' grafana/dashboards/*.json
 
-echo -e ${White} "Script complete. Use 'sudo docker-compose up' to start the containers the first time"
+echo "Script complete. Use 'sudo docker-compose up' to start the containers the first time"
 echo ""
-echo -e ${White} "Before you run docker-compose, you may want to consider adding a few firewall rules to allow remote access only to Grafana Web UI."
+echo "Before you run docker-compose, you may want to consider adding a few firewall rules to allow remote access only to Grafana Web UI."
+echo "-----"
+echo "NOTE: It may take up to 15 minutes for all metrics to appear in Grafana dashboards (assuming everything is working)"
 sleep 2

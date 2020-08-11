@@ -59,7 +59,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1596985737833,
+  "iteration": 1597147896673,
   "links": [],
   "panels": [
     {
@@ -165,10 +165,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 5,
+        "h": 9,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 30,
@@ -290,10 +290,10 @@
       "fillGradient": 0,
       "grid": {},
       "gridPos": {
-        "h": 5,
+        "h": 8,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 52
       },
       "hiddenSeries": false,
       "hideTimeOverride": false,
@@ -399,6 +399,7 @@
       "aliasColors": {
         "active": "dark-green",
         "available": "super-light-green",
+        "failed": "dark-red",
         "removing": "semi-dark-yellow"
       },
       "bars": false,
@@ -413,10 +414,10 @@
       "fillGradient": 2,
       "grid": {},
       "gridPos": {
-        "h": 5,
+        "h": 7,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 84
       },
       "height": "",
       "hiddenSeries": false,
@@ -425,7 +426,7 @@
         "alignAsTable": false,
         "avg": false,
         "current": true,
-        "hideEmpty": false,
+        "hideEmpty": true,
         "hideZero": false,
         "max": false,
         "min": false,
@@ -456,14 +457,17 @@
       "repeatDirection": "h",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:18254",
           "alias": "available",
           "yaxis": 2
         },
         {
+          "$$hashKey": "object:18255",
           "alias": "unknown",
           "yaxis": 2
         },
         {
+          "$$hashKey": "object:18256",
           "alias": "removing",
           "yaxis": 2
         }
@@ -526,22 +530,22 @@
         {
           "$$hashKey": "object:1001",
           "decimals": 0,
-          "format": "none",
-          "label": "",
+          "format": "short",
+          "label": "Active or Failed Disks",
           "logBase": 1,
           "max": null,
-          "min": "0",
+          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:1002",
           "decimals": 0,
-          "format": "none",
-          "label": "",
+          "format": "short",
+          "label": "Other",
           "logBase": 1,
           "max": null,
           "min": "0",
-          "show": false
+          "show": true
         }
       ],
       "yaxis": {
@@ -550,14 +554,14 @@
       }
     },
     {
-      "cacheTimeout": "1800",
+      "cacheTimeout": "200",
       "datasource": "${DS_GRAPHITE}",
       "description": "Wear is expected to gradually grow (and Drive Life Remaining decline), but below 50% should be rare. \nIn the case of accelerated or sudden decline in Life Remaining (say, 1%/week), it may be a good idea to contact Support.\n\nClick on the SolidFire UI link to see individual drives sorted by Wear Remaining",
       "gridPos": {
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 112
       },
       "id": 41,
       "links": [
@@ -567,6 +571,7 @@
           "url": "https://192.168.1.30/cluster/#/system/drives?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
         }
       ],
+      "maxDataPoints": "",
       "maxPerRow": 2,
       "options": {
         "colorMode": "value",
@@ -618,22 +623,8 @@
           "hide": false,
           "refCount": 0,
           "refId": "A",
-          "target": "netapp.solidfire.cluster..drives.*.lifeRemainingPercent",
-          "textEditor": false
-        },
-        {
-          "hide": true,
-          "refCount": 0,
-          "refId": "B",
-          "target": "netapp.solidfire.cluster..drives.*.sessions",
-          "textEditor": false
-        },
-        {
-          "hide": true,
-          "refCount": 0,
-          "refId": "C",
-          "target": "netapp.solidfire.cluster..drives.*.volume",
-          "textEditor": false
+          "target": "netapp.solidfire.cluster.$Cluster.drives.*.lifeRemainingPercent",
+          "textEditor": true
         }
       ],
       "timeFrom": null,
@@ -643,6 +634,7 @@
       "type": "stat"
     }
   ],
+  "refresh": "1m",
   "schemaVersion": 22,
   "style": "dark",
   "tags": [
@@ -711,5 +703,5 @@
   "variables": {
     "list": []
   },
-  "version": 33
+  "version": 4
 }

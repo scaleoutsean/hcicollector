@@ -64,7 +64,7 @@
       "title": "SolidFire UI - Storage Nodes",
       "tooltip": "Performance details for storage nodes",
       "type": "link",
-      "url": "https://10.128.59.69/cluster/#/system/nodes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
+      "url": "https://192.168.1.30/cluster/#/system/nodes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
     }
   ],
   "panels": [

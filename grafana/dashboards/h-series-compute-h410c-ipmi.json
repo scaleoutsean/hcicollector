@@ -530,8 +530,9 @@
   "schemaVersion": 22,
   "style": "dark",
   "tags": [
-    "netapp hci",
-    "ipmi"
+    "NetApp HCI",
+    "Compute",
+    "IPMI"
   ],
   "templating": {
     "list": [

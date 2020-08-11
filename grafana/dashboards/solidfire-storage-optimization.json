@@ -61,12 +61,12 @@
       }
     ]
   },
-  "description": "Opportunities for capacity and efficiency optimization",
+  "description": "Dashboard with storage optimization-focused panels",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1597055949549,
+  "iteration": 1597149326354,
   "links": [
     {
       "$$hashKey": "object:5588",
@@ -75,7 +75,18 @@
       "targetBlank": true,
       "title": "SolidFire UI - Volume Management",
       "type": "link",
-      "url": "https://10.128.59.69/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
+      "url": "https://192.168.1.30/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
+    },
+    {
+      "$$hashKey": "object:1419",
+      "icon": "external link",
+      "includeVars": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "SolidFire UI - Map selected Account ID Num to Name",
+      "tooltip": "Resolve selected Account ID to Account Name",
+      "type": "link",
+      "url": "https://192.168.1.30/cluster/#/management/accounts?page=1&filter=%7B%22accountID%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:$accountIdNum%7D%7D%7D"
     }
   ],
   "panels": [
@@ -90,26 +101,22 @@
       },
       "id": 14,
       "panels": [],
-      "repeat": "clusterID",
-      "title": "Cluster",
+      "title": "Cluster Level Information",
       "type": "row"
     },
     {
-      "aliasColors": {
-        "Data Capacity Used by Unique Blocks": "semi-dark-blue",
-        "Maximum Block Storage Capacity": "dark-red"
-      },
+      "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "${DS_GRAPHITE}",
-      "decimals": 1,
-      "description": "When Max UsedSpace is hit, cluster has no space to write new data.\n\nMost admins shouldn't wait until the value nonZeroBlocks gets very close to maxUsedSpace (especially if they desire to tolerate the loss of one node) - it is suggested to consider Warning Level which is Max Used Capacity of (N-1) nodes minus  (this value can be set in Cluster settings) 3%)\n\nNote that capacity utilization is updated once per hour (after each Garbage Collection run)",
-      "fill": 0,
-      "fillGradient": 9,
+      "decimals": 0,
+      "description": "When maxUsedSpace is hit, cluster has no space to write new data.\n\nMost users don't wait until nonZeroBlocks get close to maxUsedSpace (especially if they desire to tolerate the loss of one node)",
+      "fill": 1,
+      "fillGradient": 6,
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 9,
         "x": 0,
         "y": 1
       },
@@ -117,16 +124,15 @@
       "id": 11,
       "legend": {
         "avg": false,
-        "current": true,
+        "current": false,
         "max": false,
         "min": false,
         "show": true,
         "total": false,
-        "values": true
+        "values": false
       },
       "lines": true,
-      "linewidth": 5,
-      "maxPerRow": 2,
+      "linewidth": 2,
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
@@ -136,8 +142,6 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "repeat": null,
-      "repeatDirection": "h",
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
@@ -146,19 +150,19 @@
         {
           "refCount": 0,
           "refId": "A",
-          "target": "alias(netapp.solidfire.cluster.$clusterID.maxUsedSpace, 'Maximum Block Storage Capacity')"
+          "target": "aliasByMetric(netapp.solidfire.cluster.$clusterID.maxUsedSpace)"
         },
         {
           "refCount": 0,
           "refId": "C",
-          "target": "alias(netapp.solidfire.cluster.$clusterID.uniqueBlocksUsedSpace, 'Data Capacity Used by Unique Blocks')"
+          "target": "aliasByMetric(netapp.solidfire.cluster.$clusterID.usedSpace)"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$clusterID - Data Space Utilization and Total Capacity",
+      "title": "Data Space Used & Maximum",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -175,7 +179,7 @@
       "yaxes": [
         {
           "$$hashKey": "object:11848",
-          "decimals": 2,
+          "decimals": 0,
           "format": "bytes",
           "label": "",
           "logBase": 1,
@@ -200,39 +204,34 @@
       }
     },
     {
-      "aliasColors": {
-        "Maximum Metadata Capacity": "dark-red",
-        "Used Metadata Capacity": "light-blue"
-      },
+      "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "${DS_GRAPHITE}",
-      "decimals": 1,
-      "description": "maxUsedMetadata space is the maximum amount of space available for volume metadata. It does not account for N-1 (node or metadata disk drive loss) so it is recommended to have spare metadata capacity to be able to tolerate the loss of at least one node or metadata disk drive.\n\nIf usedMetadata space is growing quickly, make sure users or automation tools aren't leaving behind unnecessary clones or snapshots.\n\nNote that metadata capacity utilization is updated once per hour (after each Garbage Collection run).\n",
-      "fill": 0,
-      "fillGradient": 0,
+      "decimals": 0,
+      "description": "maxUsedMetadata space is the maximum amount of space available for volume metadata. \n\nIf usedMetadata space is growing quickly, make sure users or automation aren't leaving behind unnecessary clones or snapshots",
+      "fill": 1,
+      "fillGradient": 6,
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
+        "w": 9,
+        "x": 9,
         "y": 1
       },
       "hiddenSeries": false,
       "id": 12,
       "legend": {
         "avg": false,
-        "current": true,
+        "current": false,
         "max": false,
         "min": false,
-        "rightSide": false,
         "show": true,
         "total": false,
-        "values": true
+        "values": false
       },
       "lines": true,
-      "linewidth": 5,
-      "maxPerRow": 2,
+      "linewidth": 2,
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
@@ -242,8 +241,6 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "repeat": null,
-      "repeatDirection": "h",
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
@@ -252,19 +249,19 @@
         {
           "refCount": 0,
           "refId": "A",
-          "target": "alias(netapp.solidfire.cluster.$clusterID.maxUsedMetadataSpace, 'Maximum Metadata Capacity')"
+          "target": "aliasByMetric(netapp.solidfire.cluster.$clusterID.maxUsedMetadataSpace)"
         },
         {
           "refCount": 0,
           "refId": "C",
-          "target": "alias(netapp.solidfire.cluster.$clusterID.usedMetadataSpace, 'Used Metadata Capacity')"
+          "target": "aliasByMetric(netapp.solidfire.cluster.$clusterID.usedMetadataSpace)"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$clusterID - Metadata Space Utilization and Total Capacity",
+      "title": "Metadata Space Used & Maximum",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -306,222 +303,117 @@
       }
     },
     {
-      "cacheTimeout": "300",
       "datasource": "${DS_GRAPHITE}",
-      "decimals": 2,
-      "defaultColor": "#3274D9",
-      "description": "Trend of change in Unique Block Space Used over observed period of time. \n\nNote that iSCSI clients need to unmap/trim FS in order to release space.\n\nMinimum recommended interval for trend observation is 1 day.",
+      "decimals": "2",
+      "defaultColor": "#96D98D",
+      "description": "Data capacity utilization trend shows change (% delta) over selected time period and (below) the current utiilzation (% full)",
       "displayValue": "value",
-      "format": "bytes",
+      "format": "percent",
       "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 0,
-        "y": 9
-      },
-      "id": 16,
-      "linkIndex": "0",
-      "numberSize": "24px",
-      "percentSize": "40px",
-      "repeat": null,
-      "repeatDirection": "v",
-      "targets": [
-        {
-          "refId": "A",
-          "target": "alias(netapp.solidfire.cluster.$clusterID.uniqueBlocksUsedSpace, 'Active Block Space')"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$clusterID - Trend in Unique Block Space Use",
-      "titleSize": "20px",
-      "type": "btplc-trend-box-panel"
-    },
-    {
-      "cacheTimeout": "300",
-      "datasource": "${DS_GRAPHITE}",
-      "decimals": "0",
-      "defaultColor": "#3274D9",
-      "description": "Trend of change in Non-Zero Snapshot Blocks (1 block = 4kB) over observed period of time \n\nThis figure can grow quickly when first snapshots are created in the cluster,  in which case we should watch its value to see if the growth in snapshot space utilization is concerning. \n\nNote that iSCSI clients need to unmap/trim FS in order to release space.\n\nMinimum recommended interval for trend observation is 1 day.",
-      "displayValue": "value",
-      "format": "none",
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 6,
-        "y": 9
-      },
-      "id": 19,
-      "linkIndex": "0",
-      "maxPerRow": 2,
-      "numberSize": "14px",
-      "percentSize": "30px",
-      "repeat": null,
-      "repeatDirection": "h",
-      "targets": [
-        {
-          "hide": false,
-          "refCount": 1,
-          "refId": "A",
-          "target": "alias(netapp.solidfire.cluster.$clusterID.snapshotNonZeroBlocks, 'Non-zero Snapshot Blocks')"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$clusterID - Trend in Non-Zero Snapshot Use (4kB Blocks)",
-      "titleSize": "20px",
-      "type": "btplc-trend-box-panel"
-    },
-    {
-      "cacheTimeout": "300",
-      "datasource": "${DS_GRAPHITE}",
-      "decimals": 2,
-      "defaultColor": "#8AB8FF",
-      "description": "Trend of change in Used Metadata Space over observed period of time.\n\nNote that iSCSI clients need to unmap/trim FS in order to release space.\n\nMinimum recommended interval for trend observation is 1 day.",
-      "displayValue": "value",
-      "format": "bytes",
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 12,
-        "y": 9
-      },
-      "id": 17,
-      "linkIndex": "0",
-      "numberSize": "24px",
-      "percentSize": "40px",
-      "repeat": null,
-      "repeatDirection": "v",
-      "targets": [
-        {
-          "refId": "A",
-          "target": "alias(netapp.solidfire.cluster.$clusterID.usedMetadataSpace, 'Used Metadata Space')"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$clusterID - Trend in Metadata Space Use",
-      "titleSize": "20px",
-      "type": "btplc-trend-box-panel"
-    },
-    {
-      "aliasColors": {
-        "Metadata Space Used by Snapshots": "light-blue"
-      },
-      "bars": false,
-      "cacheTimeout": "300",
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_GRAPHITE}",
-      "decimals": null,
-      "description": "Metadata capacity (in bytes) used to preserve snapshots. \n\nChanges in this value may sometime seem odd because the size of Metadata Space used by Snapshots includes Metadata Space used by the original volume (technically that space is used for Snapshot Capacity because is cannot be released as long as there is has at least one snapshot).\n\nNote that iSCSI clients need to unmap/trim FS in order to release block space which lowers the use of metadata.\n",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 5,
+        "h": 4,
         "w": 6,
         "x": 18,
-        "y": 9
+        "y": 1
       },
-      "hiddenSeries": false,
-      "id": 18,
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": true,
-        "hideEmpty": true,
-        "hideZero": true,
-        "max": true,
-        "min": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 2,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pluginVersion": "6.7.4",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatDirection": "v",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": true,
+      "id": 22,
+      "linkIndex": "0",
+      "numberSize": "14px",
+      "percentSize": "30px",
+      "pluginVersion": "6.7.3",
       "targets": [
         {
           "hide": true,
-          "refCount": 1,
+          "refCount": -1,
           "refId": "A",
-          "target": "netapp.solidfire.cluster.$clusterID.usedMetadataSpaceInSnapshots"
+          "target": "aliasByMetric(netapp.solidfire.cluster.$clusterID.maxUsedSpace)"
         },
         {
           "hide": true,
-          "refCount": 1,
-          "refId": "B",
-          "target": "netapp.solidfire.cluster.$clusterID.usedMetadataSpace"
+          "refCount": -1,
+          "refId": "C",
+          "target": "aliasByMetric(netapp.solidfire.cluster.$clusterID.usedSpace)"
         },
         {
           "hide": false,
           "refCount": 0,
-          "refId": "C",
-          "target": "alias(diffSeries(#B, #A), 'Metadata Space Used by Snapshots')",
-          "targetFull": "alias(diffSeries(netapp.solidfire.cluster.$clusterID.usedMetadataSpace, netapp.solidfire.cluster.$clusterID.usedMetadataSpaceInSnapshots), 'Metadata Space Used by Snapshots')"
+          "refId": "B",
+          "target": "asPercent(#C, #A)",
+          "targetFull": "asPercent(aliasByMetric(netapp.solidfire.cluster.$clusterID.usedSpace), aliasByMetric(netapp.solidfire.cluster.$clusterID.maxUsedSpace))"
         }
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "$clusterID - Metadata Space used by Snapshots ",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
+      "thresholds": [
         {
-          "$$hashKey": "object:15181",
-          "decimals": null,
-          "format": "bytes",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
+          "$$hashKey": "object:7866",
+          "color": "#FA6400",
+          "value": "50"
         },
         {
-          "$$hashKey": "object:15182",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
+          "$$hashKey": "object:7869",
+          "color": "#E02F44",
+          "value": "70"
         }
       ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Data Space Utilization Trend",
+      "titleSize": "20px",
+      "type": "btplc-trend-box-panel"
+    },
+    {
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": "2",
+      "defaultColor": "#96D98D",
+      "description": "Metadata capacity utilization trend shows change (% delta)  over selected time period and (below) the current utiilzation (% full)",
+      "displayValue": "value",
+      "format": "percent",
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 5
+      },
+      "id": 23,
+      "linkIndex": "0",
+      "numberSize": "14px",
+      "percentSize": "30px",
+      "pluginVersion": "6.7.3",
+      "targets": [
+        {
+          "hide": true,
+          "refCount": -1,
+          "refId": "A",
+          "target": "aliasByMetric(netapp.solidfire.cluster.$clusterID.maxUsedMetadataSpace)"
+        },
+        {
+          "hide": true,
+          "refCount": -1,
+          "refId": "C",
+          "target": "aliasByMetric(netapp.solidfire.cluster.$clusterID.usedMetadataSpace)"
+        },
+        {
+          "refCount": 0,
+          "refId": "B",
+          "target": "asPercent(#C, #A)",
+          "targetFull": "asPercent(aliasByMetric(netapp.solidfire.cluster.$clusterID.usedMetadataSpace), aliasByMetric(netapp.solidfire.cluster.$clusterID.maxUsedMetadataSpace))"
+        }
+      ],
+      "thresholds": [
+        {
+          "$$hashKey": "object:7866",
+          "color": "#FA6400",
+          "value": "50"
+        },
+        {
+          "$$hashKey": "object:7869",
+          "color": "#E02F44",
+          "value": "70"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Metadata Space Utilization Trend",
+      "titleSize": "20px",
+      "type": "btplc-trend-box-panel"
     },
     {
       "collapsed": false,
@@ -530,12 +422,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 9
       },
       "id": 2,
       "panels": [],
-      "repeat": "clusterID",
-      "title": "Volume",
+      "repeat": null,
+      "title": "Volume Level Information",
       "type": "row"
     },
     {
@@ -545,22 +437,116 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "${DS_GRAPHITE}",
-      "decimals": 1,
-      "description": "Select one or more volumes from Volume ID drop-down list to possibly populate this chart (if none are less efficient than 2X, chart would remain empty).\n\nThese volumes may be candidates for efficiency improvements. Volumes with efficiency above 2X are not displayed.\n\nThis panel uses new metric paths (HCICollector v0.7) based on Volume IDs and in order to map IDs to Names click on the SolidFire UI link in top right corner of this dashboard and look it up in the SolidFire Web UI.\n",
+      "description": "Volume sizes over time (Top 10). \n\nMinimum volume size on SolidFire is 1GiB.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 9,
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "id": 25,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "clusterID",
+      "repeatDirection": "v",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "refId": "A",
+          "target": "highestCurrent(aliasByNode(removeBelowValue(netapp.solidfire.cluster.$clusterID.volumeID.*.volumeSize, 1073741824), 5), 10)"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "$clusterID Volume Sizes over TIme",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:9797",
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:9798",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "cacheTimeout": "",
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": 1,
+      "description": "These volumes may be candidates for efficiency improvements.\n\nThis panel uses new metric paths (HCICollector v0.7) based on Volume IDs and in order to map IDs to Names click on the SolidFire UI link in top right corner of this dashboard and look it up in the SolidFire Web UI.",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
         "w": 12,
         "x": 0,
-        "y": 15
+        "y": 18
       },
       "hiddenSeries": false,
       "id": 6,
       "legend": {
         "avg": false,
         "current": false,
-        "hideEmpty": true,
+        "hideEmpty": false,
         "hideZero": true,
         "max": false,
         "min": false,
@@ -575,7 +561,7 @@
         {
           "targetBlank": true,
           "title": "SolidFire UI - Volume Details",
-          "url": "https://10.128.59.69/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D,%22volumeID%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:${volumeID}%7D%7D%7D"
+          "url": "https://192.168.1.30/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D,%22volumeID%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:${volumeID}%7D%7D%7D"
         }
       ],
       "nullPointMode": "null",
@@ -605,10 +591,8 @@
           "displayAliasType": "Warning / Critical",
           "displayType": "Regular",
           "displayValueWithAlias": "Never",
-          "hide": false,
           "refId": "A",
-          "target": "substr(removeAboveValue(netapp.solidfire.cluster.*.volumeID.$volumeID.volumeEfficiency, 2), 5, 6)",
-          "textEditor": true,
+          "target": "substr(removeAboveValue(netapp.solidfire.cluster.$clusterID.volumeID.*.volumeEfficiency, 2), 5, 6)",
           "units": "none",
           "valueHandler": "Number Threshold"
         }
@@ -617,10 +601,10 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$clusterID - Volumes with 2X or lower Efficiency",
+      "title": "Volume IDs with Efficiency not Higher than 2X ",
       "tooltip": {
         "shared": true,
-        "sort": 2,
+        "sort": 1,
         "value_type": "individual"
       },
       "type": "graph",
@@ -634,12 +618,12 @@
       "yaxes": [
         {
           "$$hashKey": "object:9412",
-          "decimals": 1,
+          "decimals": 0,
           "format": "short",
           "label": "Compr x Dedupe",
           "logBase": 1,
-          "max": "2",
-          "min": "1",
+          "max": null,
+          "min": "0",
           "show": true
         },
         {
@@ -665,21 +649,20 @@
       "dashes": false,
       "datasource": "${DS_GRAPHITE}",
       "decimals": 0,
-      "description": "Select one or more volumes from Volume ID drop-down list to possibly populate this chart (if none fit criteria (accumulated Burst IOPS > 600K), chart would remain empty).\n\nVolumes that do show up are potential candidates for a lower Burst IO Setting.\n\nYou may want to adjust panel settings or create several similar indicators.\n\nThis panel uses new metric paths (HCICollector v0.7) based on Volume IDs and in order to map IDs to Names click on the SolidFire UI link in top right corner of this dashboard and look it up in the SolidFire Web UI.\n",
+      "description": "Candidates for lower Burst IO Setting.\n\nYou may want to adjust values and create several similar indicators.\n\nThis panel uses new metric paths (HCICollector v0.7) based on Volume IDs and in order to map IDs to Names click on the SolidFire UI link in top right corner of this dashboard and look it up in the SolidFire Web UI",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 12,
         "x": 12,
-        "y": 15
+        "y": 18
       },
       "hiddenSeries": false,
       "id": 9,
       "legend": {
         "avg": false,
         "current": false,
-        "hideEmpty": true,
         "hideZero": true,
         "max": false,
         "min": false,
@@ -693,7 +676,7 @@
         {
           "targetBlank": true,
           "title": "SolidFire UI - Volume Details",
-          "url": "https://10.128.59.69/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D,%22volumeID%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:${volumeID}%7D%7D%7D"
+          "url": "https://192.168.1.30/cluster/#/management/volumes?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
         }
       ],
       "nullPointMode": "null",
@@ -717,14 +700,14 @@
       "targets": [
         {
           "refId": "A",
-          "target": "substr(removeBelowValue(netapp.solidfire.cluster.$clusterID.volumeID.$volumeID.burstIOPSCredit, 600000), 5, 6)"
+          "target": "substr(removeBelowValue(netapp.solidfire.cluster.$clusterID.volumeID.*.burstIOPSCredit, 600000), 5, 6)"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$clusterID - Volumes with Burst IOPS Credit > 600K",
+      "title": "Volume IDs with Burst IOPS Credit > 600K",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -757,7 +740,7 @@
           "logBase": 1,
           "max": null,
           "min": "0",
-          "show": false
+          "show": true
         }
       ],
       "yaxis": {
@@ -772,12 +755,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 26
       },
-      "id": 21,
+      "id": 16,
       "panels": [],
-      "repeat": "clusterID",
-      "title": "Account",
+      "repeat": null,
+      "title": "Account Level Information",
       "type": "row"
     },
     {
@@ -787,28 +770,27 @@
       "dashes": false,
       "datasource": "${DS_GRAPHITE}",
       "decimals": 1,
-      "description": "Storage efficiency for selected Account ID Number (not Account ID by Name) ",
+      "description": "Data Efficiency for Account ID (Numeric)",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 8,
+        "w": 12,
         "x": 0,
-        "y": 25
+        "y": 27
       },
       "hiddenSeries": false,
-      "id": 23,
+      "id": 21,
       "legend": {
-        "alignAsTable": true,
         "avg": false,
-        "current": true,
-        "hideEmpty": true,
+        "current": false,
+        "hideEmpty": false,
         "hideZero": true,
-        "max": true,
-        "min": true,
+        "max": false,
+        "min": false,
         "show": true,
         "total": false,
-        "values": true
+        "values": false
       },
       "lines": true,
       "linewidth": 1,
@@ -820,8 +802,8 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "repeat": "accountIdNum",
-      "repeatDirection": "v",
+      "repeat": null,
+      "repeatDirection": "h",
       "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
@@ -836,7 +818,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$clusterID - Account Data Efficiency for Account ID Number  $accountIdNum",
+      "title": "Account Data Efficiency for Account ID (Num): $accountIdNum",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -852,7 +834,7 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:6591",
+          "$$hashKey": "object:6680",
           "decimals": 1,
           "format": "short",
           "label": "",
@@ -862,7 +844,7 @@
           "show": true
         },
         {
-          "$$hashKey": "object:6592",
+          "$$hashKey": "object:6681",
           "decimals": 2,
           "format": "short",
           "label": null,
@@ -878,17 +860,70 @@
       }
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": "",
+      "combine": {
+        "label": "Others",
+        "threshold": "0.05"
+      },
+      "datasource": "${DS_GRAPHITE}",
+      "decimals": 1,
+      "description": "Size of all volumes belonging to an account (selected in Name drop-down list at the top)\n\nThis includes thin-provisioned capacity (which is unused capacity) and does not consider data efficiencies",
+      "fontSize": "80%",
+      "format": "bytes",
+      "gridPos": {
+        "h": 17,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "id": 18,
+      "interval": null,
+      "legend": {
+        "header": "",
+        "percentage": true,
+        "percentageDecimals": 0,
+        "show": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": 1,
+      "nullPointMode": "connected",
+      "pieType": "pie",
+      "repeat": null,
+      "repeatDirection": "v",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "hide": false,
+          "refCount": 0,
+          "refId": "A",
+          "target": "aliasByNode(netapp.solidfire.cluster.$clusterID.accountID.$accountID.volume.*.volumeSize, 7)",
+          "textEditor": false
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Volume Sizes by Account ID (Name): $accountID",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": "",
+      "colorBackground": false,
+      "colorPostfix": false,
+      "colorPrefix": true,
+      "colorValue": true,
       "colors": [
-        "#d44a3a",
+        "#E02F44",
         "rgba(237, 129, 40, 0.89)",
         "#299c46"
       ],
       "datasource": "${DS_GRAPHITE}",
       "decimals": 2,
-      "description": "Account (selected by Account ID Number (rather than Account ID by Name). \n\nSelect Cluster Name and Account ID Number(s) to pick another account or group of accounts.\n",
+      "description": "Efficiency of data stored on volumes owned by an account (selected from Account ID (Numeric) drop-down list at the top; this is an inconvenience of storing this data in a location different - see Release Notes for v0.7)",
       "format": "short",
       "gauge": {
         "maxValue": 100,
@@ -898,23 +933,23 @@
         "thresholdMarkers": true
       },
       "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 8,
-        "y": 25
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 35
       },
-      "id": 27,
+      "id": 19,
       "interval": null,
       "links": [],
       "mappingType": 1,
       "mappingTypes": [
         {
-          "$$hashKey": "object:6301",
+          "$$hashKey": "object:5202",
           "name": "value to text",
           "value": 1
         },
         {
-          "$$hashKey": "object:6302",
+          "$$hashKey": "object:5203",
           "name": "range to text",
           "value": 2
         }
@@ -922,9 +957,8 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
-      "pluginVersion": "6.7.4",
-      "postfix": "",
-      "postfixFontSize": "50%",
+      "postfix": "x",
+      "postfixFontSize": "80%",
       "prefix": "",
       "prefixFontSize": "50%",
       "rangeMaps": [
@@ -934,10 +968,10 @@
           "to": "null"
         }
       ],
-      "repeat": "accountIdNum",
+      "repeat": null,
       "repeatDirection": "v",
       "sparkline": {
-        "fillColor": "rgba(0, 136, 242, 0.18)",
+        "fillColor": "#1F60C4",
         "full": false,
         "lineColor": "rgb(0, 0, 0)",
         "show": true,
@@ -947,78 +981,30 @@
       "tableColumn": "",
       "targets": [
         {
+          "hide": false,
+          "refCount": 0,
           "refId": "A",
-          "target": "alias(netapp.solidfire.cluster.$clusterID.accountID.$accountIdNum.accountEfficiency, '$accountIdNum')",
-          "textEditor": false
+          "target": "alias(netapp.solidfire.cluster.$clusterID.accountID.$accountIdNum.accountEfficiency, '$accountIdNum')"
         }
       ],
-      "thresholds": "2,3,4",
+      "thresholds": "2,3",
       "timeFrom": null,
       "timeShift": null,
-      "title": "$clusterID - Storage Efficiency for Account ID # $accountIdNum",
+      "title": "Volume Efficiency for Account ID (Num): $accountIdNum",
       "type": "singlestat",
       "valueFontSize": "150%",
       "valueMaps": [
         {
-          "$$hashKey": "object:6304",
+          "$$hashKey": "object:5205",
           "op": "=",
           "text": "N/A",
           "value": "null"
         }
       ],
       "valueName": "current"
-    },
-    {
-      "aliasColors": {},
-      "breakPoint": "50%",
-      "cacheTimeout": "",
-      "combine": {
-        "label": "Others",
-        "threshold": "0.01"
-      },
-      "datasource": "${DS_GRAPHITE}",
-      "decimals": 1,
-      "description": "This pie chart shows  volume size breakdown for Account ID (by name). Multiple Account ID's can be selected",
-      "fontSize": "80%",
-      "format": "bytes",
-      "gridPos": {
-        "h": 16,
-        "w": 12,
-        "x": 12,
-        "y": 25
-      },
-      "id": 25,
-      "interval": null,
-      "legend": {
-        "percentage": true,
-        "percentageDecimals": 0,
-        "show": true,
-        "sort": null,
-        "sortDesc": null,
-        "values": true
-      },
-      "legendType": "Right side",
-      "links": [],
-      "nullPointMode": "connected",
-      "pieType": "pie",
-      "repeat": "accountID",
-      "repeatDirection": "v",
-      "strokeWidth": 1,
-      "targets": [
-        {
-          "refId": "A",
-          "target": "aliasByNode(netapp.solidfire.cluster.$clusterID.accountID.$accountID.volume.*.volumeSize, 7, 8, 11)",
-          "textEditor": false
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "$clusterID - Volume Size Breakdown for Storage Account ID by Name: $accountID",
-      "type": "grafana-piechart-panel",
-      "valueName": "current"
     }
   ],
-  "refresh": "1m",
+  "refresh": "5m",
   "schemaVersion": 22,
   "style": "dark",
   "tags": [
@@ -1059,7 +1045,7 @@
         "includeAll": true,
         "index": -1,
         "label": "Volume ID",
-        "multi": true,
+        "multi": false,
         "name": "volumeID",
         "options": [],
         "query": "netapp.solidfire.cluster.*.volumeID.*",
@@ -1077,17 +1063,17 @@
         "allValue": null,
         "current": {},
         "datasource": "${DS_GRAPHITE}",
-        "definition": "netapp.solidfire.cluster.*.accountID.*",
+        "definition": "netapp.solidfire.cluster.$clusterID.accountID.*",
         "hide": 0,
-        "includeAll": true,
+        "includeAll": false,
         "index": -1,
-        "label": "Account ID by Name",
-        "multi": true,
+        "label": "Account ID (Name)",
+        "multi": false,
         "name": "accountID",
         "options": [],
-        "query": "netapp.solidfire.cluster.*.accountID.*",
+        "query": "netapp.solidfire.cluster.$clusterID.accountID.*",
         "refresh": 1,
-        "regex": "/^(?!\\d+$)[a-zA-Z\\d][\\w\\-]+$/",
+        "regex": "[a-zA-Z]|[a-zA-Z0-9].*[A-Za-z].*",
         "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "",
@@ -1104,15 +1090,15 @@
         "hide": 0,
         "includeAll": false,
         "index": -1,
-        "label": "Account ID Number",
-        "multi": true,
+        "label": "Account ID (Numeric)",
+        "multi": false,
         "name": "accountIdNum",
         "options": [],
         "query": "netapp.solidfire.cluster.*.accountID.*",
         "refresh": 1,
-        "regex": "\\d+",
+        "regex": "[0-9].*?",
         "skipUrlSync": false,
-        "sort": 2,
+        "sort": 3,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
@@ -1122,7 +1108,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -1145,5 +1131,5 @@
   "variables": {
     "list": []
   },
-  "version": 37
+  "version": 7
 }

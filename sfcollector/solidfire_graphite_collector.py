@@ -446,7 +446,7 @@ try:
     sfe = ElementFactory.create(args.solidfire, args.username, args.password, args.version, verify_ssl=args.validatecert, print_ascii_art=False)
     # There are two kinds of timeouts (one is for individual API requests)
     # https://github.com/solidfire/solidfire-sdk-python/pull/39/files
-    sfe.timeout(5)
+    sfe.timeout(10)
     sfe.connect_timeout(args.timeout)
 except solidfire.common.ApiServerError as e:
     LOG.warning("ApiServerError: {0}".format(str(e)))
