@@ -6,6 +6,10 @@ The HCI Collector is a container-based metrics collection and graphing solution 
 
 See [CHANGELOG.md](CHANGELOG.md).
 
+## FAQs
+
+See [FAQ.md](FAQ.md).
+
 ## Description
 
 The HCICollector is a fully packaged metrics collection and graphing project for Element OS 11+ and vSphere 6+ clusters. It is based on the following components packaged as individual containers:
@@ -46,7 +50,7 @@ HCICollector has the following minimum requirements:
 ## Installation and configuration
 
 - Read the Security section below and make a plan based on your security requirements
-- Deploy a VM with a sufficiently large disk (say, 1,000 GB) or adjust Graphite to retain less data, or shorter
+- Deploy a VM with a sufficiently large disk (say, 1,000 GB) or adjust Graphite to retain less data by pruning it sooner
 - Install Docker CE and docker-compose. Enable and restart Docker service
 - Clone hcicollector repository (`git clone https://github.com/scaleoutsean/hcicollector`) or download the source code from Releases
 - Execute the install script and provide requested inputs (`cd hcicollector; sudo ./install_hcicollector.sh`)

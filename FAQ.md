@@ -1,11 +1,12 @@
 # FAQs
+
 - [FAQs](#faqs)
   - [HLEP!! It doesn't wokr and I needed it to work yesterday](#hlep-it-doesnt-wokr-and-i-needed-it-to-work-yesterday)
   - [Where are the configuration files and what's in them](#where-are-the-configuration-files-and-whats-in-them)
   - [Do passwords really have to be stored unencrypted](#do-passwords-really-have-to-be-stored-unencrypted)
   - [What does the comment about multiple interfaces on HCICollector VM mean?](#what-does-the-comment-about-multiple-interfaces-on-hcicollector-vm-mean)
   - [Where is the SolidFire collector log?](#where-is-the-solidfire-collector-log)
-  - [How to rerecover from a failed run of install script](#how-to-rerecover-from-a-failed-run-of-install-script)
+  - [How to recover from a failed run of install script](#how-to-recover-from-a-failed-run-of-install-script)
   - [How to add multiple vCenter and SolidFire clusters?](#how-to-add-multiple-vcenter-and-solidfire-clusters)
   - [How to integrate HCICollector with persistent container storage](#how-to-integrate-hcicollector-with-persistent-container-storage)
   - [How to update HCICollector from an older version](#how-to-update-hcicollector-from-an-older-version)
@@ -17,7 +18,7 @@
   - [How to monitor container volumes](#how-to-monitor-container-volumes)
   - [How much disks capacity do I need for HCICollector's Graphite volume?](#how-much-disks-capacity-do-i-need-for-hcicollectors-graphite-volume)
   - [How to add 3rd party feeds and dashboards to HCICollector's Grafana instance](#how-to-add-3rd-party-feeds-and-dashboards-to-hcicollectors-grafana-instance)
-  - [How to gather and send SolidFire storage cluster metrics to existing GraphiteDB with a Python script (without running all HCICollector containers)](#how-to-gather-and-send-solidfire-storage-cluster-metrics-to-existing-graphitedb-with-a-python-script-without-running-all-hcicollector-containers)
+  - [How to gather and send SolidFire storage cluster metrics to existing GraphiteDB with a Python script (without running all HCICollector containers) such as NAbox or other?](#how-to-gather-and-send-solidfire-storage-cluster-metrics-to-existing-graphitedb-with-a-python-script-without-running-all-hcicollector-containers-such-as-nabox-or-other)
   - [Use HCICollector without vCenter](#use-hcicollector-without-vcenter)
   - [Use HCICollector with a pre-11.7 version of SolidFire/Element](#use-hcicollector-with-a-pre-117-version-of-solidfireelement)
   - [Reset Grafana password](#reset-grafana-password)
@@ -30,6 +31,7 @@
   - [Why do the two hardware monitoring dashboards for H410C and H615C have different metrics and dashboards](#why-do-the-two-hardware-monitoring-dashboards-for-h410c-and-h615c-have-different-metrics-and-dashboards)
   - [What's the roadmap, Kenneth](#whats-the-roadmap-kenneth)
   - [What is the reason Trident was removed from HCICollector](#what-is-the-reason-trident-was-removed-from-hcicollector)
+  - [Why does SF Collector use the older SolidFire Python SDK 1.5.0 rather than the newly released version 1.6?](#why-does-sf-collector-use-the-older-solidfire-python-sdk-150-rather-than-the-newly-released-version-16)
   - [Is this repo associated with or sponspored by NetApp](#is-this-repo-associated-with-or-sponspored-by-netapp)
 
 ## HLEP!! It doesn't wokr and I needed it to work yesterday
@@ -126,7 +128,7 @@ A separate but related problem is what Grafan function should be used to visuali
 
 ## I imported a sample dashboard and it's not showing anything
 
-First, give it time before you start reinstalling or making changes. I've seen it take 70 minutes for all panels to get populated. SSD disk- and ESXi-related panels take longer. As long as one panel works, that's valuable info for troubleshooting.
+First, give it time before you start reinstalling or making changes. I've seen SSDs and ESXi take 70 minutes for all panels to get populated. Other data may start appearing in 5 minutes. As long as one panel works, that's valuable info for troubleshooting, so wait at least 10-15 minutes.
 
 Things that can go wrong:
 
@@ -250,6 +252,10 @@ As noted in Change Log for v0.7, there are issues with the metrics namespace cre
 ## What is the reason Trident was removed from HCICollector
 
 Because it was confusing to people unfamiliar with Trident, the installation script couldn't handle Trident updates and various other concerns (such as, for example, the fact that more and more NetApp customers use Trident in production so there's a growing risk of unintentianal conflict with other users and workloards). Additionally, my primary goal is to make it easier to install and use SolidFire collector in existing monitoring infrastructure rather than create new instances of Grafana and Graphite or introduce additional dependencies.
+
+## Why does SF Collector use the older SolidFire Python SDK 1.5.0 rather than the newly released version 1.6?
+
+Because version 1.6 can't be downloaded from pip, which means that changes to installer and docs would be required and it's still be a poor user experience. 
 
 ## Is this repo associated with or sponspored by NetApp
 
