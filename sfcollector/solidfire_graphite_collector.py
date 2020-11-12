@@ -409,8 +409,10 @@ parser.add_argument('-u', '--username', default='admin',
                     help='username for SolidFire array. Default: admin (NOTE: consider using a dedicated reporting admin account)')
 parser.add_argument('-p', '--password', default='password',
                     help='password for admin account on SolidFire cluster. Default: password')
-parser.add_argument('-o', '--timeout', default=15,
-                    help='timeout for SolidFire Collector to connect to SolidFire API. Default: 15 (seconds)')
+parser.add_argument('-o', '--timeout', type=int, default=10,
+                    help='timeout for SolidFire Collector to connect to SolidFire API. Default: 10 (seconds)')
+parser.add_argument('-a', '--apitimeout', type=int, default=20,
+                    help='timeout for SolidFire Collector to get response from the SolidFire API endpoint. Default: 20 (seconds)')
 parser.add_argument('-c', '--validatecert', default=False,
                     help='Validate SF TLS certificate. Default: False (allow self-signed). For "True", --solidfire must use FQDN')
 parser.add_argument('-g', '--graphite', default='localhost',
@@ -446,7 +448,7 @@ try:
     sfe = ElementFactory.create(args.solidfire, args.username, args.password, args.version, verify_ssl=args.validatecert, print_ascii_art=False)
     # There are two kinds of timeouts (one is for individual API requests)
     # https://github.com/solidfire/solidfire-sdk-python/pull/39/files
-    sfe.timeout(10)
+    sfe.timeout(args.apitimeout)
     sfe.connect_timeout(args.timeout)
 except solidfire.common.ApiServerError as e:
     LOG.warning("ApiServerError: {0}".format(str(e)))

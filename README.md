@@ -25,9 +25,8 @@ HCICollector uses internal VM disk space, but advanced users can use [NetApp Tri
 
 ![HCICollector architecture overview](images/hcicollector_architecture_overview.jpg)
 
-- [HCICollector walk-through for v0.7](https://youtu.be/wjie6niB2VE)
-- [Demo of sfcollector using Element v11+ Volume Histograms](https://youtu.be/yggMCgSX2KM)
-- [HCICollector walk-through for an older version](https://youtu.be/CNXgxkpActo)
+- [HCICollector walk-through for v0.7b](https://youtu.be/9vW-PozlIUk)
+- [Demo of sfcollector using Element v11+ Volume Histograms](https://youtu.be/VHjgdtOr8Ws)
 
 ## Prerequisites and requirements
 

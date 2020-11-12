@@ -65,11 +65,14 @@ echo -e ${Green} "Enter the vCenter DNS domain (e.g. 'vi.company.com' or 'local'
 read VCENTERDOMAIN
 echo -e ${Green} "The ESXi hostnames resolve in DNS: yes or no? (e.g. 'no' for IP-based hosts)"
 read VCENTERHASDNS
-echo -e ${White} "Enter the IP address of this Docker VM:"
+echo -e ${White} "Enter the IP address of this Docker VM (for access to Grafana Web UI):"
 read DOCKERIP
 echo ""
-echo "To stop now without having to wipe this folder or fiddle with the config files, press CTRL+C within 3s"
-sleep 3
+echo "NOTE: Wrapper script wrapper.sh applies default sfcollector timeouts (10s to connect, 20s to receive API response)"
+echo "      If you want to change these timeouts edit wrapper.sh (after this script completes, but before Docker Compose build)"
+echo ""
+echo "To stop now without having to wipe this folder, press CTRL+C within 5s"
+sleep 5
 echo -e ${White} "Beginning install..."
 
 # Docker compose configuration
@@ -162,7 +165,7 @@ cat << EOF > ./sfcollector/wrapper.sh
 #!/usr/bin/env sh
 while true
 do
-/usr/bin/env python3 /solidfire_graphite_collector.py -s $SFMVIP -u $SFUSER -p "$SFPASSWORD" -g graphite &
+/usr/bin/env python3 /solidfire_graphite_collector.py -s $SFMVIP -u $SFUSER -p "$SFPASSWORD" -g "graphite" -o 10 -a 20 &
 sleep 60
 done
 EOF
