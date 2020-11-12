@@ -2,10 +2,10 @@
 
 The HCI Ccollector is a container based metrics collection and graphing solution for NetApp HCI and SolidFire systems running Element OS 9+
 
-# Updates in v0.6.2
+## Updates in v0.6.2
 * Add connection and API timeout in sfcollector Python script as well as install shell script (issue #12)
 
-# Updates in v0.6.1
+## Updates in v0.6.1
 * Update Grafana Docker image to Grafana v6.7.4 (minor security issue that does not affect HCI Collector)
 
 ## Updates in .6
