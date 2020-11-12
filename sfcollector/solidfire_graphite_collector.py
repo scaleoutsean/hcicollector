@@ -275,6 +275,10 @@ parser.add_argument('-u', '--username', default='admin',
                     help='username for SolidFire array. default admin')
 parser.add_argument('-p', '--password', default='password',
                     help='password for SolidFire array. default password')
+parser.add_argument('-o', '--timeout', type=int, default=10,
+                    help='timeout for SolidFire Collector to connect to SolidFire API. Default: 10 (seconds)')
+parser.add_argument('-a', '--apitimeout', type=int, default=20,
+                    help='timeout for SolidFire Collector to get response from the SolidFire API endpoint. Default: 20 (seconds)')
 parser.add_argument('-g', '--graphite', default='localhost',
                     help='hostname of Graphite server to send to. default localhost. "debug" sends metrics to logfile')
 parser.add_argument('-t', '--port', type=int, default=2003,
@@ -302,7 +306,10 @@ else:
 LOG.info("Metrics Collection for array: {0}".format(args.solidfire))
 try:
     sfe = ElementFactory.create(args.solidfire, args.username, args.password)
-    sfe.timeout(15)
+    # There are two kinds of timeouts (one is for individual API requests)
+    # https://github.com/solidfire/solidfire-sdk-python/pull/39/files
+    sfe.timeout(args.apitimeout)
+    sfe.connect_timeout(args.timeout)
     cluster_name = sfe.get_cluster_info().to_json()['clusterInfo']['name']
     send_cluster_stats(sfe, cluster_name)
     send_cluster_faults(sfe, cluster_name)

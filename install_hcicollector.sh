@@ -163,7 +163,7 @@ cat << EOF > ./sfcollector/wrapper.sh
 #!/usr/bin/env bash
 while true
 do
-/usr/bin/python /solidfire_graphite_collector.py -s $SFMVIP -u $SFUSER -p "$SFPASSWORD" -g graphite &
+/usr/bin/python /solidfire_graphite_collector.py -s $SFMVIP -u $SFUSER -p "$SFPASSWORD" -g "graphite" -o 10 -a 20 &
 sleep 60
 done
 EOF
