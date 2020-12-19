@@ -155,9 +155,17 @@ Example settings for SolidFire and VMware:
 - 15 minute (30 days)
 - 1 hour (1 year)
 
-For standard VM infra environments Graphite probably needs less than 1 GB/day/VM using default settings. Static environments with few VMs may want to keep fine-grained metrics longer. Dynamic DevTest or Kubernetes environments may want the opposite. If you hold Graphite on NetApp E-Series or similar array, you can keep fine-grained metrics and application logs for years. Run your environment for an hour, stop HCICollector, and compare Before vs. After.
+For standard VM infra environments Graphite probably needs less than 1 GB/day/VM using default settings. Static environments with few VMs may want to keep fine-grained metrics longer. Dynamic DevTest or Kubernetes environments may want the opposite. If you hold Graphite on NetApp E-Series or similar array, you can keep fine-grained metrics and application logs for years. Run your environment for an hour or day, stop HCICollector, and compare Before vs After.
 
-Feel free to modify Graphite settings (storage-schemas.conf) to suit your requirements. Check the official Graphite documentation for the details.
+I tried to use various approaches to optimize but the settings can never be good for everyone. Some users may vant faily verbose stats but keep them only for 8 days, others may want coarse stats for months. And the worst of all is that deleted VMs and other objects are retained according to Graphite settings, so even if the VM is created and deleted after 7 days, its data will still be kept for 1 year (with a schema similar to the example above).
+
+Feel free to modify Graphite settings (`graphite/storage-schemas.conf`) to suit your requirements. Check the official Graphite documentation for the details.
+
+## How can I delete old Graphite DB files?
+
+Get into the Graphite container, find and wipe files that haven't been touched for a while. Modify this for your circumstances (source: StackOverflow.com):
+
+`find /opt/graphite/storage/whisper/ -type f -mtime +120 -name \*.wsp -delete; find /opt/graphite/storage/whisper -depth -type d -empty -delete`
 
 ## How to add 3rd party feeds and dashboards to HCICollector's Grafana instance
 
@@ -252,10 +260,6 @@ As noted in Change Log for v0.7, there are issues with the metrics namespace cre
 ## What is the reason Trident was removed from HCICollector
 
 Because it was confusing to people unfamiliar with Trident, the installation script couldn't handle Trident updates and various other concerns (such as, for example, the fact that more and more NetApp customers use Trident in production so there's a growing risk of unintentianal conflict with other users and workloards). Additionally, my primary goal is to make it easier to install and use SolidFire collector in existing monitoring infrastructure rather than create new instances of Grafana and Graphite or introduce additional dependencies.
-
-## Why does SF Collector use the older SolidFire Python SDK 1.5.0 rather than the newly released version 1.6?
-
-Because version 1.6 can't be downloaded from pip, which means that changes to installer and docs would be required and it's still be a poor user experience. 
 
 ## Is this repo associated with or sponspored by NetApp
 

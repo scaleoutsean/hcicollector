@@ -8,7 +8,7 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 ## FAQs
 
-See [FAQ.md](FAQ.md).
+See the [FAQs](FAQ.md).
 
 ## Description
 
@@ -33,7 +33,7 @@ HCICollector uses internal VM disk space, but advanced users can use [NetApp Tri
 HCICollector was tested with the following configuration (newer components might work):
 
 - Ubuntu 18.04, Debian 10
-- Docker CE v19.03.5 and docker-compose v1.26.0+
+- Docker CE v19.03.5 and docker-compose v1.25.0+
 - NetApp HCI (SolidFire, Element OS) v11.3 (any v11 release or newer)
 - VMware vSphere 6.7U3b or newer (other 6.x releases should work and so should vSphere 7 - see vsphere-graphite documentation)
 - NetApp HCI storage and vCenter management accounts with read access to Element storage and vCenter API
@@ -49,12 +49,12 @@ HCICollector has the following minimum requirements:
 ## Installation and configuration
 
 - Read the Security section below and make a plan based on your security requirements
-- Deploy a VM with a sufficiently large disk (say, 1,000 GB) or adjust Graphite to retain less data by pruning it sooner
+- Deploy a VM with a sufficiently large disk (say, 1,000 GB) or adjust GraphiteDB settings to retain less data by pruning it sooner
 - Install Docker CE and docker-compose. Enable and restart Docker service
 - Clone hcicollector repository (`git clone https://github.com/scaleoutsean/hcicollector`) or download the source code from Releases
 - Execute the install script and provide requested inputs (`cd hcicollector; sudo ./install_hcicollector.sh`)
 - Examine the config files and run `sudo docker-compose up` (recommended the first time as you can visually inspect everything works; stop it with CTRL+C) or `sudo docker-compose up -d` (background mode)
-- Access Grafana at the VM port 80 (see under Security) and login with the temporary password from installation wizard. Default Grafana username is `admin`
+- Access Grafana at the VM port 80 (see under Security) and login with the temporary password from install wizard. Default Grafana username is `admin`
 
 ### Example of install script questions & answers
 
@@ -66,7 +66,7 @@ HCICollector has the following minimum requirements:
 - IP address of this Docker host: "public" IP for Grafana access (the VM could have another network connected to Management LAN)
 - Shell view:
 
-```shell
+```sh
  Enter the SolidFire management virtual IP (MVIP): 
 192.168.1.30
  Enter the SolidFire username (e.g. 'monitor'): 
@@ -88,7 +88,7 @@ true
 
 ### Update from previous release
 
-I'd strongly recommend against it because there likely are small breaking changes in v0.7. Users of HCICollector v6 could just manually apply the dedupe formula fix from [v0.6.1](https://github.com/jedimt/hcicollector/compare/master...scaleoutsean:v0.6.1) branch, rebuild and restart. If you're happy with the way your HCICollector works, best don't touch it! Grafana pre-6.7.4 had a security issue with the avatar feature but HCICollector explicitly disables it (you may verify that in your `grafana/Dockerfile`).
+I'd strongly recommend against it because there likely are small breaking changes in v0.7. Users of HCICollector v6 could just manually apply the dedupe formula fix from [v0.6.1](https://github.com/scaleoutsean/hcicollector/tree/v0.6.1) branch, rebuild and restart. If you're happy with the way your HCICollector works, best don't touch it! Prior to v6.7.4 Grafana had a security issue with the avatar feature, but HCICollector explicitly disables it (you may verify that in your `grafana/Dockerfile`).
 
 If your SolidFire environment isn't large and you don't need the existing HCICollector data - you could stand up another instance of HCICollector and transition to it after it's working the way you want it, and then delete the old one.
 
@@ -112,7 +112,7 @@ NetApp HCI storage (SolidFire) dashboards may then by added from this repo (you'
 ## Accounts and Security
 
 - Accounts
-  - If you want to a better security, use a dedicated SolidFire cluster admin account with a Reporting-only role. Even the Reporting-only role has access to sensitive iformation (initiator and target passwords of your storage accounts), but at least it cannot make modifications to SolidFire cluster (it can `Get` and `List`).
+  - If you want to a better security, use a dedicated SolidFire cluster admin account with a Reporting-only role. Even the Reporting-only role has access to sensitive information (initiator and target passwords of your storage accounts), but at least it cannot make modifications to SolidFire cluster (it can `Get` and `List`).
   - It is recommended to create a dedicated vCenter "read-only" account for limited, read-only access by vpshere-graphite
   - Do not use SolidFire cluster or VMware vCenter passwords for Grafana Web UI authentication
 - Configuration files
@@ -142,4 +142,3 @@ NetApp HCI storage (SolidFire) dashboards may then by added from this repo (you'
 - `solidfire_graphite_collector.py`, SolidFire-related dashboards and scripts are licensed under the Apache License, Version 2.0
 - External, third party containers, scripts and applications may be licensed under their respective licenses
 - NetApp, SolidFire, and the marks listed at www.netapp.com/TM are trademarks of NetApp, Inc. Other marks belong to their respective owners
-

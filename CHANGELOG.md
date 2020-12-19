@@ -1,5 +1,15 @@
 # Change Log
 
+- [Change Log](#change-log)
+  - [Changes in v0.7](#changes-in-v07)
+  - [Changes in v0.6.1](#changes-in-v061)
+  - [Changes in .v6](#changes-in-v6)
+  - [Changes in .5](#changes-in-5)
+  - [Changes in .4](#changes-in-4)
+  - [Changes in .3](#changes-in-3)
+  - [Changes in .v2](#changes-in-v2)
+  - [Changes in .v1](#changes-in-v1)
+
 ## Changes in v0.7
 
 - Fork upstream hcicollector by jedimt (this release builds upon upstream branch .v7, here renamed to v0.7)
@@ -7,15 +17,16 @@
 - Remove the NetApp Technical Report PDF and video demo files from the repo for faster repository cloning. Add video links to YouTube demo videos
 - Changes and improvements to documentation as well as online help (links to the SolidFire UI and basic descriptions in various panels)
 - Introduce potentially breaking changes in metrics paths and details gathered from SolidFire (see Release Notes v0.7 and FAQs)
-- Slighly adjust Graphite data retention policy to use less space for GraphiteDB
+- Change storage schemas for GraphiteDB to use less disk space
 - Fixes:
-  - SFCollector: wrapper script can contain special characters (issue #2). Change Docker base OS to Python 3.8.5 (slim Buster)
+  - SFCollector: wrapper script can contain special characters (issue #2). Change Docker base OS to Python 3.8.6 (slim Buster)
   - SFCollector: gather more SolidFire metrics relevant to administrators and operations staff
   - SFCollector: deduplication efficiency formula changed to account for space used for snapshots (issue #3)
   - SFCollector: set SolidFire API call timeout to a lower value than default (issue #6)
   - SFCollector: add the option to validate TLS certificate of SolidFire API endpoint(s)
-  - SFCollector: patch SolidFire Python SDK 1.5.0.87 (common/model.py) to unbreak `.to_json()` which for some reason stopped working
-  - Grafana: configure Legend and Axis Y values in most panels to display 0 decimals (enforce integer values where apppropriate (e.g. byte count) and lower the level of unnecesary detail elsewhere), adjust precision and make other usability improvements
+  - SFCollector: add variable for API response timeout for larger environments (issue #12)
+  - SFCollector: upgrade SolidFire SDK for Python  v1.7.0.152
+  - Grafana: configure Legend and Axis Y values in most panels to display 0 decimals (enforce integer values where apppropriate (e.g. byte count) and lower the level of unnecessary detail elsewhere), adjust precision and make other usability improvements
   - Grafana: change deprecated gauge caunters to new gauge counters
   - Grafana: replace deprecated Grafana renderer with new renderer container
   - Grafana: add new panels to existing dashboards, including iSCSI connections, disk wear level, QoS histograms and more
@@ -28,9 +39,11 @@
   - Built-in dashboard links to SolidFire UI work for configurations with single SolidFire storage cluster. HCICollector environments that monitor multiple SolidFire clusters can add a MVIP variable to dashboard and reference it in URLs to modify URLs on the fly
   - Install script configures only one vCenter cluster and only one SolidFire cluster. See the FAQs for workarounds
   - Some visualizations use Beta-release plugins from Grafana which may have issues related to visualization or configuration (editing of panel settings). There are bugs in browsers and Grafana too
+  - SolidFire disk drive Wear Level / Life Remaining visualization uses the title like `drive.${disk-id}` although `${disk-id}` would be better. The reason is the Grafana plugin cannot accept numeric titles. If that bothers you try some other Grafana visualization plugin
   - Dashboards and panels may contain hard-coded URLs (e.g. 192.168.1.30) or SolidFire cluster name (e.g. PROD): search-and-replace this link with your own before you import them. HCICollector install script does this for you, but direct import bypasses that step. The proper solution would be to add the MVIP variable to all dashboards and use it in URLs
+  - By the nature of how vSphere and SolidFire plugins gather metrics, an object deleted and created with the same name (e.g. a VM, or datastore, or SolidFire volume) may appear in the same long term graph as its ancient namesake. Such objects generally have UUIDs, but VMware and SolidFire don't keep UUID-to-Name mappings for deleted objects. If UUIDs were to be used (which is partially done in Some SolidFire dashboards, that would be correct but present problems for humans who hardly recognize current, let alone historic, UUIDs). This isn't an unsolvable problem but it'd require a fair amount of work to fix. Essentially a DB would have to be built, and another back-end added to Graphite, as far as I can tell. Or cross reference SolidFire API logs against UUIDs.
 - Experimental features:
-  - Two sample dashboards for hardware monitoring of NetApp H-Series Compute nodes: this is not deployed by default - it requires read-only access to the compute node IPMI interface, manual deployment of collectd VM or container (see the config-examples directory and FAQs) and potentially modifications to the dashboards to make them usable)
+  - Two sample dashboards for hardware monitoring of NetApp H-Series Compute nodes: metrics are not gathered by by default - it requires read-only access to the compute node IPMI interface, manual deployment of collectd VM or container (see the config-examples directory and FAQs) and potentially modifications to the dashboards to make them usable)
 
 ## Changes in v0.6.1
 

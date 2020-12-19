@@ -11,6 +11,12 @@
   ],
   "__requires": [
     {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar Gauge",
+      "version": ""
+    },
+    {
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
@@ -33,12 +39,6 @@
       "id": "singlestat",
       "name": "Singlestat",
       "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
     }
   ],
   "annotations": {
@@ -59,7 +59,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1597147896673,
+  "iteration": 1608386563492,
   "links": [],
   "panels": [
     {
@@ -168,7 +168,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 8
       },
       "hiddenSeries": false,
       "id": 30,
@@ -293,7 +293,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 52
+        "y": 26
       },
       "hiddenSeries": false,
       "hideTimeOverride": false,
@@ -417,7 +417,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 84
+        "y": 42
       },
       "height": "",
       "hiddenSeries": false,
@@ -561,7 +561,7 @@
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 112
+        "y": 56
       },
       "id": 41,
       "links": [
@@ -571,13 +571,11 @@
           "url": "https://192.168.1.30/cluster/#/system/drives?page=1&filter=%7B%22status%22:%7B%22func%22:%22equalTo%22,%22params%22:%7B%22value%22:%22active%22%7D%7D%7D"
         }
       ],
-      "maxDataPoints": "",
-      "maxPerRow": 2,
       "options": {
-        "colorMode": "value",
+        "displayMode": "gradient",
         "fieldOptions": {
           "calcs": [
-            "lastNotNull"
+            "mean"
           ],
           "defaults": {
             "decimals": 0,
@@ -588,50 +586,57 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "dark-red",
+                  "color": "green",
                   "value": null
                 },
                 {
-                  "color": "semi-dark-orange",
+                  "color": "dark-yellow",
                   "value": 30
                 },
                 {
-                  "color": "light-green",
-                  "value": 60
+                  "color": "dark-orange",
+                  "value": 50
                 },
                 {
-                  "color": "dark-green",
+                  "color": "dark-red",
                   "value": 80
                 }
               ]
             },
-            "title": "",
             "unit": "percent"
           },
           "overrides": [],
           "values": false
         },
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "vertical"
+        "orientation": "horizontal",
+        "showUnfilled": true
       },
       "pluginVersion": "6.7.4",
       "repeat": "Cluster",
       "repeatDirection": "h",
       "targets": [
         {
+          "$$hashKey": "object:2864",
+          "aggregation": "Last",
+          "alias": "Wear Level",
+          "decimals": 0,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
           "hide": false,
           "refCount": 0,
           "refId": "A",
-          "target": "netapp.solidfire.cluster.$Cluster.drives.*.lifeRemainingPercent",
-          "textEditor": true
+          "target": "substr(netapp.solidfire.cluster.$Cluster.drives.*.lifeRemainingPercent, -3, -1)",
+          "textEditor": false,
+          "units": "percent",
+          "valueHandler": "Number Threshold"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "$Cluster Drive Life Remaining",
+      "title": "$Cluster Drive Wear Level",
       "transparent": true,
-      "type": "stat"
+      "type": "bargauge"
     }
   ],
   "refresh": "1m",
@@ -703,5 +708,5 @@
   "variables": {
     "list": []
   },
-  "version": 4
+  "version": 5
 }
