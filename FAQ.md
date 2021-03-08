@@ -208,6 +208,7 @@ Several of the many options:
 - Enterprise: please consider either the gratis or paid version of [NetApp Cloud Insights](https://cloud.netapp.com/cloud-insights), a proven, comprehensive, cloud-hosted service for cloud and on-premises environments. The free/lite version can monitor most NetApp storage products including NetApp HCI
 - Enterprise: if you own a NetApp HCI or SolidFire ("storage-only") cluster, you can choose to allow NetApp ActiveIQ to gather metrics and send them to ActiveIQ service, but with better trending and alerting. ActiveIQ also has an API and a mobile application which is superior for support-related monitoring (as opposed to gathering and visualization of performance-related metrics.)
 - Gratis: [NABox](https://nabox.org) (at some point it may be able to monitor Element storage clusters; until then you may try to integrate the SolidFire Graphite collector script on your own.)
+- Gratis: [solidfire-exporter](https://github.com/mjavier2k/solidfire-exporter) - permissively licensed SolidFire exporter to Prometheus
 - Gratis: enable and use SNMP v2/v3 on Element software cluster (as well as other monitored components). This can work with any tool which can receive SNMP traps (Zabbix, [Nagios/Icinga](https://github.com/scaleoutsean/nagfire), etc.)
 
 ## How to export data from Graphite
@@ -255,13 +256,13 @@ Up to four nodes in the H400 Series chassis share (two) chassis fans, so if one 
 
 Don't have it! At this time my primary goal is to keep the components up to date and ensure this thing installs and runs.
 
-As noted in Change Log for v0.7, there are issues with the metrics namespace created by sfcollector. To fix that we'd need a mapping service or API for SolidFire ID to Name mapping and then all dashboards would have to be overhauled to accommodate those changes.
+As noted in CHANGELOG for v0.7, there are issues with the metrics namespace created by sfcollector. To fix that we'd need a mapping service or API for SolidFire ID to Name mapping and then all dashboards would have to be overhauled to accommodate those changes. Another approach would be to rely on SolidFire logs and Elastic, Splunk or other destination where sfcollector metrics, and Volume and Account CRUD operations from SolidFire logs could be correlated. Ideas and contributions welcome!
 
 ## What is the reason Trident was removed from HCICollector
 
 Because it was confusing to people unfamiliar with Trident, the installation script couldn't handle Trident updates and various other concerns (such as, for example, the fact that more and more NetApp customers use Trident in production so there's a growing risk of unintentianal conflict with other users and workloards). Additionally, my primary goal is to make it easier to install and use SolidFire collector in existing monitoring infrastructure rather than create new instances of Grafana and Graphite or introduce additional dependencies.
 
-## Is this repo associated with or sponspored by NetApp
+## Is this repo associated with or sponsored by NetApp
 
 No, it is not.
 
