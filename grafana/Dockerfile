@@ -1,7 +1,7 @@
 # Dockerfile for Grafana container
 #
 # https://hub.docker.com/r/grafana/grafana/tags
-FROM grafana/grafana:6.7.4
+FROM grafana/grafana:6.7.5
 ENV GF_SECURITY_DISABLE_GRAVATAR=true
 ENV GF_SERVER_PROTOCOL=http
 ENV GF_SERVER_HTTP_PORT=3000

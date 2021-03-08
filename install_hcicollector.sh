@@ -94,6 +94,8 @@ services:
         - ${GRAPHITEVOL}:/opt/graphite/storage/whisper
     networks:
         - net_hcicollector
+    environment:
+        GRAPHITE_LOG_ROTATION: 1
 
   grafana:
     build: ./grafana

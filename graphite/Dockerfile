@@ -1,6 +1,6 @@
 # Dockerfile for Graphite stack
 # 
-FROM graphiteapp/graphite-statsd:1.1.7-6
+FROM graphiteapp/graphite-statsd:1.1.7-11
 
 # Graphite
 COPY carbon.conf /opt/graphite/conf/carbon.conf

@@ -25,16 +25,16 @@
   - SFCollector: set SolidFire API call timeout to a lower value than default (issue #6)
   - SFCollector: add the option to validate TLS certificate of SolidFire API endpoint(s)
   - SFCollector: add variable for API response timeout for larger environments (issue #12)
-  - SFCollector: upgrade SolidFire SDK for Python  v1.7.0.152
+  - SFCollector: upgrade SolidFire SDK for Python  v1.7.0.152, upgrade base image to Python 3.9.2-buster-slim
   - Grafana: configure Legend and Axis Y values in most panels to display 0 decimals (enforce integer values where apppropriate (e.g. byte count) and lower the level of unnecessary detail elsewhere), adjust precision and make other usability improvements
   - Grafana: change deprecated gauge caunters to new gauge counters
   - Grafana: replace deprecated Grafana renderer with new renderer container
   - Grafana: add new panels to existing dashboards, including iSCSI connections, disk wear level, QoS histograms and more
   - Grafana: change some dashboards to make it easier to see key panels without scrolling
   - Update third party container images:
-    - graphite-statsd v1.1.7-6: considerably smaller Docker image
-    - grafana v6.7.4: fixes a security risk that does not impact HCICollector with default settings (because HCICollector doesn't enable the feature)
-    - vsphere-graphite v0.8b: support for vSphere 7 API
+    - graphite-statsd v1.1.7-11: considerably smaller Docker image, and (by upstream) update internal components (`GRAPHITE_LOG_ROTATION: 1` added to container environment variables to retain previous behavior after changes in upstream v1.1.7-9)
+    - grafana v6.7.5: v6.7.4 and v6.7.5 fix two security issues (neither of them impacts HCICollector with default settings because they aren't enabled)
+    - vsphere-graphite v0.8b: support for vSphere 7.0 (and 7.0U1) API via govmomi 0.23.0 (v7.0 API should work fine on vCenter 7.0U1)
 - Known issues:
   - Built-in dashboard links to SolidFire UI work for configurations with single SolidFire storage cluster. HCICollector environments that monitor multiple SolidFire clusters can add a MVIP variable to dashboard and reference it in URLs to modify URLs on the fly
   - Install script configures only one vCenter cluster and only one SolidFire cluster. See the FAQs for workarounds
