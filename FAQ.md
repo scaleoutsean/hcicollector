@@ -17,6 +17,7 @@
   - [I imported a sample dashboard and it's not showing anything](#i-imported-a-sample-dashboard-and-its-not-showing-anything)
   - [How to monitor container volumes](#how-to-monitor-container-volumes)
   - [How much disks capacity do I need for HCICollector's Graphite volume?](#how-much-disks-capacity-do-i-need-for-hcicollectors-graphite-volume)
+  - [How can I delete old Graphite DB files?](#how-can-i-delete-old-graphite-db-files)
   - [How to add 3rd party feeds and dashboards to HCICollector's Grafana instance](#how-to-add-3rd-party-feeds-and-dashboards-to-hcicollectors-grafana-instance)
   - [How to gather and send SolidFire storage cluster metrics to existing GraphiteDB with a Python script (without running all HCICollector containers) such as NAbox or other?](#how-to-gather-and-send-solidfire-storage-cluster-metrics-to-existing-graphitedb-with-a-python-script-without-running-all-hcicollector-containers-such-as-nabox-or-other)
   - [Use HCICollector without vCenter](#use-hcicollector-without-vcenter)
@@ -31,12 +32,12 @@
   - [Why do the two hardware monitoring dashboards for H410C and H615C have different metrics and dashboards](#why-do-the-two-hardware-monitoring-dashboards-for-h410c-and-h615c-have-different-metrics-and-dashboards)
   - [What's the roadmap, Kenneth](#whats-the-roadmap-kenneth)
   - [What is the reason Trident was removed from HCICollector](#what-is-the-reason-trident-was-removed-from-hcicollector)
-  - [Why does SF Collector use the older SolidFire Python SDK 1.5.0 rather than the newly released version 1.6?](#why-does-sf-collector-use-the-older-solidfire-python-sdk-150-rather-than-the-newly-released-version-16)
-  - [Is this repo associated with or sponspored by NetApp](#is-this-repo-associated-with-or-sponspored-by-netapp)
+  - [Can HCICollector collect Trident metrics](#can-hcicollector-collect-trident-metrics)
+  - [Is this repo associated with or sponsored by NetApp](#is-this-repo-associated-with-or-sponsored-by-netapp)
 
 ## HLEP!! It doesn't wokr and I needed it to work yesterday
 
-If you must have a working solution ASAP, pleaseconsider one of the alternativess (say, NetApp ActiveIQ or the free version of NetApp Cloud Insights) while you figure out how to make this thing work. For NetApp Cloud Insights you just need to register at cloud.netapp.com, download and deploy acquisition VM and you'll have something that works well.
+If you must have a working solution ASAP, please consider one of the alternatives (see other FAQs for alternatives) while you figure out how to make this thing work. For NetApp Cloud Insights you just need to register at cloud.netapp.com, download and deploy acquisition VM and you'll have something that works well.
 
 But if you still want to try HCICollector, since v0.7 there's really not much that can go wrong so first get familiar with Docker and the HCICollector docs. You may also try the netapp-hci channel in the NetApp Community Slack (join [here](https://netapp.io)) to see if you can find someone who has experience with HCICollector. For help with 3rd party projects, please refer to their documentation & community resources.
 
@@ -62,9 +63,9 @@ The entire VM (apart from the Grafana Web UI, of course) should be made off limi
 - User Network: expose Grafana via HTTPS 
   - Firewall that permits access only to port 443 of this interface (or 80, if you don't want to create TLS certificates and register this interface in DNS)
 
-Another thing that should be considered by users of Element OS v12 or newer is to set up a dedicated cluster admin account on SolidFire or NetApp HCI limited to Read & Reporting role (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide). Older Element releases require full-featured cluster admin account for Read &  Reporting.
+Another thing that should be considered by users of Element OS v12 or newer is to set up a dedicated cluster admin account on SolidFire or NetApp HCI limited to Read & Reporting role (refer to Access Control in the SolidFire User Guide or SolidFire API Reference Guide). Older Element releases require full-featured cluster admin account for Read & Reporting.
 
-The same goes for VMware - a vSphere administrator account with limited permissions (read-only) should be used for VMware cluster monitoring. If you don't manage the SolidFire or VMware cluster(s) you want to monitor, you may ask the admin(s) to create a reporting-only admin account for you (for Element v11, if you do not use QoS histograms; for VMware vCenter please refer to the vsphere-graphite and VMware documentation.)
+The same goes for VMware - vSphere administrator account with limited permissions (read-only) should be used for VMware cluster monitoring. If you don't manage the SolidFire or VMware cluster(s) you want to monitor, you may ask the admin(s) to create a reporting-only admin account for you (for Element v11, if you do not use QoS histograms; for VMware vCenter please refer to the vsphere-graphite and VMware documentation.)
 
 ## What does the comment about multiple interfaces on HCICollector VM mean? 
 
@@ -89,7 +90,7 @@ For the container running solidfire_graphite_collector.py (SFCollector) see `sfc
 
 ## How to recover from a failed run of install script
 
-It's just Docker, so use regular Docker (including docker-compose) commands to delete the containers, networks, etc. To remove Docker data, look into removing the Docker Graphite and Grafana volumes, too.
+It's just Docker, so use regular Docker (including `docker-compose`) commands to delete the containers, networks, etc. To remove Docker data, look into removing the Docker Graphite and Grafana volumes, too.
 
 ## How to add multiple vCenter and SolidFire clusters?
 
@@ -104,7 +105,7 @@ If you want to migrate data from a local to an external volume, you could create
 
 ## How to update HCICollector from an older version
 
-I would advise against that because that hasn't been tested and changes may break it (see Changes in v0.7).
+I would advise against that because that hasn't been tested and changes may break it (see CHANGELOG for v0.7).
 
 ## How to update individual HCICollector container to a newer version
 
@@ -208,7 +209,7 @@ Several of the many options:
 - Enterprise: please consider either the gratis or paid version of [NetApp Cloud Insights](https://cloud.netapp.com/cloud-insights), a proven, comprehensive, cloud-hosted service for cloud and on-premises environments. The free/lite version can monitor most NetApp storage products including NetApp HCI
 - Enterprise: if you own a NetApp HCI or SolidFire ("storage-only") cluster, you can choose to allow NetApp ActiveIQ to gather metrics and send them to ActiveIQ service, but with better trending and alerting. ActiveIQ also has an API and a mobile application which is superior for support-related monitoring (as opposed to gathering and visualization of performance-related metrics.)
 - Gratis: [NABox](https://nabox.org) (at some point it may be able to monitor Element storage clusters; until then you may try to integrate the SolidFire Graphite collector script on your own.)
-- Gratis: [solidfire-exporter](https://github.com/mjavier2k/solidfire-exporter) - permissively licensed SolidFire exporter to Prometheus
+- Gratis: [solidfire-exporter](https://github.com/mjavier2k/solidfire-exporter) - permissively licensed SolidFire metrics exporter to Prometheus
 - Gratis: enable and use SNMP v2/v3 on Element software cluster (as well as other monitored components). This can work with any tool which can receive SNMP traps (Zabbix, [Nagios/Icinga](https://github.com/scaleoutsean/nagfire), etc.)
 
 ## How to export data from Graphite
@@ -262,7 +263,19 @@ As noted in CHANGELOG for v0.7, there are issues with the metrics namespace crea
 
 Because it was confusing to people unfamiliar with Trident, the installation script couldn't handle Trident updates and various other concerns (such as, for example, the fact that more and more NetApp customers use Trident in production so there's a growing risk of unintentianal conflict with other users and workloards). Additionally, my primary goal is to make it easier to install and use SolidFire collector in existing monitoring infrastructure rather than create new instances of Grafana and Graphite or introduce additional dependencies.
 
+## Can HCICollector collect Trident metrics
+
+Up to v0.7 it cannot. It could, but that feature would have to be added. It should be relatively simple (scrape Prometheus metrics from Trident container (port 8001), store them in another back-end (not Graphite), and add a dashboard or two).
+
+Prometheus users probably want to use existing Prometheus instances (built into Kubernetes or stand-alone) so I think it should be easier to do this:
+
+- Add a Graphite container to and send sfcollector data to it, and use existing Grafana or other front-end, or
+- Use `solidfire-exporter` (not sfcollector) with existing Prometheus, and do not use HCICollector/sfcollector. It may collect slightly different metrics, of course.
+
+Trident's SolidFire metrics are relatively basic as of v21.01, so I'd recommend `solidfire-exporter` to folks who use Kubernetes. The value of Trident metrics isn't in the breadth or depth of SolidFire metrics, but that it makes it possible to monitor only Trident-related SolidFire metrics. 
+
+`sfcollector` can't tell for sure what volumes were created by Trident, although I was able to use regexp in Grafana to create a "poor man's" filter to show only Trident volumes. Those generally have at least two underscores in Volume name. Trident-managed SolidFire volumes have specific metadata tags and are owned by known accounts (those specified in the SolidFire back-end JSON used by Trident), so it is not hard to identify them them in either Grafana (regexp for volume name, or storage account) or sfcollector (pre-process Trident volume metrics before sendign them to Graphite, based on account information and volume metadata).
+
 ## Is this repo associated with or sponsored by NetApp
 
 No, it is not.
-
